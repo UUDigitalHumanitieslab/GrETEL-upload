@@ -20,6 +20,6 @@
 				<li class="pure-menu-item"><?=anchor('upload', lang('upload_treebank'), 'class="pure-menu-link"'); ?></li>
 				<li class="pure-menu-item"><?=anchor('treebank', lang('public_treebanks'), 'class="pure-menu-link"'); ?></li>
 				<li class="pure-menu-item"><?=anchor('treebank/user/1', lang('my_treebanks'), 'class="pure-menu-link"'); ?></li>
-				<li class="pure-menu-item"><?=anchor('../../gretel', 'GrETEL', 'class="pure-menu-link"'); ?></li>
+				<li class="pure-menu-item"><?=anchor(GRETEL_URL, 'GrETEL', 'class="pure-menu-link"'); ?></li>
 			</ul>
 		</div>
