@@ -17,12 +17,6 @@ class Treebank_model extends CI_Model
 		return $this->db->get('treebank')->result();
 	}
 
-	public function get_treebanks_by_user($user_id)
-	{
-		$this->db->where('user_id', $user_id);
-		return $this->db->get('treebank')->result();
-	}
-
 	public function get_treebank_by_title($title)
 	{
 		$this->db->where('title', $title);
@@ -44,11 +38,24 @@ class Treebank_model extends CI_Model
 	/**
 	* API calls
 	*/
+	public function get_api_treebanks()
+	{
+		$this->db->select(array('title', 'users.email', 'uploaded', 'processed'));
+		$this->db->from('treebank');
+		$this->db->join('users', 'users.id = treebank.user_id');
+		return $this->db->get()->result();
+	}
+
 	public function get_public_treebanks()
 	{
-		$this->db->select(array('title', 'uploaded', 'processed'));
 		$this->db->where('public', TRUE);
 		$this->db->where('processed IS NOT NULL');
-		return $this->db->get('treebank')->result();
+		return $this->get_api_treebanks();
+	}
+
+	public function get_treebanks_by_user($user_id)
+	{
+		$this->db->where('user_id', $user_id);
+		return $this->get_api_treebanks();
 	}
 }

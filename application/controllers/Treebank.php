@@ -10,7 +10,7 @@ class Treebank extends CI_Controller
 
 	public function index()
 	{
-		$data['page_title'] = lang('treebanks');
+		$data['page_title'] = lang('public_treebanks');
 		$data['treebanks'] = $this->treebank_model->get_public_treebanks();
 
 		$this->load->view('header', $data);
@@ -18,9 +18,23 @@ class Treebank extends CI_Controller
 		$this->load->view('footer');
 	}
 
+	public function show($title)
+	{
+		$treebank = $this->treebank_model->get_treebank_by_title($title);
+
+		$data['page_title'] = sprintf(lang('treebank_detail'), $title);
+		$data['treebank'] = $treebank;
+		$data['components'] = $this->component_model->get_components_by_treebank($treebank->id);
+
+		$this->load->view('header', $data);
+		$this->load->view('treebank_detail', $data);
+		$this->load->view('footer');
+	}
+
+
 	public function user($user_id)
 	{
-		$data['page_title'] = lang('treebanks_by_user');
+		$data['page_title'] = lang('my_treebanks');
 		$data['treebanks'] = $this->treebank_model->get_treebanks_by_user($user_id);
 
 		$this->load->view('header', $data);

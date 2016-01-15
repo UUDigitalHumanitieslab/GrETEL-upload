@@ -26,6 +26,43 @@ h1 {
 	background: none repeat scroll 0% 0% rgb(255, 255, 255);
 }
 
+.error {
+	color: red;
+}
+
+/* Bootstrap-like contextual boxes */
+.success {
+	text-align: center;
+	padding: 10px; 
+	margin-bottom: 10px;
+	background-color: #DFF0D8;
+	border: 1px solid #00C008;
+}
+
+.failed {
+	text-align: center;
+	padding: 10px;
+	margin-bottom: 10px;
+	background-color: #F2DEDE;
+	border: 1px solid red;
+}
+
+.warning {
+	text-align: center;
+	padding: 10px;
+	margin-bottom: 10px;
+	background-color: #FCF8E3;
+	border: 1px solid yellow;
+}
+
+.info {
+	text-align: center;
+	padding: 10px;
+	margin-bottom: 10px;
+	background-color: #D9EDF7;
+	border: 1px solid blue;
+}
+
 /* Pure CSS add-ons */
 
 .pure-menu-custom { 

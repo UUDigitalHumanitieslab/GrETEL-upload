@@ -1,3 +1,11 @@
+<h2><?=$page_title; ?></h2>
+
+<?php if ($this->session->flashdata('message')) { ?>
+	<div class="success">
+		<?=$this->session->flashdata('message'); ?>
+	</div>
+<?php } ?>
+
 <?=form_open_multipart($action, array('class' => 'pure-form pure-form-aligned')); ?>
 
 <?=form_fieldset($page_title); ?>

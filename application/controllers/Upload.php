@@ -14,6 +14,8 @@ class Upload extends CI_Controller
 		$config['max_size']			= 1024;
 
 		$this->load->library('upload', $config);
+
+		$this->form_validation->set_error_delimiters('<label class="error">', '</label>');
 	}
 
 	public function index()
@@ -41,7 +43,7 @@ class Upload extends CI_Controller
 			$this->treebank_model->add_treebank($treebank);
 
 			// Show my treebanks
-			flashdata(lang('upload_success'));
+			$this->session->set_flashdata('message', lang('upload_success'));
 			redirect('/treebank/user/1', 'refresh');
 		}
 	}
@@ -53,7 +55,7 @@ class Upload extends CI_Controller
 	/** Validates the input */
 	private function validate_treebank()
 	{
-		$this->form_validation->set_rules('title', lang('title'), 'trim|required|max_length[200]');
+		$this->form_validation->set_rules('title', lang('title'), 'trim|required|is_unique[treebank.title]|max_length[200]');
 		$this->form_validation->set_rules('treebank', lang('treebank'), 'callback_upload_treebank');
 		$this->form_validation->set_rules('public', lang('public'), '');
 
