@@ -101,5 +101,6 @@ defined('BASEX_PORT') 	OR define('BASEX_PORT',	'1984');
 defined('BASEX_USER') 	OR define('BASEX_USER',	'admin');
 defined('BASEX_PWD')	OR define('BASEX_PWD',	'admin');
 
+// Other settings
 defined('UPLOAD_DIR')	OR define('UPLOAD_DIR',	'./uploads/');
 defined('GRETEL_URL')	OR define('GRETEL_URL',	'http://localhost/gretel');

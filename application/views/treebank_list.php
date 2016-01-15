@@ -13,6 +13,7 @@
 			<th><?=lang('uploaded_by'); ?></th>
 			<th><?=lang('uploaded_at'); ?></th>
 			<th><?=lang('processed_at'); ?></th>
+			<th><?=lang('actions'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -22,6 +23,10 @@
 			<td><?=$treebank->email; ?></td>
 			<td><?=$treebank->uploaded; ?></td>
 			<td><?=$treebank->processed; ?></td>
+			<td>
+				<?php if (!$treebank->processed) { echo anchor('cron/process/by_id/' . $treebank->id, 'Process'); } ?>
+				<?=anchor('treebank/delete/' . $treebank->id, 'Delete'); ?>
+			</td>
 		</tr>
 		<?php endforeach ?>
 	</tbody>

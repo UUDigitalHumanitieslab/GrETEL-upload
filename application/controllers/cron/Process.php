@@ -14,38 +14,51 @@ class Process extends CI_Controller
 		$treebanks = $this->treebank_model->get_to_be_processed_treebanks();
 		foreach ($treebanks as $treebank)
 		{
-			$zip = new ZipArchive;
-			$res = $zip->open(UPLOAD_DIR . $treebank->filename);
-			if ($res === TRUE)
+			process_treebank($treebank);
+		}
+	}
+
+	public function by_id($treebank_id)
+	{
+		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
+		$this->process_treebank($treebank);
+
+		$this->session->set_flashdata('message', lang('treebank_processed'));
+		redirect($this->agent->referrer(), 'refresh');
+	}
+
+	private function process_treebank($treebank)
+	{
+		$zip = new ZipArchive;
+		$res = $zip->open(UPLOAD_DIR . $treebank->filename);
+		if ($res === TRUE)
+		{
+			$root_dir = UPLOAD_DIR . substr($treebank->filename, 0, -4);
+			$zip->extractTo($root_dir);
+			$zip->close();
+
+			foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
 			{
-				$root_dir = UPLOAD_DIR . substr($treebank->filename, 0, -4);
-				$zip->extractTo($root_dir);
-				$zip->close();
+				$title = basename($dir);
+				$basex_db = strtoupper($treebank->title . '_ID_' . $title);
 
-				$this->treebank_model->update_treebank($treebank->id, array('processed' => input_datetime()));
+				$component = array(
+					'treebank_id' 	=> $treebank->id,
+					'title'			=> $title,
+					'slug'			=> $title,
+					'basex_db'		=> $basex_db);
+				$component_id = $this->component_model->add_component($component);
 
-				foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
-				{
-					$title = basename($dir);
-					$basex_db = strtoupper($treebank->title . '_ID_' . $title);
-
-					$component = array(
-						'treebank_id' 	=> $treebank->id,
-						'title'			=> $title,
-						'slug'			=> $title,
-						'basex_db'		=> $basex_db);
-					$component_id = $this->component_model->add_component($component);
-
-					$this->merge_xml_files($dir, $component_id);
-					$this->upload_to_basex($basex_db, $dir . '/total.xml');
-				}
-
-				echo 'Processed!';
+				$this->merge_xml_files($dir, $component_id);
+				$this->upload_to_basex($basex_db, $dir . '/total.xml');
 			}
-			else
-			{
-				echo 'File not found.';
-			}
+
+			$this->treebank_model->update_treebank($treebank->id, array('processed' => input_datetime()));
+			echo 'Processed!';
+		}
+		else
+		{
+			echo 'File not found.';
 		}
 	}
 

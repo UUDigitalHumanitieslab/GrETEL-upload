@@ -31,6 +31,12 @@ class Treebank extends CI_Controller
 		$this->load->view('footer');
 	}
 
+	public function delete($treebank_id)
+	{
+		$treebank = $this->treebank_model->delete_treebank($treebank_id);
+		$this->session->set_flashdata('message', lang('treebank_deleted'));
+		redirect($this->agent->referrer(), 'refresh');
+	}
 
 	public function user($user_id)
 	{
