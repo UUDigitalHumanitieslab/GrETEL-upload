@@ -73,7 +73,7 @@ class Process extends CI_Controller
 		foreach(glob($dir . '/*.xml') as $file)
 		{
 			$file_xml = new DOMDocument();
-			$file_xml->load($file);
+			$file_xml->loadXML(file_get_contents($file));
 
 			// Set the id attribute as the filename in the root element
 			$file_xml->documentElement->setAttribute('id', basename($file));
