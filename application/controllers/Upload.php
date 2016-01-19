@@ -11,7 +11,7 @@ class Upload extends CI_Controller
 
 		$config['upload_path']		= UPLOAD_DIR;
 		$config['allowed_types']	= 'zip';
-		$config['max_size']			= 1024;
+		$config['max_size']			= 4096;
 
 		$this->load->library('upload', $config);
 
