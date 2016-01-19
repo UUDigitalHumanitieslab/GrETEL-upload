@@ -130,7 +130,7 @@ class Process extends CI_Controller
 		} 
 		catch (Exception $e) 
 		{
-			// print exception
+			// Print exception
 			echo $e->getMessage();
 		}
 	}
