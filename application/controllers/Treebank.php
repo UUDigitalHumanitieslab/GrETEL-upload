@@ -25,6 +25,8 @@ class Treebank extends CI_Controller
 		$data['page_title'] = sprintf(lang('treebank_detail'), $title);
 		$data['treebank'] = $treebank;
 		$data['components'] = $this->component_model->get_components_by_treebank($treebank->id);
+		$data['total_sentences'] = $this->component_model->get_sum($treebank->id, 'nr_sentences');
+		$data['total_words'] = $this->component_model->get_sum($treebank->id, 'nr_words');
 
 		$this->load->view('header', $data);
 		$this->load->view('treebank_detail', $data);

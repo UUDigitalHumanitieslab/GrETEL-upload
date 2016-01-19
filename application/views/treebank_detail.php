@@ -18,10 +18,17 @@
 		<?php foreach ($components as $component): ?>
 		<tr>
 			<td><?=$component->title; ?></td>
-			<td><?=$component->nr_sentences; ?></td>
-			<td><?=$component->nr_words; ?></td>
+			<td><?=number_format($component->nr_sentences); ?></td>
+			<td><?=number_format($component->nr_words); ?></td>
 		</tr>
 		<?php endforeach ?>
+		<tr class="pure-table-odd">
+			<td><strong><?='Total:'; ?></strong></td>
+			<td><strong><?=number_format($total_sentences); ?></strong></td>
+			<td><strong><?=number_format($total_words); ?></strong></td>
+		</tr>
 	</tbody>
 </table>
-<?=anchor('treebank', lang('back')); ?>
+<p>
+	<?=anchor('treebank', lang('back')); ?>
+</p>

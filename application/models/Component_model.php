@@ -23,6 +23,13 @@ class Component_model extends CI_Model
 		$this->db->update('component', $component);
 	}
 
+	public function get_sum($treebank_id, $column) 
+	{
+		$this->db->select_sum($column, 'total');
+		$this->db->where('treebank_id', $treebank_id);
+		return $this->db->get('component')->row()->total;
+	}
+
 	/**
 	* API calls
 	*/
