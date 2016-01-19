@@ -46,9 +46,10 @@ class Treebank_model extends CI_Model
 		$this->db->delete('treebank', array('id' => $treebank_id));
 	}
 
-	/**
-	* API calls
-	*/
+	/////////////////////////
+	// API Calls
+	/////////////////////////
+
 	public function get_api_treebanks()
 	{
 		$this->db->select(array('treebank.id', 'treebank.title', 'users.email', 'treebank.uploaded', 'treebank.processed', 'treebank.public'));

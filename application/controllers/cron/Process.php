@@ -18,6 +18,11 @@ class Process extends CI_Controller
 		}
 	}
 
+	/**
+	 * Processes a single Treebank.
+	 * @param  integer $treebank_id The ID of the Treebank.
+	 * @return Redirects to the previous page.
+	 */
 	public function by_id($treebank_id)
 	{
 		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
@@ -27,6 +32,11 @@ class Process extends CI_Controller
 		redirect($this->agent->referrer(), 'refresh');
 	}
 
+	/**
+	 * The acutal processing of the Treebank.
+	 * @param  Treebank $treebank
+	 * @return Nothing
+	 */
 	private function process_treebank($treebank)
 	{
 		$zip = new ZipArchive;

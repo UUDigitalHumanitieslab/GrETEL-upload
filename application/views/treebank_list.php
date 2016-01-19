@@ -25,8 +25,8 @@
 			<td><?=$treebank->uploaded; ?></td>
 			<td><?=$treebank->processed; ?></td>
 			<td>
-				<?php if (!$treebank->processed) { echo anchor('cron/process/by_id/' . $treebank->id, 'Process'); } ?>
-				<?=anchor('treebank/change_access/' . $treebank->id, $treebank->public ? 'Make private' : 'Make public'); ?>
+				<?php if (!$treebank->processed) { echo anchor('cron/process/by_id/' . $treebank->id, 'Process'); echo '|'; } ?>
+				<?=anchor('treebank/change_access/' . $treebank->id, $treebank->public ? 'Make private' : 'Make public'); ?> |
 				<?=anchor('treebank/delete/' . $treebank->id, 'Delete'); ?>
 			</td>
 		</tr>

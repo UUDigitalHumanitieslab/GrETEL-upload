@@ -18,6 +18,10 @@ class Upload extends CI_Controller
 		$this->form_validation->set_error_delimiters('<label class="error">', '</label>');
 	}
 
+	/**
+	 * Shows a view to upload a new Treebank.
+	 * @return Loads the upload view.
+	 */
 	public function index()
 	{
 		$data['page_title'] = lang('upload_treebank');
@@ -28,6 +32,10 @@ class Upload extends CI_Controller
 		$this->load->view('footer');
 	}
 
+	/**
+	 * Handles submission of the upload.
+	 * @return On success: redirects to the previous page.
+	 */
 	public function submit()
 	{
 		// Validate treebank
@@ -52,7 +60,10 @@ class Upload extends CI_Controller
 	// Form handling
 	/////////////////////////
 
-	/** Validates the input */
+	/**
+	 * Validates the input.
+	 * @return boolean Whether the validation has succeeded.
+	 */
 	private function validate_treebank()
 	{
 		$this->form_validation->set_rules('title', lang('title'), 'trim|required|is_unique[treebank.title]|max_length[200]');
@@ -62,7 +73,11 @@ class Upload extends CI_Controller
 		return $this->form_validation->run();
 	}
 
-	/** Posts the treebank data */
+	/**
+	 * Posts the treebank data.
+	 * TODO: generate a slug here.
+	 * @return array
+	 */
 	private function post_treebank()
 	{
 		return array(
@@ -77,6 +92,10 @@ class Upload extends CI_Controller
 	// Callbacks
 	/////////////////////////
 
+	/**
+	 * Uploads a Treebank file to the specified upload directory.
+	 * @return boolean Whether the upload has succeeded.
+	 */
 	public function upload_treebank()
 	{
 		if (!$this->upload->do_upload('treebank'))
