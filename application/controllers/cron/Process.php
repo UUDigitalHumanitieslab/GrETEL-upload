@@ -37,6 +37,7 @@ class Process extends CI_Controller
 			$zip->extractTo($root_dir);
 			$zip->close();
 
+			// Create databases per component
 			foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
 			{
 				$title = basename($dir);
@@ -53,6 +54,24 @@ class Process extends CI_Controller
 				$this->upload_to_basex($basex_db, $dir . '/total.xml');
 			}
 
+			// Create complete database
+			$basex_db = strtoupper($treebank->title . '_ID');
+			$treebank_xml = new DOMDocument();
+			$treebank_xml->loadXML('<treebank/>');
+			foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
+			{				
+				$file_xml = new DOMDocument();
+				$file_xml->loadXML(file_get_contents($dir . '/total.xml'));
+				foreach ($file_xml->getElementsByTagName('alpino_ds') as $tree)
+				{
+					$node = $treebank_xml->importNode($tree, TRUE);
+					$treebank_xml->documentElement->appendChild($node);
+				}
+			}
+			file_put_contents($root_dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
+			$this->upload_to_basex($basex_db, $root_dir . '/total.xml');
+
+			// Mark treebank as processed
 			$this->treebank_model->update_treebank($treebank->id, array('processed' => input_datetime()));
 			echo 'Processed!';
 		}
@@ -92,7 +111,7 @@ class Process extends CI_Controller
 			'nr_words' => $nr_words);
 		$this->component_model->update_component($component_id, $c);
 
-		$treebank_xml->save($dir . '/total.xml');
+		file_put_contents($dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
 	}
 
 	private function upload_to_basex($db, $file)
