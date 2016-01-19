@@ -6,6 +6,7 @@
 	</div>
 <?php } ?>
 
+<?php if ($treebanks) { ?>
 <table class="pure-table">
 	<thead>
 		<tr>
@@ -25,9 +26,15 @@
 			<td><?=$treebank->processed; ?></td>
 			<td>
 				<?php if (!$treebank->processed) { echo anchor('cron/process/by_id/' . $treebank->id, 'Process'); } ?>
+				<?=anchor('treebank/change_access/' . $treebank->id, $treebank->public ? 'Make private' : 'Make public'); ?>
 				<?=anchor('treebank/delete/' . $treebank->id, 'Delete'); ?>
 			</td>
 		</tr>
 		<?php endforeach ?>
 	</tbody>
 </table>
+<?php } else { ?>
+<p>
+	No treebanks yet. Consider uploading one via <?=anchor('upload', 'the upload functionality'); ?>.
+</p>
+<?php } ?>

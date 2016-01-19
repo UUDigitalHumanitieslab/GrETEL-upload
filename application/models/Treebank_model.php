@@ -51,7 +51,7 @@ class Treebank_model extends CI_Model
 	*/
 	public function get_api_treebanks()
 	{
-		$this->db->select(array('treebank.id', 'treebank.title', 'users.email', 'treebank.uploaded', 'treebank.processed'));
+		$this->db->select(array('treebank.id', 'treebank.title', 'users.email', 'treebank.uploaded', 'treebank.processed', 'treebank.public'));
 		$this->db->from('treebank');
 		$this->db->join('users', 'users.id = treebank.user_id');
 		return $this->db->get()->result();

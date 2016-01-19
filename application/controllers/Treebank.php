@@ -31,9 +31,19 @@ class Treebank extends CI_Controller
 		$this->load->view('footer');
 	}
 
+	public function change_access($treebank_id)
+	{
+		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
+		$t = array('public' => !$treebank->public);
+		$this->treebank_model->update_treebank($treebank_id, $t);
+		redirect($this->agent->referrer(), 'refresh');
+	}
+
 	public function delete($treebank_id)
 	{
 		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
+
+		// Delete the treebank from BaseX
 		$components = $this->component_model->get_components_by_treebank($treebank_id);
 		foreach ($components as $component)
 		{
@@ -41,8 +51,10 @@ class Treebank extends CI_Controller
 		}
 		$this->delete_from_basex(strtoupper($treebank->title . '_ID'));
 		
+		// Delete the treebank from the database
 		$treebank = $this->treebank_model->delete_treebank($treebank_id);
 
+		// Return to the previous page
 		$this->session->set_flashdata('message', lang('treebank_deleted'));
 		redirect($this->agent->referrer(), 'refresh');
 	}
