@@ -47,16 +47,19 @@ class Process extends CI_Controller
 			$zip->extractTo($root_dir);
 			$zip->close();
 
+			// Read the metadata (TODO: probably better is a global metadata file)
+			$metadata = json_decode(file_get_contents($root_dir . '/metadata.json'));
+
 			// Create databases per component
 			foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
 			{
-				$title = basename($dir);
-				$basex_db = strtoupper($treebank->title . '_ID_' . $title);
+				$slug = basename($dir);
+				$basex_db = strtoupper($treebank->title . '_ID_' . $slug);
 
 				$component = array(
 					'treebank_id' 	=> $treebank->id,
-					'title'			=> $title,
-					'slug'			=> $title,
+					'title'			=> $metadata->$slug->description,
+					'slug'			=> $slug,
 					'basex_db'		=> $basex_db);
 				$component_id = $this->component_model->add_component($component);
 
@@ -117,8 +120,8 @@ class Process extends CI_Controller
 		}
 
 		$c = array(
-			'nr_sentences' => $nr_sentences, 
-			'nr_words' => $nr_words);
+			'nr_sentences'	=> $nr_sentences, 
+			'nr_words' 		=> $nr_words);
 		$this->component_model->update_component($component_id, $c);
 
 		file_put_contents($dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));

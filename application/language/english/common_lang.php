@@ -4,6 +4,7 @@ $lang['site_title'] 		= 'Upload treebanks for GrETEL 2.0';
 $lang['back'] 				= 'Back';
 
 $lang['upload_treebank'] 	= 'Upload your treebank';
+$lang['slug'] 				= 'Short name';
 $lang['title'] 				= 'Title';
 $lang['file'] 				= 'Treebank (.zip-file)';
 $lang['public'] 			= 'Publicly available?';

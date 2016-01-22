@@ -36,7 +36,7 @@ class Component_model extends CI_Model
 	
 	public function get_components_by_treebank($treebank_id)
 	{
-		$this->db->select(array('title', 'slug', 'basex_db', 'nr_sentences', 'nr_words'));
+		$this->db->select(array('slug', 'title', 'basex_db', 'nr_sentences', 'nr_words'));
 		$this->db->where('treebank_id', $treebank_id);
 		return $this->db->get('component')->result();
 	}
