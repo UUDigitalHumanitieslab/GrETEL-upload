@@ -47,7 +47,7 @@ class Process extends CI_Controller
 			$zip->extractTo($root_dir);
 			$zip->close();
 
-			// Read the metadata (TODO: probably better is a global metadata file)
+			// Read the metadata
 			$metadata = json_decode(file_get_contents($root_dir . '/metadata.json'));
 
 			// Create databases per component
