@@ -111,8 +111,8 @@ class Process extends CI_Controller
 			$file_xml->documentElement->setAttribute('id', basename($file));
 
 			$xp = new DOMXPath($file_xml);
-			$nr_sentences += $xp->evaluate('count(//sentence)');
-			$nr_words += $xp->evaluate('count(//node/node)');	// TODO: hoe tel je dit netjes?
+			$nr_sentences += 1;
+			$nr_words += intval($xp->query('//node[@cat="top"]')->item(0)->getAttribute('end'));
 
 			// Attach the document to the original folder
 			$node = $treebank_xml->importNode($file_xml->documentElement, TRUE);
