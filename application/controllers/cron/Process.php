@@ -108,7 +108,7 @@ class Process extends CI_Controller
 			$file_xml->loadXML(file_get_contents($file));
 
 			// Set the id attribute as the filename in the root element
-			$file_xml->documentElement->setAttribute('id', basename($file));
+			$file_xml->documentElement->setAttribute('id', basename($dir) . '-' . basename($file));
 
 			$xp = new DOMXPath($file_xml);
 			$nr_sentences += 1;
