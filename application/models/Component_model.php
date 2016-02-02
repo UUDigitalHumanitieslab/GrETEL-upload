@@ -8,26 +8,26 @@ class Component_model extends CI_Model
 
 	public function get_all_components()
 	{
-		return $this->db->get('component')->result();
+		return $this->db->get('components')->result();
 	}
 
 	public function add_component($component)
 	{
-		$this->db->insert('component', $component);
+		$this->db->insert('components', $component);
 		return $this->db->insert_id();
 	}
 
 	public function update_component($component_id, $component)
 	{
 		$this->db->where('id', $component_id);
-		$this->db->update('component', $component);
+		$this->db->update('components', $component);
 	}
 
 	public function get_sum($treebank_id, $column) 
 	{
 		$this->db->select_sum($column, 'total');
 		$this->db->where('treebank_id', $treebank_id);
-		return $this->db->get('component')->row()->total;
+		return $this->db->get('components')->row()->total;
 	}
 	
 	/////////////////////////
@@ -38,6 +38,6 @@ class Component_model extends CI_Model
 	{
 		$this->db->select(array('slug', 'title', 'basex_db', 'nr_sentences', 'nr_words'));
 		$this->db->where('treebank_id', $treebank_id);
-		return $this->db->get('component')->result();
+		return $this->db->get('components')->result();
 	}
 }
