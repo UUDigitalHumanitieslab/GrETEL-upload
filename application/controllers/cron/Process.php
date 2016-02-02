@@ -3,6 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Process extends CI_Controller 
 {
+	/**
+	 * Processes all Treebanks. Only available as a command-line script.
+	 * @return void
+	 */
 	public function index()
 	{
 		if (!is_cli())
@@ -35,7 +39,7 @@ class Process extends CI_Controller
 	/**
 	 * The acutal processing of the Treebank.
 	 * @param  Treebank $treebank
-	 * @return Nothing
+	 * @return void
 	 */
 	private function process_treebank($treebank)
 	{
@@ -94,6 +98,12 @@ class Process extends CI_Controller
 		}
 	}
 
+	/**
+	 * Merges all .xml-files in a directory to a single DomDocument and counts the number of words/sentences.
+	 * @param  string $dir           The directory which contains the .xml-files
+	 * @param  integer $component_id The ID of the current Component
+	 * @return void
+	 */
 	private function merge_xml_files($dir, $component_id)
 	{
 		$nr_sentences = 0;
@@ -127,6 +137,12 @@ class Process extends CI_Controller
 		file_put_contents($dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
 	}
 
+	/**
+	 * Uploads a .xml-file to a BaseX database
+	 * @param  string $db   The BaseX database
+	 * @param  string $file The .xml-file
+	 * @return void
+	 */
 	private function upload_to_basex($db, $file)
 	{
 		try

@@ -3,8 +3,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Upload extends CI_Controller 
 {
+	/**
+	 * Temporary variable for the uploaded Treebank.
+	 * @var File
+	 */
 	private $uploaded_treebank;
 
+	/**
+	 * - Configures the Upload library
+	 * - Sets the correct error delimiters
+	 */
 	public function __construct()
 	{
 		parent::__construct();
