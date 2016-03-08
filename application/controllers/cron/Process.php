@@ -16,7 +16,7 @@ class Process extends CI_Controller
 	{
 		if (!is_cli())
 		{
-			echo 'This script can only be accessed via the command line' . PHP_EOL;
+			echo 'This script can only be accessed via the command line.' . PHP_EOL;
 			return;
 		}
 
