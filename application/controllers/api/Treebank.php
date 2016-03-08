@@ -5,6 +5,11 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 class Treebank extends REST_Controller 
 {
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
 	/**
 	 * Returns all public Treebanks (=public and processed)
 	 * @return JSON response.

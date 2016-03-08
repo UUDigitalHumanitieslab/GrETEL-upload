@@ -74,7 +74,7 @@ class Upload extends CI_Controller
 	 */
 	private function validate_treebank()
 	{
-		$this->form_validation->set_rules('title', lang('title'), 'trim|required|is_unique[treebank.title]|max_length[200]');
+		$this->form_validation->set_rules('title', lang('title'), 'trim|required|is_unique[treebanks.title]|max_length[200]');
 		$this->form_validation->set_rules('treebank', lang('treebank'), 'callback_upload_treebank');
 		$this->form_validation->set_rules('public', lang('public'), '');
 

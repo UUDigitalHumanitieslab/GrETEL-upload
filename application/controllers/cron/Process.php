@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Process extends CI_Controller 
 {
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
 	/**
 	 * Processes all Treebanks. Only available as a command-line script.
 	 * @return void
