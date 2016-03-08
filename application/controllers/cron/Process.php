@@ -57,21 +57,27 @@ class Process extends CI_Controller
 			$zip->close();
 
 			// Read the metadata
-			$metadata = json_decode(file_get_contents($root_dir . '/metadata.json'));
+			$metadata = NULL;
+			if (file_exists($root_dir . '/metadata.json'))
+			{
+				$metadata = json_decode(file_get_contents($root_dir . '/metadata.json'));
+			}
 
 			// Create databases per component
 			foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
 			{
 				$slug = basename($dir);
 				$basex_db = strtoupper($treebank->title . '_ID_' . $slug);
+				$title = $metadata ? $metadata->$slug->description : $slug;
 
 				$component = array(
 					'treebank_id' 	=> $treebank->id,
-					'title'			=> $metadata->$slug->description,
+					'title'			=> $title,
 					'slug'			=> $slug,
 					'basex_db'		=> $basex_db);
 				$component_id = $this->component_model->add_component($component);
 
+				$this->alpino_parse($dir, $component_id);
 				$this->merge_xml_files($dir, $component_id);
 				$this->upload_to_basex($basex_db, $dir . '/total.xml');
 			}
@@ -104,8 +110,59 @@ class Process extends CI_Controller
 	}
 
 	/**
-	 * Merges all .xml-files in a directory to a single DomDocument and counts the number of words/sentences.
-	 * @param  string $dir           The directory which contains the .xml-files
+	 * Parses all files in the input to Alpino-DS XML.
+	 * @param  string $dir          The directory which contains the .xml-files
+	 * @param  integer $component_id The ID of the current Component
+	 * @return void
+	 */
+	private function alpino_parse($dir, $component_id) 
+	{
+		$id = 0;
+		foreach(glob($dir . '/*.txt') as $file)
+		{
+			$handle = fopen($file, 'r');
+			if ($handle) 
+			{
+				while (($line = fgets($handle)) !== false) 
+				{
+					if ($line === '') continue; // Don't process empty lines
+
+					$id++;
+
+					$cmd = ALPINO_HOME . '/bin/Alpino -notk -veryfast user_max=180000 -end_hook=xml -parse -flag treebank ' . $dir;
+					$descriptorspec = array(
+						0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
+						1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
+						2 => array('file', TMP_DIR . '/alpino.log', 'a') // stderr is a file to write to
+					);
+					$cwd = NULL;
+					$env = array('ALPINO_HOME' => ALPINO_HOME);
+					$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
+
+					if (is_resource($process))
+					{
+						fwrite($pipes[0], $id . '|' . $line);
+						fclose($pipes[0]);
+
+						echo stream_get_contents($pipes[1]);
+						fclose($pipes[1]);
+
+						proc_close($process);
+					}
+				}
+
+				fclose($handle);
+			} 
+			else 
+			{
+				echo 'Error opening file.';
+			} 
+		}
+	}
+
+	/**
+	 * Merges all Alpino-DS .xml-files in a directory to a single DomDocument and counts the number of words/sentences.
+	 * @param  string $dir           The directory which contains the Alpino-DS .xml-files
 	 * @param  integer $component_id The ID of the current Component
 	 * @return void
 	 */
