@@ -76,7 +76,11 @@ class Upload extends CI_Controller
 	{
 		$this->form_validation->set_rules('title', lang('title'), 'trim|required|is_unique[treebanks.title]|max_length[200]');
 		$this->form_validation->set_rules('treebank', lang('treebank'), 'callback_upload_treebank');
-		$this->form_validation->set_rules('public', lang('public'), '');
+		$this->form_validation->set_rules('public', lang('public'), 'trim');
+		$this->form_validation->set_rules('is_txt', lang('is_txt'), 'trim');
+		$this->form_validation->set_rules('is_sent_tokenised', lang('is_sent_tokenised'), 'trim');
+		$this->form_validation->set_rules('is_word_tokenised', lang('is_word_tokenised'), 'trim');
+		$this->form_validation->set_rules('has_labels', lang('has_labels'), 'trim');
 
 		return $this->form_validation->run();
 	}
@@ -89,10 +93,14 @@ class Upload extends CI_Controller
 	private function post_treebank()
 	{
 		return array(
-			'user_id'	=> 1,	// TODO: set to current user
-			'title'		=> $this->input->post('title'),
-			'filename'	=> $this->uploaded_treebank,
-			'public'	=> is_array($this->input->post('public')),
+			'user_id'			=> 1,	// TODO: set to current user
+			'title'				=> $this->input->post('title'),
+			'filename'			=> $this->uploaded_treebank,
+			'public'			=> $this->input->post('public'),
+			'is_txt'			=> $this->input->post('is_txt'),
+			'is_sent_tokenised'	=> $this->input->post('is_sent_tokenised'),
+			'is_word_tokenised'	=> $this->input->post('is_word_tokenised'),
+			'has_labels'		=> $this->input->post('has_labels'),
 		);
 	}
 

@@ -19,7 +19,13 @@
 <input type="file" name="treebank" size="20" class="pure-input-rounded" />
 <?=form_error('treebank'); ?>
 </div>
-<?=form_single_checkbox_and_label('public', TRUE, TRUE); ?>
+<?=form_single_checkbox_and_label('public', '1', '1'); ?>
+<?=form_fieldset_close(); ?>
+<?=form_fieldset(lang('parse_flags')); ?>
+<?=form_single_checkbox_and_label('is_txt', '1'); ?>
+<?=form_single_checkbox_and_label('is_sent_tokenised', '1'); ?>
+<?=form_single_checkbox_and_label('is_word_tokenised', '1'); ?>
+<?=form_single_checkbox_and_label('has_labels', '1'); ?>
 
 <?=form_controls(); ?>
 <?=form_fieldset_close(); ?>

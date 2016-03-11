@@ -42,7 +42,7 @@ class Process extends CI_Controller
 	}
 
 	/**
-	 * The acutal processing of the Treebank.
+	 * The actual processing of the Treebank.
 	 * @param  Treebank $treebank
 	 * @return void
 	 */
@@ -66,6 +66,7 @@ class Process extends CI_Controller
 			// Create databases per component
 			foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
 			{
+				// Create a Component for each directory in the .zip-file.
 				$slug = basename($dir);
 				$basex_db = strtoupper($treebank->title . '_ID_' . $slug);
 				$title = $metadata ? $metadata->$slug->description : $slug;
@@ -77,16 +78,31 @@ class Process extends CI_Controller
 					'basex_db'		=> $basex_db);
 				$component_id = $this->component_model->add_component($component);
 
-				$this->alpino_parse($dir, $component_id);
+				// If the Treebank consists of plain text items, tokenize and parse it.
+				if ($treebank->is_txt)
+				{
+					if (!$treebank->is_sent_tokenised) 
+					{
+						echo 'TODO!';
+					}
+					if (!$treebank->is_word_tokenised) 
+					{
+						echo 'TODO!';
+					}
+
+					$this->alpino_parse($dir, $component_id, $treebank->has_labels);
+				}
+
+				// Merge the (created) XML files, and upload them to BaseX
 				$this->merge_xml_files($dir, $component_id);
 				$this->upload_to_basex($basex_db, $dir . '/total.xml');
 			}
 
-			// Create complete database
+			// Create the complete treebank, consisting of the individual directories.
 			$basex_db = strtoupper($treebank->title . '_ID');
 			$treebank_xml = new DOMDocument();
 			$treebank_xml->loadXML('<treebank/>');
-			foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
+			foreach (glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
 			{				
 				$file_xml = new DOMDocument();
 				$file_xml->loadXML(file_get_contents($dir . '/total.xml'));
@@ -113,12 +129,13 @@ class Process extends CI_Controller
 	 * Parses all files in the input to Alpino-DS XML.
 	 * @param  string $dir          The directory which contains the .xml-files
 	 * @param  integer $component_id The ID of the current Component
+	 * @param  boolean $has_labels	Whether the sentence has a label or not.
 	 * @return void
 	 */
-	private function alpino_parse($dir, $component_id) 
+	private function alpino_parse($dir, $component_id, $has_labels) 
 	{
 		$id = 0;
-		foreach(glob($dir . '/*.txt') as $file)
+		foreach (glob($dir . '/*.txt') as $file)
 		{
 			$handle = fopen($file, 'r');
 			if ($handle) 
@@ -141,7 +158,8 @@ class Process extends CI_Controller
 
 					if (is_resource($process))
 					{
-						fwrite($pipes[0], $id . '|' . $line);
+						$in = $has_labels ? $line : ($id . '|' . $line);
+						fwrite($pipes[0], $in);
 						fclose($pipes[0]);
 
 						echo stream_get_contents($pipes[1]);
@@ -174,7 +192,7 @@ class Process extends CI_Controller
 		$treebank_xml = new DOMDocument();
 		$treebank_xml->loadXML('<treebank/>');
 
-		foreach(glob($dir . '/*.xml') as $file)
+		foreach (glob($dir . '/*.xml') as $file)
 		{
 			$file_xml = new DOMDocument();
 			$file_xml->loadXML(file_get_contents($file));

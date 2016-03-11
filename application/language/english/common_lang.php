@@ -22,3 +22,9 @@ $lang['upload_success']		= 'Successfully uploaded your treebank, click "Process"
 $lang['treebank_processed']	= 'Successfully processed your treebank';
 $lang['treebank_deleted']	= 'Successfully deleted your treebank';
 $lang['actions']			= 'Actions';
+
+$lang['parse_flags']		= 'Parse flags';
+$lang['is_txt']				= 'This is a collection of .txt files.';
+$lang['is_sent_tokenised']	= 'The files are sentence-tokenised.';
+$lang['is_word_tokenised']	= 'The files are word-tokenised.';
+$lang['has_labels']			= 'Each sentence has a label.';
