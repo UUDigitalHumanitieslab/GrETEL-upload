@@ -96,11 +96,11 @@ class Upload extends CI_Controller
 			'user_id'			=> 1,	// TODO: set to current user
 			'title'				=> $this->input->post('title'),
 			'filename'			=> $this->uploaded_treebank,
-			'public'			=> $this->input->post('public'),
-			'is_txt'			=> $this->input->post('is_txt'),
-			'is_sent_tokenised'	=> $this->input->post('is_sent_tokenised'),
-			'is_word_tokenised'	=> $this->input->post('is_word_tokenised'),
-			'has_labels'		=> $this->input->post('has_labels'),
+			'public'			=> $this->input->post('public') === '1',
+			'is_txt'			=> $this->input->post('is_txt') === '1',
+			'is_sent_tokenised'	=> $this->input->post('is_sent_tokenised') === '1',
+			'is_word_tokenised'	=> $this->input->post('is_word_tokenised') === '1',
+			'has_labels'		=> $this->input->post('has_labels') === '1',
 		);
 	}
 

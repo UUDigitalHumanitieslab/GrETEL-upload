@@ -38,7 +38,7 @@ class Process extends CI_Controller
 		$this->process_treebank($treebank);
 
 		$this->session->set_flashdata('message', lang('treebank_processed'));
-		redirect($this->agent->referrer(), 'refresh');
+		//redirect($this->agent->referrer(), 'refresh');
 	}
 
 	/**
@@ -83,11 +83,11 @@ class Process extends CI_Controller
 				{
 					if (!$treebank->is_sent_tokenised) 
 					{
-						echo 'TODO!';
+						echo 'TODO!'; // ./paragraph_per_line /tmp/test.txt
 					}
 					if (!$treebank->is_word_tokenised) 
 					{
-						echo 'TODO!';
+						$this->tokenize($dir);
 					}
 
 					$this->alpino_parse($dir, $component_id, $treebank->has_labels);
@@ -122,6 +122,30 @@ class Process extends CI_Controller
 		else
 		{
 			echo 'File not found.';
+		}
+	}
+
+	private function tokenize($dir)
+	{
+		foreach (glob($dir . '/*.txt') as $file)
+		{
+			$cmd = 'cat ' . $file . ' | sh ' . ALPINO_HOME . '/Tokenization/tokenize.sh';
+			$descriptorspec = array(
+				0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
+				1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
+			);
+			$cwd = NULL;
+			$env = array('ALPINO_HOME' => ALPINO_HOME);
+			$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
+
+			if (is_resource($process))
+			{
+				// TODO: write this to separate file?
+				file_put_contents($file, stream_get_contents($pipes[1]));
+				fclose($pipes[1]);
+
+				proc_close($process);
+			}
 		}
 	}
 
@@ -174,7 +198,7 @@ class Process extends CI_Controller
 			else 
 			{
 				echo 'Error opening file.';
-			} 
+			}
 		}
 	}
 
