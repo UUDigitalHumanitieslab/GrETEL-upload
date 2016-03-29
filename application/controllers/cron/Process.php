@@ -38,7 +38,7 @@ class Process extends CI_Controller
 		$this->process_treebank($treebank);
 
 		$this->session->set_flashdata('message', lang('treebank_processed'));
-		//redirect($this->agent->referrer(), 'refresh');
+		redirect($this->agent->referrer(), 'refresh');
 	}
 
 	/**
