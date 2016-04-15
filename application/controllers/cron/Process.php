@@ -95,7 +95,7 @@ class Process extends CI_Controller
 
 				// Merge the (created) XML files, and upload them to BaseX
 				$this->merge_xml_files($dir, $component_id);
-				$this->upload_to_basex($basex_db, $dir . '/total.xml');
+				$this->basex->upload($basex_db, $dir . '/total.xml');
 			}
 
 			// Create the complete treebank, consisting of the individual directories.
@@ -113,7 +113,7 @@ class Process extends CI_Controller
 				}
 			}
 			file_put_contents($root_dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
-			$this->upload_to_basex($basex_db, $root_dir . '/total.xml');
+			$this->basex->upload($basex_db, $root_dir . '/total.xml');
 
 			// Mark treebank as processed
 			$this->treebank_model->update_treebank($treebank->id, array('processed' => input_datetime()));
@@ -239,32 +239,5 @@ class Process extends CI_Controller
 		$this->component_model->update_component($component_id, $c);
 
 		file_put_contents($dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
-	}
-
-	/**
-	 * Uploads a .xml-file to a BaseX database
-	 * @param  string $db   The BaseX database
-	 * @param  string $file The .xml-file
-	 * @return void
-	 */
-	private function upload_to_basex($db, $file)
-	{
-		try
-		{
-			// Create session
-			$session = new BaseXSession(BASEX_HOST, BASEX_PORT, BASEX_USER, BASEX_PWD);
-
-			// Create new database
-			$session->create($db, file_get_contents($file));
-			echo $session->info();
-
-			// Close session
-			$session->close();
-		} 
-		catch (Exception $e) 
-		{
-			// Print exception
-			echo $e->getMessage();
-		}
 	}
 }

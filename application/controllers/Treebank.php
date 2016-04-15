@@ -71,9 +71,9 @@ class Treebank extends CI_Controller
 		$components = $this->component_model->get_components_by_treebank($treebank_id);
 		foreach ($components as $component)
 		{
-			$this->delete_from_basex($component->basex_db);
+			$this->basex->delete($component->basex_db);
 		}
-		$this->delete_from_basex(strtoupper($treebank->title . '_ID'));
+		$this->basex->delete(strtoupper($treebank->title . '_ID'));
 		
 		// Delete the treebank from the database
 		$treebank = $this->treebank_model->delete_treebank($treebank_id);
@@ -97,31 +97,5 @@ class Treebank extends CI_Controller
 		$this->load->view('header', $data);
 		$this->load->view('treebank_list', $data);
 		$this->load->view('footer');
-	}
-
-	/**
-	 * Deletes a database from BaseX.
-	 * @param  string $db The database.
-	 * @return Nothing.
-	 */
-	private function delete_from_basex($db)
-	{
-		try
-		{
-			// Create session
-			$session = new BaseXSession(BASEX_HOST, BASEX_PORT, BASEX_USER, BASEX_PWD);
-
-			// Delete database
-			$session->send(sprintf("DROP DB %s", $db));
-			echo $session->info();
-
-			// Close session
-			$session->close();
-		} 
-		catch (Exception $e) 
-		{
-			// Print exception
-			echo $e->getMessage();
-		}
 	}
 }
