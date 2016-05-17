@@ -83,11 +83,11 @@ class Process extends CI_Controller
 				{
 					if (!$treebank->is_sent_tokenised) 
 					{
-						echo 'TODO!'; // ./paragraph_per_line /tmp/test.txt
+						$this->paragraph_tokenize($dir);
 					}
 					if (!$treebank->is_word_tokenised) 
 					{
-						$this->tokenize($dir);
+						$this->word_tokenize($dir);
 					}
 
 					$this->alpino_parse($dir, $component_id, $treebank->has_labels);
@@ -125,7 +125,31 @@ class Process extends CI_Controller
 		}
 	}
 
-	private function tokenize($dir)
+	private function paragraph_tokenize($dir)
+	{
+		foreach (glob($dir . '/*.txt') as $file)
+		{
+			$cmd = '/usr/bin/perl -w ' . ALPINO_HOME . '/Tokenization/paragraph_per_line ' . $file;
+			$descriptorspec = array(
+				0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
+				1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
+			);
+			$cwd = NULL;
+			$env = array('ALPINO_HOME' => ALPINO_HOME);
+			$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
+
+			if (is_resource($process))
+			{
+				// TODO: write this to separate file?
+				file_put_contents($file, stream_get_contents($pipes[1]));
+				fclose($pipes[1]);
+
+				proc_close($process);
+			}
+		}
+	}
+
+	private function word_tokenize($dir)
 	{
 		foreach (glob($dir . '/*.txt') as $file)
 		{
