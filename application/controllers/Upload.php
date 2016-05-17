@@ -60,7 +60,7 @@ class Upload extends CI_Controller
 
 			// Show my treebanks
 			$this->session->set_flashdata('message', lang('upload_success'));
-			redirect('/treebank/user/1', 'refresh');
+			redirect('/treebank/user/' . $this->session->userdata('user_id'), 'refresh');
 		}
 	}
 	

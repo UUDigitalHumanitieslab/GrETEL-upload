@@ -42,3 +42,5 @@ $lang['process']			= 'Process';
 $lang['delete']				= 'Delete';
 $lang['make_private']		= 'Make private';
 $lang['make_public']		= 'Make public';
+
+$lang['not_authorized']		= 'You are not authorized to view this page.';
