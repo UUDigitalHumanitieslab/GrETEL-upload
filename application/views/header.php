@@ -15,11 +15,4 @@
 	<div id="wrapper" class="pure-u-3-4">
 		<img id="header-img" src="images/uu-header.png">
 		<?=heading(lang('site_title'), 1); ?>
-		<div class="pure-menu pure-menu-horizontal">
-			<ul class="pure-menu-list">
-				<li class="pure-menu-item"><?=anchor('upload', lang('upload_treebank'), 'class="pure-menu-link"'); ?></li>
-				<li class="pure-menu-item"><?=anchor('treebank', lang('public_treebanks'), 'class="pure-menu-link"'); ?></li>
-				<li class="pure-menu-item"><?=anchor('treebank/user/1', lang('my_treebanks'), 'class="pure-menu-link"'); ?></li>
-				<li class="pure-menu-item"><?=anchor(GRETEL_URL, 'GrETEL', 'class="pure-menu-link"'); ?></li>
-			</ul>
-		</div>
+		<?=$this->load->view('menu', NULL, TRUE); ?>

@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('database', 'form_validation', 'session', 'user_agent', 'BaseX');
+$autoload['libraries'] = array('database', 'form_validation', 'session', 'user_agent', 'BaseX', 'ldap');
 
 /*
 | -------------------------------------------------------------------
@@ -126,4 +126,4 @@ $autoload['language'] = array('common', 'form');
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('component_model', 'treebank_model');
+$autoload['model'] = array('component_model', 'treebank_model', 'user_model');

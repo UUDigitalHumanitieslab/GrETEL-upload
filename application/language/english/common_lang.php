@@ -28,3 +28,12 @@ $lang['is_txt']				= 'This is a collection of .txt files.';
 $lang['is_sent_tokenised']	= 'The files are sentence-tokenised.';
 $lang['is_word_tokenised']	= 'The files are word-tokenised.';
 $lang['has_labels']			= 'Each sentence has a label.';
+
+$lang['login']				= 'Log in';
+$lang['logout']				= 'Log out';
+$lang['username']			= 'Username';
+$lang['email']				= 'Email';
+$lang['password']			= 'Password';
+$lang['invalid_credentials']= 'Username or password incorrect.';
+
+$lang['GrETEL']				= 'GrETEL';
