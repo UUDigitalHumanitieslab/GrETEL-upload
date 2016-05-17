@@ -37,3 +37,8 @@ $lang['password']			= 'Password';
 $lang['invalid_credentials']= 'Username or password incorrect.';
 
 $lang['GrETEL']				= 'GrETEL';
+
+$lang['process']			= 'Process';
+$lang['delete']				= 'Delete';
+$lang['make_private']		= 'Make private';
+$lang['make_public']		= 'Make public';

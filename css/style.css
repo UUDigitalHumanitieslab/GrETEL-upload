@@ -30,6 +30,10 @@ h1 {
 	color: red;
 }
 
+td.actions a {
+	margin-right: .5em;
+}
+
 /* Bootstrap-like contextual boxes */
 .success {
 	text-align: center;
