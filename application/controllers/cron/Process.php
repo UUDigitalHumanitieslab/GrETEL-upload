@@ -90,7 +90,7 @@ class Process extends CI_Controller
 						$this->word_tokenize($dir);
 					}
 
-					$this->alpino_parse($dir, $component_id, $treebank->has_labels);
+					$this->parse($dir, $treebank->has_labels);
 				}
 
 				// Merge the (created) XML files, and upload them to BaseX
@@ -129,23 +129,7 @@ class Process extends CI_Controller
 	{
 		foreach (glob($dir . '/*.txt') as $file)
 		{
-			$cmd = '/usr/bin/perl -w ' . ALPINO_HOME . '/Tokenization/paragraph_per_line ' . $file;
-			$descriptorspec = array(
-				0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
-				1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
-			);
-			$cwd = NULL;
-			$env = array('ALPINO_HOME' => ALPINO_HOME);
-			$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
-
-			if (is_resource($process))
-			{
-				// TODO: write this to separate file?
-				file_put_contents($file, stream_get_contents($pipes[1]));
-				fclose($pipes[1]);
-
-				proc_close($process);
-			}
+			$this->alpino->paragraph_tokenize($file);
 		}
 	}
 
@@ -153,76 +137,22 @@ class Process extends CI_Controller
 	{
 		foreach (glob($dir . '/*.txt') as $file)
 		{
-			$cmd = 'cat ' . $file . ' | sh ' . ALPINO_HOME . '/Tokenization/tokenize.sh';
-			$descriptorspec = array(
-				0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
-				1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
-			);
-			$cwd = NULL;
-			$env = array('ALPINO_HOME' => ALPINO_HOME);
-			$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
-
-			if (is_resource($process))
-			{
-				// TODO: write this to separate file?
-				file_put_contents($file, stream_get_contents($pipes[1]));
-				fclose($pipes[1]);
-
-				proc_close($process);
-			}
+			$this->alpino->word_tokenize($file);
 		}
 	}
 
 	/**
 	 * Parses all files in the input to Alpino-DS XML.
 	 * @param  string $dir          The directory which contains the .xml-files
-	 * @param  integer $component_id The ID of the current Component
 	 * @param  boolean $has_labels	Whether the sentence has a label or not.
 	 * @return void
 	 */
-	private function alpino_parse($dir, $component_id, $has_labels) 
+	private function alpino_parse($dir, $has_labels) 
 	{
 		$id = 0;
 		foreach (glob($dir . '/*.txt') as $file)
 		{
-			$handle = fopen($file, 'r');
-			if ($handle) 
-			{
-				while (($line = fgets($handle)) !== false) 
-				{
-					if ($line === '') continue; // Don't process empty lines
-
-					$id++;
-
-					$cmd = ALPINO_HOME . '/bin/Alpino -notk -veryfast user_max=180000 -end_hook=xml -parse -flag treebank ' . $dir;
-					$descriptorspec = array(
-						0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
-						1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
-						2 => array('file', TMP_DIR . '/alpino.log', 'a') // stderr is a file to write to
-					);
-					$cwd = NULL;
-					$env = array('ALPINO_HOME' => ALPINO_HOME);
-					$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
-
-					if (is_resource($process))
-					{
-						$in = $has_labels ? $line : ($id . '|' . $line);
-						fwrite($pipes[0], $in);
-						fclose($pipes[0]);
-
-						echo stream_get_contents($pipes[1]);
-						fclose($pipes[1]);
-
-						proc_close($process);
-					}
-				}
-
-				fclose($handle);
-			} 
-			else 
-			{
-				echo 'Error opening file.';
-			}
+			$id = $this->alpino->parse($id, $file, $has_labels);
 		}
 	}
 
