@@ -14,7 +14,7 @@
 </p>
 <ul>
 	<li>sentences parsed by Alpino (<em>*.xml</em>-files)</li>
-	<li>plain-text files (with extension <em>*.txt</em>), with a sentence on each line.</li>
+	<li>plain-text files (with extension <em>*.txt</em>)</li>
 </ul>
 <p>
 	Choose an appropriate title for your treebank and upload your <em>.zip</em>-file below.
@@ -40,9 +40,3 @@
 <?=form_controls(); ?>
 <?=form_fieldset_close(); ?>
 <?=form_close(); ?>
-
-<script>
-$(function() {
-	$('input[name="is_sent_tokenised"').prop('checked', true).prop('disabled', true);
-});
-</script>
