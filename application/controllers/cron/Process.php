@@ -23,7 +23,17 @@ class Process extends CI_Controller
 		$treebanks = $this->treebank_model->get_to_be_processed_treebanks();
 		foreach ($treebanks as $treebank)
 		{
-			process_treebank($treebank);
+			$this->process_treebank($treebank);
+
+			// Send e-mail to User when Treebank is processed
+			$user = $this->user_model->get_user_by_id($treebank->user_id);
+
+			$this->email->from('M.H.vanderKlis@uu.nl', lang('site_title'));
+			$this->email->to($user->email);
+			$this->email->subject('Processing of your treebank finished');
+			$this->email->message('...');
+
+			$this->email->send();
 		}
 	}
 
@@ -90,7 +100,7 @@ class Process extends CI_Controller
 						$this->word_tokenize($dir);
 					}
 
-					$this->parse($dir, $treebank->has_labels);
+					$this->alpino_parse($dir, $treebank->has_labels);
 				}
 
 				// Merge the (created) XML files, and upload them to BaseX
@@ -129,7 +139,7 @@ class Process extends CI_Controller
 	{
 		foreach (glob($dir . '/*.txt') as $file)
 		{
-			$this->alpino->paragraph_tokenize($file);
+			$this->alpino->paragraph_per_line($file);
 		}
 	}
 
@@ -152,7 +162,7 @@ class Process extends CI_Controller
 		$id = 0;
 		foreach (glob($dir . '/*.txt') as $file)
 		{
-			$id = $this->alpino->parse($id, $file, $has_labels);
+			$id = $this->alpino->parse($id, $dir, $file, $has_labels);
 		}
 	}
 

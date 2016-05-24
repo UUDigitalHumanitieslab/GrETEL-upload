@@ -10,7 +10,7 @@ class Alpino
         $this->CI =& get_instance();
     }
 
-    public function parse($id, $file, $has_labels)
+    public function parse($id, $dir, $file, $has_labels)
     {
 		$handle = fopen($file, 'r');
 		if ($handle) 
@@ -25,7 +25,7 @@ class Alpino
 				$descriptorspec = array(
 					0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
 					1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
-					2 => array('file', TMP_DIR . '/alpino.log', 'a') // stderr is a file to write to
+					//2 => array('file', TMP_DIR . '/alpino.log', 'a') // stderr is a file to write to
 				);
 				$cwd = NULL;
 				$env = array('ALPINO_HOME' => ALPINO_HOME);

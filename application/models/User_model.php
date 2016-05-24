@@ -6,6 +6,12 @@ class User_model extends CI_Model
 		$this->load->database();
 	}
 
+	public function get_user_by_id($user_id)
+	{
+		$this->db->where('id', $user_id);
+		return $this->db->get('users')->row();
+	}
+
 	public function get_user_by_username($username)
 	{
 		$this->db->where('username', $username);
