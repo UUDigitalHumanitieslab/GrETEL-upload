@@ -93,7 +93,7 @@ class Upload extends CI_Controller
 	private function post_treebank()
 	{
 		return array(
-			'user_id'			=> 1,	// TODO: set to current user
+			'user_id'			=> $this->session->userdata('user_id'),
 			'title'				=> $this->input->post('title'),
 			'filename'			=> $this->uploaded_treebank,
 			'public'			=> $this->input->post('public') === '1',
