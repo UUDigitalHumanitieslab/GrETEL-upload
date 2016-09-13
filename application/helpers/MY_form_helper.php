@@ -183,3 +183,15 @@ if (!function_exists('form_cancel'))
 		return anchor($link, $label, 'class="pure-button pure-button-primary" style="background: rgb(202, 60, 60);"');
 	}
 }
+
+if (!function_exists('form_help'))
+{
+	function form_help($label)
+	{
+		$result = '<span class="help">';
+		$result .= '<img src="images/information.png">';
+		$result .= '<span class="tooltiptext">' . lang($label) . '</span>';
+		$result .= '</span>';
+		return $result;
+	}
+}

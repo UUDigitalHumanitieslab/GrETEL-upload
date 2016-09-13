@@ -14,11 +14,11 @@
 </p>
 <ul>
 	<li>sentences parsed by Alpino (<em>*.xml</em>-files)</li>
-	<li>plain-text files (with extension <em>*.txt</em>)</li>
+	<li><abbr title="<?=lang('help_plain_text'); ?>">plain-text files</abbr> (with extension <em>*.txt</em>)</li>
 </ul>
 <p>
 	Choose an appropriate title for your treebank and upload your <em>.zip</em>-file below.
-	Then, please set the correct parse attributes.
+	Then, please set the correct parse attributes for your files (they will not be detected automatically).
 </p>
 
 <?=form_fieldset($page_title); ?>
@@ -29,14 +29,46 @@
 <?=form_error('treebank'); ?>
 </div>
 <?=form_single_checkbox_and_label('public', '1', '1'); ?>
+<?=form_help('help_publicly_available'); ?>
 <?=form_fieldset_close(); ?>
 
 <?=form_fieldset(lang('parse_flags')); ?>
 <?=form_single_checkbox_and_label('is_txt', '1'); ?>
+<?=form_help('help_is_txt'); ?>
 <?=form_single_checkbox_and_label('is_sent_tokenised', '1'); ?>
+<?=form_help('help_is_sent_tokenised'); ?>
 <?=form_single_checkbox_and_label('is_word_tokenised', '1'); ?>
+<?=form_help('help_is_word_tokenised'); ?>
 <?=form_single_checkbox_and_label('has_labels', '1'); ?>
+<?=form_help('help_has_labels'); ?>
 
 <?=form_controls(); ?>
 <?=form_fieldset_close(); ?>
 <?=form_close(); ?>
+
+<script>
+$(document).ready(function() {
+	$('.pure-control-group').each(function() {
+		$(this).append($(this).next('.help'));
+	});
+
+	$('abbr[title]').qtip({
+		hide: {
+			fixed: true,
+			delay: 300,
+		}
+	});
+
+    $('.help img').each(function () {
+        $(this).qtip({
+            content: $(this).next('.tooltiptext'),
+            hide: {
+                fixed: true,
+                delay: 500,
+            }
+        });
+    });
+
+    $('.tooltiptext').hide();
+});
+</script>

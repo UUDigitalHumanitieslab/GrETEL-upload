@@ -1,6 +1,6 @@
 <?=heading($page_title, 2); ?>
 
-<p>
+<p class="info">
 	<?=lang('login_help'); ?>
 </p>
 
@@ -12,3 +12,7 @@
 
 <?=form_close(); ?>
 <?=validation_errors(); ?>
+
+<p>
+	<?=lang('login_warning'); ?>
+</p>

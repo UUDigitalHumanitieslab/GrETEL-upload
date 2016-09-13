@@ -5,9 +5,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?=lang('site_title'); ?></title>
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<?=link_tag('http://yui.yahooapis.com/pure/0.6.0/pure-min.css'); ?>
-<?=link_tag('http://fonts.googleapis.com/css?family=Oswald:400,300,700|Carrois+Gothic'); ?>
+<script src="//code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.js"></script>
+<?=link_tag('//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.css'); ?>
+<?=link_tag('//yui.yahooapis.com/pure/0.6.0/pure-min.css'); ?>
+<?=link_tag('//fonts.googleapis.com/css?family=Oswald:400,300,700|Carrois+Gothic'); ?>
 <?=link_tag('css/style.css'); ?>
 
 <div class="pure-g">

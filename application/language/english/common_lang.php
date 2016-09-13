@@ -44,3 +44,6 @@ $lang['make_private']		= 'Make private';
 $lang['make_public']		= 'Make public';
 
 $lang['not_authorized']		= 'You are not authorized to view this page.';
+
+$lang['login_warning']		= 'Currently, logging in is limited to users with a Solis-ID and password of the Faculty of Humanities of Utrecht University. We are working on extending login options.';
+$lang['login_help']			= 'Please log in with your Solis-ID and password below.';

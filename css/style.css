@@ -109,3 +109,8 @@ td.actions a {
 .pure-form-aligned input[type="text"] { 
 	width: 15em;
 }
+
+/* Larget qtip font */
+.qtip-content {
+	font-size: 1.1em;
+}
