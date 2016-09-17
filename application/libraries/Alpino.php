@@ -12,12 +12,13 @@ class Alpino
 
 	public function parse($id, $dir, $file, $has_labels)
 	{
+		$metadata_block = FALSE;
 		$metadata = array();
 		$metadata_types = array();
 		$handle = fopen($file, 'r');
 		if ($handle) 
 		{
-			while (($line = fgets($handle)) !== false) 
+			while (($line = fgets($handle)) !== FALSE)
 			{
 				if ($line === '') continue; // Don't process empty lines
 
@@ -26,12 +27,23 @@ class Alpino
 				if (substr($line, 0, 6) === '##META')
 				{
 					$parts = explode(' ', $line);
+
+					// If we haven't had any metadata with this name yet, add an empty array of values
 					if (!isset($metadata[$parts[2]]))
 					{
 						$metadata[$parts[2]] = array();
 						$metadata_types[$parts[2]] = $parts[1]; // TODO: check against available types
 					}
+					// If we came out of a text block, reset the metadata for this field
+					else if (!$metadata_block)
+					{
+						$metadata[$parts[2]] = array();
+					}
+					// Add the new value to the metadata array
 					array_push($metadata[$parts[2]], $parts[4]);
+
+					// We are now in a metadata block
+					$metadata_block = TRUE;
 				}
 				else
 				{
@@ -61,6 +73,9 @@ class Alpino
 					}
 
 					$this->add_metadata($dir, $id, $metadata, $metadata_types);
+
+					// We are now in a text block
+					$metadata_block = FALSE;
 				}
 			}
 
