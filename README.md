@@ -20,9 +20,9 @@ A working version is available on http://gretel.hum.uu.nl.
 
 On top of a default LAMP installation, the following packages are required:
 
-* basex: Stored processed treebanks.
-* php-zip: Required to process .zip-files.
-* php-ldap: Authentication via LDAP.
+* [basex](https://packages.debian.org/stable/basex): Stored processed treebanks.
+* [php-zip](https://packages.debian.org/sid/php-zip): Required to process .zip-files.
+* [php-ldap](https://packages.debian.org/sid/php-ldap): Authentication via LDAP.
 
 ### Configuration
 
@@ -31,14 +31,18 @@ On top of a default LAMP installation, the following packages are required:
 
 ### Database schema
 
-You can use the command `php index.php migrate/install` to create the database.
+You can use the command `php index.php migrate` in the source directory to create/migrate the database.
+
+### Permissions
+
+Make sure the `uploads` directory is writable for the user running the Apache daemon (usually `www-data`).
 
 ## Libraries
 
 ### PHP
 
 GrETEL-upload is written in PHP and created with [CodeIgniter 3.1.0](https://www.codeigniter.com/).
-It makes use of the following libraries:
+The application uses the following libraries:
 
 * `application/libraries/Alpino.php`: Wrapper around Alpino's dependency parser and tokenisation scripts.
 * `application/libraries/BaseX.php`: BaseX PHP script. Slightly modified to work in CodeIgniter.
@@ -48,11 +52,11 @@ It makes use of the following libraries:
 
 ### Javascript
 
-GrETEL-upload makes use of the following libraries:
+GrETEL-upload uses the following libraries:
 
-* jQuery
-* qTip
+* [jQuery](https://jquery.com/)
+* [qTip2](http://qtip2.com/)
 
 ### CSS
 
-GrETEL-upload is created with Pure CSS.
+GrETEL-upload is created with [Pure CSS](http://purecss.io/).
