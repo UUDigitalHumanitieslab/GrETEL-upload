@@ -102,9 +102,9 @@ class Alpino
 			{
 				$mElement = $file_xml->createElement('meta');
 
-				$typeAttribute = $mElement->setAttribute('type', $metadata_types[$feature]);
-				$nameAttribute = $mElement->setAttribute('name', $feature);
-				$valueAttribute = $mElement->setAttribute('value', $value);
+				$typeAttribute = $mElement->setAttribute('type', trim($metadata_types[$feature]));
+				$nameAttribute = $mElement->setAttribute('name', trim($feature));
+				$valueAttribute = $mElement->setAttribute('value', trim($value));
 
 				$mElement->appendChild($typeAttribute);
 				$mElement->appendChild($nameAttribute);
