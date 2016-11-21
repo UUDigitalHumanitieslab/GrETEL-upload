@@ -106,3 +106,4 @@ defined('UPLOAD_DIR')	OR define('UPLOAD_DIR',	'./uploads/');
 defined('GRETEL_URL')	OR define('GRETEL_URL',	'http://localhost/gretel');
 defined('ALPINO_HOME')  OR define('ALPINO_HOME', '/opt/Alpino');
 defined('TMP_DIR')  	OR define('TMP_DIR', '/tmp');
+defined('ADMIN_EMAIL') 	OR define('ADMIN_EMAIL', 'M.H.vanderKlis@uu.nl');

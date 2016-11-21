@@ -7,12 +7,10 @@ class Migration_Username extends CI_Migration {
 	public function up()
 	{
 		$fields = array(
-			'username' 			=> array('type' => 'VARCHAR', 'constraint' => 200),
+			'username' 			=> array('type' => 'VARCHAR', 'constraint' => 200, 'unique' => TRUE),
 		);
 
 		$this->dbforge->add_column('users', $fields);
-
-		$this->db->query("ALTER TABLE users ADD UNIQUE username (username);");
 	}
 
 	public function down()

@@ -6,6 +6,7 @@
 	</div>
 <?php } ?>
 
+<h3><?=lang('components'); ?></h3>
 <table class="pure-table">
 	<thead>
 		<tr>
@@ -32,6 +33,31 @@
 		</tr>
 	</tbody>
 </table>
+
+<?php if ($metadata) { ?>
+<h3><?=lang('metadata'); ?></h3>
+<table class="pure-table">
+	<thead>
+		<tr>
+			<th><?=lang('field'); ?></th>
+			<th><?=lang('type'); ?></th>
+			<th><?=lang('min_value'); ?></th>
+			<th><?=lang('max_value'); ?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($metadata as $m): ?>
+		<tr>
+			<td><?=$m->field; ?></td>
+			<td><?=$m->type; ?></td>
+			<td><?=$m->min_value; ?></td>
+			<td><?=$m->max_value; ?></td>
+		</tr>
+		<?php endforeach ?>
+	</tbody>
+</table>
+<?php } ?>
+
 <p>
 	<?=anchor('treebank', lang('back')); ?>
 </p>

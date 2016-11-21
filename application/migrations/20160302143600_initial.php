@@ -15,6 +15,7 @@ class Migration_Initial extends CI_Migration
 			'email' => array(
 				'type' => 'VARCHAR',
 				'constraint' => '200',
+				'unique' => TRUE,
 			),
 			'password' => array(
 				'type' => 'VARCHAR',
@@ -92,9 +93,7 @@ class Migration_Initial extends CI_Migration
 		$this->dbforge->add_key('treebank_id');
 		$this->dbforge->create_table('components', FALSE, array('ENGINE' => 'InnoDB'));
 
-		# Add FOREIGN KEYs and UNIQUE INDEXes via SQL. 
-		$this->db->query("ALTER TABLE `users`
-			ADD UNIQUE `email` (`email`);");
+		# Add FOREIGN KEYs via SQL. 
 		$this->db->query("ALTER TABLE `treebanks`
 			ADD FOREIGN KEY (`user_id`)
 			REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;");

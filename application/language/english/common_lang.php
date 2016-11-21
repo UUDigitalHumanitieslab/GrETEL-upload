@@ -13,6 +13,7 @@ $lang['public_treebanks']	= 'Available treebanks';
 $lang['my_treebanks'] 		= 'My treebanks';
 
 $lang['treebank_detail'] 	= "Details for treebank <em>%s</em>";
+$lang['components']			= 'Components';
 $lang['nr_sentences'] 		= '# sentences';
 $lang['nr_words'] 			= '# words';
 $lang['uploaded_by'] 		= 'Uploaded by';
@@ -47,3 +48,12 @@ $lang['not_authorized']		= 'You are not authorized to view this page.';
 
 $lang['login_warning']		= 'Currently, logging in is limited to users with a Solis-ID and password of the Faculty of Humanities of Utrecht University. We are working on extending login options.';
 $lang['login_help']			= 'Please log in with your Solis-ID and password below.';
+
+$lang['mail_processed_title'] = 'Processing of your treebank finished';
+$lang['mail_processed_body'] = 'Your treebank has been processed. You can now search the treebank using <a href="%s">GrETEL</a>.';
+
+$lang['metadata']			= 'Metadata';
+$lang['field']				= 'Field';
+$lang['type']				= 'Type';
+$lang['min_value']			= 'Minimum value';
+$lang['max_value']			= 'Maximum value';

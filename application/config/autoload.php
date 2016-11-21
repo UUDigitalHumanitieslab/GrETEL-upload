@@ -126,4 +126,4 @@ $autoload['language'] = array('common', 'form', 'help', 'rest_controller');
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('component_model', 'treebank_model', 'user_model');
+$autoload['model'] = array('user_model', 'treebank_model', 'component_model', 'metadata_model');

@@ -26,7 +26,7 @@ class Alpino
 				// ##META text genre = roman
 				if (substr($line, 0, 6) === '##META')
 				{
-					$parts = explode(' ', $line);
+					$parts = array_map('trim', explode(' ', $line));
 
 					// If we haven't had any metadata with this name yet, add an empty array of values
 					if (!isset($metadata[$parts[2]]))
@@ -72,7 +72,7 @@ class Alpino
 						proc_close($process);
 					}
 
-					$this->add_metadata($dir, $id, $metadata, $metadata_types);
+					$this->add_metadata($id, $dir, $metadata, $metadata_types);
 
 					// We are now in a text block
 					$metadata_block = FALSE;
@@ -89,7 +89,7 @@ class Alpino
 		}
 	}
 
-	private function add_metadata($dir, $id, $metadata, $metadata_types)
+	private function add_metadata($id, $dir, $metadata, $metadata_types)
 	{
 		$xml_file = $dir . '/' . $id . '.xml';
 		$file_xml = new DOMDocument();
@@ -102,9 +102,9 @@ class Alpino
 			{
 				$mElement = $file_xml->createElement('meta');
 
-				$typeAttribute = $mElement->setAttribute('type', trim($metadata_types[$feature]));
-				$nameAttribute = $mElement->setAttribute('name', trim($feature));
-				$valueAttribute = $mElement->setAttribute('value', trim($value));
+				$typeAttribute = $mElement->setAttribute('type', $metadata_types[$feature]);
+				$nameAttribute = $mElement->setAttribute('name', $feature);
+				$valueAttribute = $mElement->setAttribute('value', $value);
 
 				$mElement->appendChild($typeAttribute);
 				$mElement->appendChild($nameAttribute);

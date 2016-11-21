@@ -28,10 +28,10 @@ class Process extends CI_Controller
 			// Send e-mail to User when Treebank is processed
 			$user = $this->user_model->get_user_by_id($treebank->user_id);
 
-			$this->email->from('M.H.vanderKlis@uu.nl', lang('site_title'));
-			$this->email->to($user->email);
-			$this->email->subject('Processing of your treebank finished');
-			$this->email->message('...');
+			$this->email->from(ADMIN_EMAIL, lang('site_title'));
+			$this->email->to(ENVIRONMENT === 'development' ? ADMIN_EMAIL : $user->email);
+			$this->email->subject(lang('mail_processed_title'));
+			$this->email->message(sprintf(lang('mail_processed_body'), $treebank->title, base_url()));
 
 			$this->email->send();
 		}
@@ -195,6 +195,33 @@ class Process extends CI_Controller
 			// Attach the document to the original folder
 			$node = $treebank_xml->importNode($file_xml->documentElement, TRUE);
 			$treebank_xml->documentElement->appendChild($node);
+
+			// Save any existing metadata to the database
+			$metadata_nodes = $xp->query('//meta');
+			foreach ($metadata_nodes as $metadata_node)
+			{
+				$field = $metadata_node->getAttribute('name');
+				$type = $metadata_node->getAttribute('type');
+				$value = $metadata_node->getAttribute('value');
+
+				$metadata = $this->metadata_model->get_metadata_by_field($field);
+
+				if ($metadata)
+				{
+					$metadata_id = $metadata->id;
+				}
+				else
+				{
+					$metadata = array(
+						'component_id'	=> $component_id,
+						'field'			=> $field,
+						'type'			=> $type,
+					);
+					$metadata_id = $this->metadata_model->add_metadata($metadata);
+				}
+
+				$this->metadata_model->update_minmax($metadata_id, $value);
+			}
 		}
 
 		$c = array(

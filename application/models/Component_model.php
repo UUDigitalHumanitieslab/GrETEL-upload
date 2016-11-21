@@ -11,6 +11,13 @@ class Component_model extends CI_Model
 		return $this->db->get('components')->result();
 	}
 
+	public function get_component_by_treebank_title($treebank_id, $title)
+	{
+		$this->db->where('title', $title);
+		$this->db->where('treebank_id', $treebank_id);
+		return $this->db->get('components')->row();
+	}
+
 	public function add_component($component)
 	{
 		$this->db->insert('components', $component);
