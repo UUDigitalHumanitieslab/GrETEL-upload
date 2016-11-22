@@ -6,8 +6,9 @@ After processing, the treebanks are searchable in GrETEL.
 
 ## API
 
-* treebank/get: Returns all publicly available treebanks.
-* treebank/show/[title]: Returns information on the treebank given by title.
+* treebank/: Returns all publicly available treebanks.
+* treebank/show/[title]: Returns the components of the treebank given by title.
+* treebank/metadata/[title]: Returns the metadata of the treebank given by title.
 * treebank/user/[user_id]: Returns all treebanks available to the currently logged in user. This might include private treebanks.
 
 ## Demo
@@ -20,18 +21,20 @@ A working version is available on http://gretel.hum.uu.nl.
 
 On top of a default LAMP installation, the following packages are required:
 
-* [basex](https://packages.debian.org/stable/basex): Stored processed treebanks.
+* [basex](https://packages.debian.org/stable/basex): Storing processed treebanks.
 * [php-zip](https://packages.debian.org/sid/php-zip): Required to process .zip-files.
 * [php-ldap](https://packages.debian.org/sid/php-ldap): Authentication via LDAP.
 
 ### Configuration
 
-* `application/database.php`: Settings for your database connection to both the relational database (MySQL, PostgreSQL, SQLite) and the XML-database (basex). An example configuration can be found in `application/database_default.php`.
-* `application/ldap.php`: Settings for LDAP authentication.
+You will have to provide configuration details in two files:
+
+* `application/database.php`: Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex). An example configuration can be found in `application/database_default.php`.
+* `application/ldap.php`: Settings for LDAP authentication. An example configuration can be found in `application/ldap_default.php`.
 
 ### Database schema
 
-You can use the command `php index.php migrate` in the source directory to create/migrate the database.
+You can use the command `php index.php migrate` in the source directory to create/migrate the database schema.
 
 ### Permissions
 
