@@ -104,7 +104,7 @@ class Process extends CI_Controller
 				}
 
 				// Merge the (created) XML files, and upload them to BaseX
-				$this->merge_xml_files($dir, $component_id);
+				$this->merge_xml_files($dir, $component_id, $treebank->id);
 				$this->basex->upload($basex_db, $dir . '/total.xml');
 			}
 
@@ -172,7 +172,7 @@ class Process extends CI_Controller
 	 * @param  integer $component_id The ID of the current Component
 	 * @return void
 	 */
-	private function merge_xml_files($dir, $component_id)
+	private function merge_xml_files($dir, $component_id, $treebank_id)
 	{
 		$nr_sentences = 0;
 		$nr_words = 0;
@@ -204,7 +204,7 @@ class Process extends CI_Controller
 				$type = $metadata_node->getAttribute('type');
 				$value = $metadata_node->getAttribute('value');
 
-				$metadata = $this->metadata_model->get_metadata_by_field($field);
+				$metadata = $this->metadata_model->get_metadata_by_field($treebank_id, $field);
 
 				if ($metadata)
 				{
@@ -213,7 +213,7 @@ class Process extends CI_Controller
 				else
 				{
 					$metadata = array(
-						'component_id'	=> $component_id,
+						'treebank_id'	=> $treebank_id,
 						'field'			=> $field,
 						'type'			=> $type,
 					);

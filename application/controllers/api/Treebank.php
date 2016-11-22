@@ -20,7 +20,7 @@ class Treebank extends REST_Controller
 	}
 	
 	/**
-	 * Returns the components of a Treebank, given its title.
+	 * Returns the Components of a Treebank, given its title.
 	 * @param  string $title The title of the Treebank.
 	 * @return JSON response.
 	 */
@@ -37,7 +37,7 @@ class Treebank extends REST_Controller
 	}
 	
 	/**
-	 * Returns the metadata of a Treebank, given its title.
+	 * Returns the Metadata of a Treebank, given its title.
 	 * @param  string $title The title of the Treebank.
 	 * @return JSON response.
 	 */

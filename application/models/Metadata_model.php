@@ -12,8 +12,9 @@ class Metadata_model extends CI_Model
 		return $this->db->get('metadata')->row();
 	}
 
-	public function get_metadata_by_field($field)
+	public function get_metadata_by_treebank_field($treebank_id, $field)
 	{
+		$this->db->where('treebank_id', $treebank_id);
 		$this->db->where('field', $field);
 		return $this->db->get('metadata')->row();
 	}
@@ -53,22 +54,16 @@ class Metadata_model extends CI_Model
 	// API Calls
 	/////////////////////////
 	
-	public function get_metadata_by_component($component_id)
+	public function get_metadata_by_treebank($treebank_id)
 	{
 		$this->db->select(array('field', 'type', 'min_value', 'max_value'));
-		$this->db->where('component_id', $component_id);
+		$this->db->where('treebank_id', $treebank_id);
 		return $this->db->get('metadata')->result();
 	}
 	
-	public function get_metadata_by_treebank($treebank_id)
+	public function get_metadata_by_component($component_id)
 	{
-		$this->db->select(array('field', 'type'));
-		$this->db->select_min('min_value');
-		$this->db->select_max('max_value');
-		$this->db->from('metadata');
-		$this->db->join('components', 'components.id = metadata.component_id');
-		$this->db->where('treebank_id', $treebank_id);
-		$this->db->group_by(array('field', 'type'));
-		return $this->db->get()->result();
+		$component = $this->component_model->get_component_by_id($component_id);
+		return $this->get_metadata_by_treebank($component->treebank_id);
 	}
 }

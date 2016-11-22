@@ -12,7 +12,7 @@ class Migration_Metadata extends CI_Migration
 				'type' => 'INT',
 				'auto_increment' => TRUE,
 			),
-			'component_id' => array(
+			'treebank_id' => array(
 				'type' => 'INT',
 			),
 			'field' => array(
@@ -35,13 +35,13 @@ class Migration_Metadata extends CI_Migration
 		));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key('treebank_id');
-		$this->dbforge->add_key(array('component_id', 'field'));
+		$this->dbforge->add_key(array('treebank_id', 'field'));
 		$this->dbforge->create_table('metadata', FALSE, array('ENGINE' => 'InnoDB'));
 
 		# Add FOREIGN KEY via SQL
 		$this->db->query("ALTER TABLE `metadata`
-			ADD FOREIGN KEY (`component_id`)
-			REFERENCES `components` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;");
+			ADD FOREIGN KEY (`treebank_id`)
+			REFERENCES `treebanks` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;");
 	}
 
 	public function down()
