@@ -43,6 +43,8 @@
 			<th><?=lang('type'); ?></th>
 			<th><?=lang('min_value'); ?></th>
 			<th><?=lang('max_value'); ?></th>
+			<th><?=lang('facet'); ?></th>
+		</tr>
 		</tr>
 	</thead>
 	<tbody>
@@ -52,6 +54,13 @@
 			<td><?=$m->type; ?></td>
 			<td><?=$m->min_value; ?></td>
 			<td><?=$m->max_value; ?></td>
+			<td>
+				<?php
+					echo form_open('metadata/update_facet/' . $m->id);
+					echo form_dropdown('facet', facet_options(), $m->facet);
+					echo form_close();
+				?>
+			</td>
 		</tr>
 		<?php endforeach ?>
 	</tbody>
@@ -61,3 +70,11 @@
 <p>
 	<?=anchor('treebank', lang('back')); ?>
 </p>
+
+<script>
+$(function() {
+	$('select').on('change', function() {
+		$(this).closest('form').submit();
+	});
+});
+</script>

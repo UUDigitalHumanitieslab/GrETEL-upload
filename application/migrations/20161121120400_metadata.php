@@ -22,6 +22,9 @@ class Migration_Metadata extends CI_Migration
 			'type' => array(
 				'type' => 'ENUM("text", "int", "float", "date", "datetime")',
 			),
+			'facet' => array(
+				'type' => 'ENUM("checkbox", "dropdown", "slider", "date_range")',
+			),
 			'min_value' => array(
 				'type' => 'VARCHAR',
 				'constraint' => '20',

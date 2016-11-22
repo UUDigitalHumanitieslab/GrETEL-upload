@@ -22,6 +22,12 @@ class Treebank extends CI_Controller
 		$this->load->view('footer');
 	}
 
+	public function detail($treebank_id)
+	{
+		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
+		redirect('treebank/show/' . $treebank->title);
+	}
+
 	/**
 	 * Returns details for a Treebank.
 	 * @param  string $title The title of the Treebank.

@@ -57,3 +57,9 @@ $lang['field']				= 'Field';
 $lang['type']				= 'Type';
 $lang['min_value']			= 'Minimum value';
 $lang['max_value']			= 'Maximum value';
+$lang['facet']				= 'Facet';
+
+$lang['facet-checkbox']		= 'Checkbox';
+$lang['facet-dropdown']		= 'Dropdown';
+$lang['facet-slider']		= 'Slider';
+$lang['facet-date_range']	= 'Date range';

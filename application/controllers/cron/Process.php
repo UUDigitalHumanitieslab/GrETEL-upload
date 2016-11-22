@@ -204,7 +204,7 @@ class Process extends CI_Controller
 				$type = $metadata_node->getAttribute('type');
 				$value = $metadata_node->getAttribute('value');
 
-				$metadata = $this->metadata_model->get_metadata_by_field($treebank_id, $field);
+				$metadata = $this->metadata_model->get_metadata_by_treebank_field($treebank_id, $field);
 
 				if ($metadata)
 				{
@@ -216,6 +216,7 @@ class Process extends CI_Controller
 						'treebank_id'	=> $treebank_id,
 						'field'			=> $field,
 						'type'			=> $type,
+						'facet'			=> default_facet($type),
 					);
 					$metadata_id = $this->metadata_model->add_metadata($metadata);
 				}

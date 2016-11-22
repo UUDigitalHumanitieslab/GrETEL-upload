@@ -56,7 +56,6 @@ class Metadata_model extends CI_Model
 	
 	public function get_metadata_by_treebank($treebank_id)
 	{
-		$this->db->select(array('field', 'type', 'min_value', 'max_value'));
 		$this->db->where('treebank_id', $treebank_id);
 		return $this->db->get('metadata')->result();
 	}
