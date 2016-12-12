@@ -12,7 +12,7 @@ class Alpino
 
 	public function parse($id, $dir, $file, $has_labels)
 	{
-		$metadata_block = FALSE;
+		$metadata_block = array();
 		$metadata = array();
 		$metadata_types = array();
 		$handle = fopen($file, 'r');
@@ -34,16 +34,14 @@ class Alpino
 						$metadata[$parts[2]] = array();
 						$metadata_types[$parts[2]] = $parts[1]; // TODO: check against available types
 					}
-					// If we came out of a text block, reset the metadata for this field
-					else if (!$metadata_block)
+					// If we came out this data had not yet defined in this block, reset the metadata for this field
+					else if (!in_array($parts[2], $metadata_block))
 					{
 						$metadata[$parts[2]] = array();
+						array_push($metadata_block, $parts[2]);
 					}
 					// Add the new value to the metadata array
 					array_push($metadata[$parts[2]], $parts[4]);
-
-					// We are now in a metadata block
-					$metadata_block = TRUE;
 				}
 				else
 				{
@@ -74,8 +72,8 @@ class Alpino
 
 					$this->add_metadata($id, $dir, $metadata, $metadata_types);
 
-					// We are now in a text block
-					$metadata_block = FALSE;
+					// We are now in a text block, empty the metadata block
+					$metadata_block = array();
 				}
 			}
 
