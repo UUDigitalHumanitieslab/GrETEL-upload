@@ -19,7 +19,7 @@ $lang['nr_words'] 			= '# words';
 $lang['uploaded_by'] 		= 'Uploaded by';
 $lang['uploaded_at'] 		= 'Uploaded at';
 $lang['processed_at'] 		= 'Processed at';
-$lang['upload_success']		= 'Successfully uploaded your treebank, click "Process" to process your treebank';
+$lang['upload_success']		= 'Successfully uploaded your treebank.<br><br>Your treebank will now be processed. You will receive a mail when the processing has finished. Processing can take up to a day, depending on the size of your corpus.';
 $lang['treebank_processed']	= 'Successfully processed your treebank';
 $lang['treebank_deleted']	= 'Successfully deleted your treebank';
 $lang['actions']			= 'Actions';
@@ -50,7 +50,7 @@ $lang['login_warning']		= 'Currently, logging in is limited to users with a Soli
 $lang['login_help']			= 'Please log in with your Solis-ID and password below.';
 
 $lang['mail_processed_title'] = 'Processing of your treebank finished';
-$lang['mail_processed_body'] = 'Your treebank has been processed. You can now search the treebank using <a href="%s">GrETEL</a>.';
+$lang['mail_processed_body'] = 'Your treebank <em>%s</em> has been processed. You can now search the treebank using <a href="%s">GrETEL</a>.';
 
 $lang['metadata']			= 'Metadata';
 $lang['field']				= 'Field';
