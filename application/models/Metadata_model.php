@@ -54,15 +54,16 @@ class Metadata_model extends CI_Model
 	// API Calls
 	/////////////////////////
 	
-	public function get_metadata_by_treebank($treebank_id)
+	public function get_metadata_by_treebank($treebank_id, $show_hidden = TRUE)
 	{
 		$this->db->where('treebank_id', $treebank_id);
+		if (!$show_hidden) $this->db->where('show', TRUE);
 		return $this->db->get('metadata')->result();
 	}
 	
-	public function get_metadata_by_component($component_id)
+	public function get_metadata_by_component($component_id, $show_hidden = TRUE)
 	{
 		$component = $this->component_model->get_component_by_id($component_id);
-		return $this->get_metadata_by_treebank($component->treebank_id);
+		return $this->get_metadata_by_treebank($component->treebank_id, $show_hidden);
 	}
 }

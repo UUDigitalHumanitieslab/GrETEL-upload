@@ -30,6 +30,18 @@ class Metadata extends CI_Controller
 			redirect('/treebank/detail/' . $metadata->treebank_id, 'refresh');
 		}
 	}
+
+	/**
+	 * Updates whether the field is shown for the given metadata field
+	 */
+	public function update_shown($metadata_id, $show)
+	{
+		$metadata = $this->metadata_model->get_metadata_by_id($metadata_id);
+		$this->metadata_model->update_metadata($metadata_id, array('show' => $show));
+
+		// Show the treebank detail data
+		redirect('/treebank/detail/' . $metadata->treebank_id, 'refresh');
+	}
 	
 	/////////////////////////
 	// Form handling

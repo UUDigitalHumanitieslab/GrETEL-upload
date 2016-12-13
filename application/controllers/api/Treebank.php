@@ -50,7 +50,7 @@ class Treebank extends REST_Controller
 			$this->response();
 		}
 
-		$this->response($this->metadata_model->get_metadata_by_treebank($treebank->id));
+		$this->response($this->metadata_model->get_metadata_by_treebank($treebank->id, FALSE));
 	}
 	
 	/**

@@ -58,6 +58,7 @@ $lang['type']				= 'Type';
 $lang['min_value']			= 'Minimum value';
 $lang['max_value']			= 'Maximum value';
 $lang['facet']				= 'Facet';
+$lang['show']				= 'Shown?';
 
 $lang['facet-checkbox']		= 'Checkbox';
 $lang['facet-dropdown']		= 'Dropdown';

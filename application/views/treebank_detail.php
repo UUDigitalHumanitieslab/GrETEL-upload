@@ -44,6 +44,7 @@
 			<th><?=lang('min_value'); ?></th>
 			<th><?=lang('max_value'); ?></th>
 			<th><?=lang('facet'); ?></th>
+			<th><?=lang('show'); ?></th>
 		</tr>
 		</tr>
 	</thead>
@@ -59,6 +60,14 @@
 					echo form_open('metadata/update_facet/' . $m->id);
 					echo form_dropdown('facet', facet_options(), $m->facet);
 					echo form_close();
+				?>
+			</td>
+			<td>
+				<?php
+					$url = 'metadata/update_shown/' . $m->id . '/' . ($m->show === '1' ? '0' : '1');
+					$src = $m->show === '1' ? 'images/tick.png' : 'images/cross.png';
+
+					echo anchor($url, img(array('src' => $src)));
 				?>
 			</td>
 		</tr>

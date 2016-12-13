@@ -25,6 +25,6 @@ class Component extends REST_Controller
 			$this->response();
 		}
 
-		$this->response($this->metadata_model->get_metadata_by_component($component->id));
+		$this->response($this->metadata_model->get_metadata_by_component($component->id, FALSE));
 	}
 }
