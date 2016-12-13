@@ -31,7 +31,7 @@ class Process extends CI_Controller
 			$this->email->clear();
 
 			$this->email->from(ADMIN_EMAIL, lang('site_title'));
-			$this->email->to(ENVIRONMENT === 'development' ? ADMIN_EMAIL : $user->email);
+			$this->email->to(in_development() ? ADMIN_EMAIL : $user->email);
 			$this->email->subject(lang('mail_processed_title'));
 			$this->email->message(sprintf(lang('mail_processed_body'), $treebank->title, GRETEL_URL));
 			$this->email->send();
