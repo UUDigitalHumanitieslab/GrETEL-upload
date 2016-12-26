@@ -21,7 +21,7 @@ A working version is available on http://gretel.hum.uu.nl.
 
 On top of a default LAMP installation, the following packages are required:
 
-* [basex](https://packages.debian.org/stable/basex): Storing processed treebanks.
+* [basex](https://packages.debian.org/stable/basex): Storing processed treebanks into a XML-database.
 * [php-zip](https://packages.debian.org/sid/php-zip): Required to process .zip-files.
 * [php-ldap](https://packages.debian.org/sid/php-ldap): Authentication via LDAP.
 
@@ -48,7 +48,7 @@ GrETEL-upload is written in PHP and created with [CodeIgniter 3.1.0](https://www
 The application uses the following libraries:
 
 * `application/libraries/Alpino.php`: Wrapper around Alpino's dependency parser and tokenisation scripts.
-* `application/libraries/BaseX.php`: BaseX PHP script. Slightly modified to work in CodeIgniter.
+* `application/libraries/BaseX.php`: BaseX PHP connector. Slightly modified to work in CodeIgniter.
 * `application/libraries/Format.php`: Helper to convert between various formats such as XML, JSON, CSV, etc.
 * `application/libraries/Ldap.php`: Authentication via LDAP. Inspired by auth_ldap.
 * `application/libraries/REST_Controller.php`: Turns controllers into REST APIs. 

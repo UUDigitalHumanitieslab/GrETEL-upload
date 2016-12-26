@@ -9,7 +9,7 @@
 <?=form_open_multipart($action, array('class' => 'pure-form pure-form-aligned')); ?>
 
 <p>
-	A treebank (in this case) consists of a number of archived folders (<em>.zip</em>), 
+	A treebank (in this case) consists of a number of archived folders (<em>.zip</em>),
 	with each folder containing one of the below:
 </p>
 <ul>
@@ -48,10 +48,7 @@
 
 <script>
 $(document).ready(function() {
-	$('.pure-control-group').each(function() {
-		$(this).append($(this).next('.help'));
-	});
-
+	// Creates a tooltip for each <abbr> element
 	$('abbr[title]').qtip({
 		hide: {
 			fixed: true,
@@ -59,7 +56,13 @@ $(document).ready(function() {
 		}
 	});
 
-    $('.help img').each(function () {
+	// Move help divs to the end of the pure-control-group 
+	$('.pure-control-group').each(function() {
+		$(this).append($(this).next('.help'));
+	});
+
+	// Creates a tooltip for each help image
+    $('.help img').each(function() {
         $(this).qtip({
             content: $(this).next('.tooltiptext'),
             hide: {
@@ -69,6 +72,7 @@ $(document).ready(function() {
         });
     });
 
+    // Hides all tooltiptext-spans
     $('.tooltiptext').hide();
 });
 </script>
