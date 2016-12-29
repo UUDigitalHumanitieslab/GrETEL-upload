@@ -23,25 +23,50 @@ class Alpino
 				if ($line === '') continue; // Don't process empty lines
 
 				// A metadata line in a plain-text file looks like: 
-				// ##META text genre = roman
+				// ##META text  genre = newspaper
+				// which we should map to:
+				//        $type $name   $value
 				if (substr($line, 0, 6) === '##META')
 				{
-					$parts = array_map('trim', explode(' ', $line));
+					$parts = array_map('trim', explode(' = ', $line));
+					if (count($parts) !== 2)
+					{
+						echo 'Metadata line not properly separated';
+						continue;
+					}
+
+					$specs = array_map('trim', explode(' ', $parts[0]));
+					$value = $parts[1];
+
+					if (count($specs) !== 3)
+					{
+						echo 'Metadata specification not properly separated';
+						continue;
+					}
+
+					$type = $specs[1];
+					$name = $specs[2];
+
+					if (!MetadataType::isValidValue($type))
+					{
+						echo 'Unknown metadata type';
+						continue;
+					}
 
 					// If we haven't had any metadata with this name yet, add an empty array of values
-					if (!isset($metadata[$parts[2]]))
+					if (!isset($metadata[$name]))
 					{
-						$metadata[$parts[2]] = array();
-						$metadata_types[$parts[2]] = $parts[1]; // TODO: check against available types
+						$metadata[$name] = array();
+						$metadata_types[$name] = $type;
 					}
 					// If we came out this data had not yet defined in this block, reset the metadata for this field
-					else if (!in_array($parts[2], $metadata_block))
+					else if (!in_array($name, $metadata_block))
 					{
-						$metadata[$parts[2]] = array();
-						array_push($metadata_block, $parts[2]);
+						$metadata[$name] = array();
+						array_push($metadata_block, $name);
 					}
 					// Add the new value to the metadata array
-					array_push($metadata[$parts[2]], $parts[4]);
+					array_push($metadata[$name], $value);
 				}
 				else
 				{
