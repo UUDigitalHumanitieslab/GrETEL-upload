@@ -20,7 +20,12 @@ class Alpino
 		{
 			while (($line = fgets($handle)) !== FALSE)
 			{
-				if ($line === '') continue; // Don't process empty lines
+				if ($line === '')
+				{
+					// Don't process empty lines, but empty the metadata block
+					$metadata_block = array();
+					continue;
+				}
 
 				// A metadata line in a plain-text file looks like: 
 				// ##META text  genre = newspaper
