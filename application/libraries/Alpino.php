@@ -16,13 +16,13 @@ class Alpino
 		$metadata = array();
 		$metadata_types = array();
 		$handle = fopen($file, 'r');
-		if ($handle) 
+		if ($handle)
 		{
 			while (($line = fgets($handle)) !== FALSE)
 			{
-				if ($line === '')
+				// Don't process empty lines, but empty the metadata block
+				if (trim($line) == '')
 				{
-					// Don't process empty lines, but empty the metadata block
 					$metadata_block = array();
 					continue;
 				}
@@ -110,8 +110,8 @@ class Alpino
 			fclose($handle);
 
 			return $id;
-		} 
-		else 
+		}
+		else
 		{
 			echo 'Error opening file.';
 		}
@@ -147,22 +147,46 @@ class Alpino
 
 	public function word_tokenize($file)
 	{
-		$cmd = 'cat ' . $file . ' | sh ' . ALPINO_HOME . '/Tokenization/tokenize.sh';
-		$descriptorspec = array(
-			0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
-			1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
-		);
-		$cwd = NULL;
-		$env = array('ALPINO_HOME' => ALPINO_HOME);
-		$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
+		// Rename the in-file
+		$in = $this->replace_extension($file, 'in');
+		$out = $file;
+		rename($file, $in);
 
-		if (is_resource($process))
+		$handle = fopen($in, 'r');
+		if ($handle)
 		{
-			// TODO: write this to separate file?
-			file_put_contents($file, stream_get_contents($pipes[1]));
-			fclose($pipes[1]);
+			while (($line = fgets($handle)) !== FALSE)
+			{
+				// Skip empty/metadata lines
+				if (trim($line) == '' || substr($line, 0, 6) === '##META')
+				{
+					file_put_contents($out, $line, FILE_APPEND);
+					continue;
+				}
 
-			proc_close($process);
+				$cmd = 'echo "' . $line . '" | sh ' . ALPINO_HOME . '/Tokenization/tokenize.sh';
+				$descriptorspec = array(
+					0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
+					1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
+				);
+				$cwd = NULL;
+				$env = array('ALPINO_HOME' => ALPINO_HOME);
+				$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
+
+				if (is_resource($process))
+				{
+					file_put_contents($out, stream_get_contents($pipes[1]), FILE_APPEND);
+					fclose($pipes[1]);
+
+					proc_close($process);
+				}
+			}
+
+			fclose($handle);
+		}
+		else
+		{
+			echo 'Error opening file.';
 		}
 	}
 
@@ -185,5 +209,11 @@ class Alpino
 
 			proc_close($process);
 		}
+	}
+
+	private function replace_extension($filename, $new_extension)
+	{
+    	$info = pathinfo($filename);
+    	return $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.' . $new_extension;
 	}
 }
