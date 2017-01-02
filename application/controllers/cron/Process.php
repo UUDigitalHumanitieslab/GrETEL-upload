@@ -59,10 +59,14 @@ class Process extends CI_Controller
 	 */
 	private function process_treebank($treebank)
 	{
+		$importrun_id = $this->importrun_model->start_importrun($treebank->id);
+
 		$zip = new ZipArchive;
 		$res = $zip->open(UPLOAD_DIR . $treebank->filename);
 		if ($res === TRUE)
 		{
+			$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing started');
+
 			$root_dir = UPLOAD_DIR . substr($treebank->filename, 0, -4);
 			$zip->extractTo($root_dir);
 			$zip->close();
@@ -101,7 +105,7 @@ class Process extends CI_Controller
 						$this->word_tokenize($dir);
 					}
 
-					$this->alpino_parse($dir, $treebank->has_labels);
+					$this->alpino_parse($importrun_id, $dir, $treebank->has_labels);
 				}
 
 				// Merge the (created) XML files, and upload them to BaseX
@@ -126,14 +130,15 @@ class Process extends CI_Controller
 			file_put_contents($root_dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
 			$this->basex->upload($basex_db, $root_dir . '/total.xml');
 
-			// Mark treebank as processed
-			$this->treebank_model->update_treebank($treebank->id, array('processed' => input_datetime()));
-			echo 'Processed!';
+			$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');
 		}
 		else
 		{
-			echo 'File not found.';
+			$this->importlog_model->add_log($importrun_id, LogLevel::Fatal, 'File not found');
 		}
+		
+		// Mark treebank as processed
+		$this->importrun_model->end_importrun($importrun_id, $treebank->id);
 	}
 
 	private function paragraph_tokenize($dir)
@@ -154,16 +159,17 @@ class Process extends CI_Controller
 
 	/**
 	 * Parses all files in the input to Alpino-DS XML.
+	 * @param  integer $importrun_id The ID of the current ImportRun
 	 * @param  string $dir          The directory which contains the .xml-files
 	 * @param  boolean $has_labels	Whether the sentence has a label or not.
 	 * @return void
 	 */
-	private function alpino_parse($dir, $has_labels) 
+	private function alpino_parse($importrun_id, $dir, $has_labels) 
 	{
 		$id = 0;
 		foreach (glob($dir . '/*.txt') as $file)
 		{
-			$id = $this->alpino->parse($id, $dir, $file, $has_labels);
+			$id = $this->alpino->parse($id, $importrun_id, $dir, $file, $has_labels);
 		}
 	}
 

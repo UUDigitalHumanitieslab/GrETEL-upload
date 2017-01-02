@@ -10,16 +10,24 @@ class Alpino
 		$this->CI =& get_instance();
 	}
 
-	public function parse($id, $dir, $file, $has_labels)
+	public function parse($id, $importrun_id, $dir, $file, $has_labels)
 	{
+		// Instantiate variables for Metadata processing
 		$metadata_block = array();
 		$metadata = array();
 		$metadata_types = array();
+		
+		// We set the filename to be foldername + basename
+		$filename = basename(dirname($file)) . DIRECTORY_SEPARATOR . basename($file);
+		$linenumber = 0;
+
 		$handle = fopen($file, 'r');
 		if ($handle)
 		{
 			while (($line = fgets($handle)) !== FALSE)
 			{
+				$linenumber++;
+
 				// Don't process empty lines, but empty the metadata block
 				if (trim($line) == '')
 				{
@@ -36,7 +44,8 @@ class Alpino
 					$parts = array_map('trim', explode(' = ', $line));
 					if (count($parts) !== 2)
 					{
-						echo 'Metadata line not properly separated';
+						$msg = 'Metadata line not properly separated';
+						$this->CI->importlog_model->add_log($importrun_id, LogLevel::Warn, $msg, $filename, $linenumber);
 						continue;
 					}
 
@@ -45,7 +54,8 @@ class Alpino
 
 					if (count($specs) !== 3)
 					{
-						echo 'Metadata specification not properly separated';
+						$msg = 'No proper metadata specification';
+						$this->CI->importlog_model->add_log($importrun_id, LogLevel::Warn, $msg, $filename, $linenumber);
 						continue;
 					}
 
@@ -54,7 +64,8 @@ class Alpino
 
 					if (!MetadataType::isValidValue($type))
 					{
-						echo 'Unknown metadata type';
+						$msg = 'Unknown metadata type "' . $type . '"';
+						$this->CI->importlog_model->add_log($importrun_id, LogLevel::Warn, $msg, $filename, $linenumber);
 						continue;
 					}
 

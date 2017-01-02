@@ -56,6 +56,7 @@ class Treebank extends REST_Controller
 	/**
 	 * Returns all Treebanks for a User.
 	 * TODO: limit access to current User.
+	 * TODO: only return processed Treebanks in GrETEL.
 	 * @param  interger $user_id The ID of the User.
 	 * @return JSON response.
 	 */

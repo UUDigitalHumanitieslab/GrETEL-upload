@@ -83,7 +83,8 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('date', 'form', 'html', 'language', 'url', 'common', 'metadata');
+$autoload['helper'] = array('date', 'form', 'html', 'language', 'url',
+	'common', 'log', 'metadata');
 
 /*
 | -------------------------------------------------------------------
@@ -126,4 +127,5 @@ $autoload['language'] = array('common', 'form', 'help', 'rest_controller');
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('user_model', 'treebank_model', 'component_model', 'metadata_model');
+$autoload['model'] = array('user_model', 'treebank_model', 'component_model',
+	'metadata_model', 'importrun_model', 'importlog_model');
