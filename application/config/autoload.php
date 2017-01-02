@@ -84,7 +84,7 @@ $autoload['drivers'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 $autoload['helper'] = array('date', 'form', 'html', 'language', 'url',
-	'common', 'log', 'metadata');
+	'common', 'log', 'metadata', 'treebank');
 
 /*
 | -------------------------------------------------------------------

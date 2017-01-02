@@ -40,9 +40,11 @@ $lang['invalid_credentials']= 'Username or password incorrect.';
 $lang['GrETEL']				= 'GrETEL';
 
 $lang['process']			= 'Process';
-$lang['delete']				= 'Delete';
+$lang['details']			= 'Show details';
+$lang['view_log']			= 'View log';
 $lang['make_private']		= 'Make private';
 $lang['make_public']		= 'Make public';
+$lang['delete']				= 'Delete';
 
 $lang['not_authorized']		= 'You are not authorized to view this page.';
 
@@ -64,3 +66,10 @@ $lang['facet-checkbox']		= 'Checkbox';
 $lang['facet-dropdown']		= 'Dropdown';
 $lang['facet-slider']		= 'Slider';
 $lang['facet-date_range']	= 'Date range';
+
+$lang['treebank_log'] 		= "Logging for import of treebank <em>%s</em>";
+$lang['time'] 				= 'Time';
+$lang['level'] 				= 'Level';
+$lang['message'] 			= 'Message';
+$lang['filename'] 			= 'Filename';
+$lang['linenumber'] 		= 'Line number';

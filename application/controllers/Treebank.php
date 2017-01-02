@@ -56,6 +56,31 @@ class Treebank extends CI_Controller
 	}
 
 	/**
+	 * Returns the ImportLogs from the most recent ImportRun for a Treebank.
+	 * @param  integer $treebank_id The ID of the Treebank.
+	 * @return Loads the log view.
+	 */
+	public function log($treebank_id)
+	{
+		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
+		$importrun = $this->importrun_model->get_last_importrun_by_treebank($treebank);
+
+		// Only allow the owner to view the logs of a Treebank
+		if ($treebank->user_id != $this->session->userdata('user_id'))
+		{
+			show_error(lang('not_authorized'), 403);
+		}
+
+		$data['page_title'] = sprintf(lang('treebank_log'), $treebank->title);
+		$data['importlogs'] = $this->importlog_model->get_importlogs_by_importrun($importrun->id);
+
+		$this->load->view('header', $data);
+		$this->load->view('treebank_log', $data);
+		$this->load->view('footer');
+	}
+
+
+	/**
 	 * Alters the accessibility of a Treebank (public <-> private).
 	 * @param  integer $treebank_id The ID of the Treebank.
 	 * @return Redirects to the previous page.

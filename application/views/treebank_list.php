@@ -28,23 +28,7 @@
 			<td><?=$treebank->processed; ?></td>
 			<?php if ($this->session->userdata('logged_in')) { ?>
 				<td class="actions">
-				<?php
-					if ($treebank->user_id == $this->session->userdata('user_id'))
-					{
-						$actions = array(
-							array('url' => 'treebank/change_access/' . $treebank->id, 'title' => ($treebank->public ? 'make_private' : 'make_public')),
-							array('url' => 'treebank/delete/' . $treebank->id, 'title' => 'delete'),
-						);
-						if (!$treebank->processed && in_development()) {
-							array_unshift($actions,
-								array('url' => 'cron/process/by_id/' . $treebank->id, 'title' => 'process')
-							);
-						}
-						foreach ($actions as $action) {
-							echo anchor($action['url'], lang($action['title']));
-						}
-					}
-				?>
+				<?=treebank_actions($treebank->id); ?>
 				</td>
 			<?php } ?>
 		</tr>

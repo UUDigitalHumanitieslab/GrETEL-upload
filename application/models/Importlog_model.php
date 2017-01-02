@@ -18,4 +18,11 @@ class Importlog_model extends CI_Model
 		$this->db->insert('importlogs', $importlog);
 		return $this->db->insert_id();
 	}
+	
+	public function get_importlogs_by_importrun($importrun_id)
+	{
+		$this->db->where('importrun_id', $importrun_id);
+		$this->db->order_by('time_logged', 'ASC');
+		return $this->db->get('importlogs')->result();
+	}
 }

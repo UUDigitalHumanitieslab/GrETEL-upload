@@ -22,4 +22,11 @@ class Importrun_model extends CI_Model
 		$this->db->where('id', $importrun_id);
 		$this->db->update('importruns', array('time_ended' => $processed));
 	}
+
+	public function get_last_importrun_by_treebank($treebank)
+	{
+		$this->db->where('treebank_id', $treebank->id);
+		$this->db->order_by('time_ended', 'DESC');
+		return $this->db->get('importruns')->row();
+	}
 }
