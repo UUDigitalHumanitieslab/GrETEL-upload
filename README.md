@@ -44,7 +44,7 @@ Make sure the `uploads` directory is writable for the user running the Apache da
 
 ### PHP
 
-GrETEL-upload is written in PHP and created with [CodeIgniter 3.1.0](https://www.codeigniter.com/).
+GrETEL-upload is written in PHP and created with [CodeIgniter 3.1.2](https://www.codeigniter.com/).
 The application uses the following libraries:
 
 * `application/libraries/Alpino.php`: Wrapper around Alpino's dependency parser and tokenisation scripts.
