@@ -87,27 +87,15 @@ class Alpino
 				else
 				{
 					$id++;
-					$in = $has_labels ? $line : ($id . '|' . $line);
 
-					$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-					$connect = socket_connect($socket, ALPINO_HOST, ALPINO_PORT);
+					$this->split_label($id, $line, $has_labels, $label, $in);
 
-					if ($connect === FALSE)
-					{
-						$msg = 'Unable to connect to Alpino server on host ' . ALPINO_HOST . ' and port ' . ALPINO_PORT;
-						throw new Exception($msg);
-					}
+					$xml_string = $this->call_alpino($in);
 
-					socket_write($socket, $in, strlen($in));
-					$result = '';
-					while ($out = socket_read($socket, 2048))
-					{
-						$result .= $out;
-					}
-					socket_close($socket);
-
+					// Write the result to an XML document, add a proper label and set metadata
 					$xml = new DOMDocument();
-					$xml->loadXML($result);
+					$xml->loadXML($xml_string);
+					$this->add_label($xml, $label);
 					$this->add_metadata($xml, $metadata, $metadata_types);
 					$xml->save($dir . '/' . $id . '.xml');
 
@@ -123,6 +111,61 @@ class Alpino
 		else
 		{
 			echo 'Error opening file.';
+		}
+	}
+
+	private function split_label($id, $line, $has_labels, &$label, &$in)
+	{
+		$label = $id;
+		$in = $line;
+
+		if ($has_labels)
+		{
+			$parts = explode('|', $line);
+
+			if (count($parts) == 1)
+			{
+				$msg = 'Sentence without label';
+				$this->CI->importlog_model->add_log($importrun_id, LogLevel::Warn, $msg, $filename, $linenumber);
+			}
+			else
+			{
+				$label = $parts[0];
+				$in = substr($line, strlen($label) + 1);
+			}
+		}
+	}
+
+	private function call_alpino($in)
+	{
+		// Open a socket to Alpino
+		$socket = socket_create(AF_INET, SOCK_STREAM, 0);
+		$connect = socket_connect($socket, ALPINO_HOST, ALPINO_PORT);
+
+		// If we can't connect, abort
+		if ($connect === FALSE)
+		{
+			$msg = 'Unable to connect to Alpino server on host ' . ALPINO_HOST . ' and port ' . ALPINO_PORT;
+			throw new Exception($msg);
+		}
+
+		// Otherwise, write the sentence to the server and obtain the result
+		socket_write($socket, $in, strlen($in));
+		$result = '';
+		while ($out = socket_read($socket, 2048))
+		{
+			$result .= $out;
+		}
+		socket_close($socket);
+
+		return $result;
+	}
+
+	private function add_label($xml, $label)
+	{
+		foreach ($xml->getElementsByTagName('sentence') as $sentence)
+		{
+			$sentence->setAttribute('sentid', $label);
 		}
 	}
 

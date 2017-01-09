@@ -103,7 +103,7 @@ defined('BASEX_PWD')	OR define('BASEX_PWD',	'admin');
 
 // Alpino variables
 defined('ALPINO_HOME')  OR define('ALPINO_HOME', '/opt/Alpino');
-defined('ALPINO_HOST')  OR define('ALPINO_HOST', '0.0.0.0');
+defined('ALPINO_HOST')  OR define('ALPINO_HOST', '127.0.0.1');
 defined('ALPINO_PORT')  OR define('ALPINO_PORT', '7001');
 
 // Other settings
