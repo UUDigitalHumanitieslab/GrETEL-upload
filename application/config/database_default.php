@@ -101,9 +101,13 @@ defined('BASEX_PORT') 	OR define('BASEX_PORT',	'1984');
 defined('BASEX_USER') 	OR define('BASEX_USER',	'admin');
 defined('BASEX_PWD')	OR define('BASEX_PWD',	'admin');
 
+// Alpino variables
+defined('ALPINO_HOME')  OR define('ALPINO_HOME', '/opt/Alpino');
+defined('ALPINO_HOST')  OR define('ALPINO_HOST', '0.0.0.0');
+defined('ALPINO_PORT')  OR define('ALPINO_PORT', '7001');
+
 // Other settings
 defined('UPLOAD_DIR')	OR define('UPLOAD_DIR',	'./uploads/');
 defined('GRETEL_URL')	OR define('GRETEL_URL',	'http://localhost/gretel');
-defined('ALPINO_HOME')  OR define('ALPINO_HOME', '/opt/Alpino');
 defined('TMP_DIR')  	OR define('TMP_DIR', '/tmp');
 defined('ADMIN_EMAIL') 	OR define('ADMIN_EMAIL', 'M.H.vanderKlis@uu.nl');

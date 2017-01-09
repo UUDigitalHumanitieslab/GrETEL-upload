@@ -87,31 +87,29 @@ class Alpino
 				else
 				{
 					$id++;
+					$in = $has_labels ? $line : ($id . '|' . $line);
 
-					// Call Alpino to parse the current sentence
-					$cmd = ALPINO_HOME . '/bin/Alpino -notk -veryfast user_max=180000 -end_hook=xml -parse -flag treebank ' . $dir;
-					$descriptorspec = array(
-						0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
-						1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
-						//2 => array('file', TMP_DIR . '/alpino.log', 'a') // stderr is a file to write to
-					);
-					$cwd = NULL;
-					$env = array('ALPINO_HOME' => ALPINO_HOME);
-					$process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
+					$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+					$connect = socket_connect($socket, ALPINO_HOST, ALPINO_PORT);
 
-					if (is_resource($process))
+					if ($connect === FALSE)
 					{
-						$in = $has_labels ? $line : ($id . '|' . $line);
-						fwrite($pipes[0], $in);
-						fclose($pipes[0]);
-
-						echo stream_get_contents($pipes[1]);
-						fclose($pipes[1]);
-
-						proc_close($process);
+						$msg = 'Unable to connect to Alpino server on host ' . ALPINO_HOST . ' and port ' . ALPINO_PORT;
+						throw new Exception($msg);
 					}
 
-					$this->add_metadata($id, $dir, $metadata, $metadata_types);
+					socket_write($socket, $in, strlen($in));
+					$result = '';
+					while ($out = socket_read($socket, 2048))
+					{
+						$result .= $out;
+					}
+					socket_close($socket);
+
+					$xml = new DOMDocument();
+					$xml->loadXML($result);
+					$this->add_metadata($xml, $metadata, $metadata_types);
+					$xml->save($dir . '/' . $id . '.xml');
 
 					// We are now in a text block, empty the metadata block
 					$metadata_block = array();
@@ -128,18 +126,14 @@ class Alpino
 		}
 	}
 
-	private function add_metadata($id, $dir, $metadata, $metadata_types)
+	private function add_metadata($xml, $metadata, $metadata_types)
 	{
-		$xml_file = $dir . '/' . $id . '.xml';
-		$file_xml = new DOMDocument();
-		$file_xml->loadXML(file_get_contents($xml_file));
-		
-		$mdElement = $file_xml->createElement('metadata');
+		$mdElement = $xml->createElement('metadata');
 		foreach ($metadata as $feature => $values)
 		{
 			foreach ($values as $value)
 			{
-				$mElement = $file_xml->createElement('meta');
+				$mElement = $xml->createElement('meta');
 
 				$typeAttribute = $mElement->setAttribute('type', $metadata_types[$feature]);
 				$nameAttribute = $mElement->setAttribute('name', $feature);
@@ -152,8 +146,7 @@ class Alpino
 				$mdElement->appendChild($mElement);
 			}
 		}
-		$file_xml->documentElement->appendChild($mdElement);
-		$file_xml->save($xml_file);
+		$xml->documentElement->appendChild($mdElement);
 	}
 
 	public function word_tokenize($file)

@@ -169,7 +169,15 @@ class Process extends CI_Controller
 		$id = 0;
 		foreach (glob($dir . '/*.txt') as $file)
 		{
-			$id = $this->alpino->parse($id, $importrun_id, $dir, $file, $has_labels);
+			try
+			{
+				$id = $this->alpino->parse($id, $importrun_id, $dir, $file, $has_labels);
+			}
+			catch (Exception $e)
+			{
+				$this->importlog_model->add_log($importrun_id, LogLevel::Fatal, $e->getMessage());
+				return;
+			}
 		}
 	}
 

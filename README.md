@@ -40,6 +40,13 @@ You can use the command `php index.php migrate` in the source directory to creat
 
 Make sure the `uploads` directory is writable for the user running the Apache daemon (usually `www-data`).
 
+### Start-up
+
+Start both Alpino and BaseX as server instances by running the following two commands:
+
+	basexserver -S
+	./alpino.sh
+
 ## Libraries
 
 ### PHP
