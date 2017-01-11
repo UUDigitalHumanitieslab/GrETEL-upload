@@ -50,7 +50,7 @@ class Alpino
 				//        $type $name   $value
 				if (substr($line, 0, 6) === '##META')
 				{
-					$parts = array_map('trim', explode(' = ', $line));
+					$parts = array_map('trim', explode('=', $line));
 					if (count($parts) !== 2)
 					{
 						$msg = 'Metadata line not properly separated';
