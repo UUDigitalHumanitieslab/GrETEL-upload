@@ -84,14 +84,23 @@ class Alpino
 						$metadata[$name] = array();
 						$metadata_types[$name] = $type;
 					}
-					// If we came out this data had not yet defined in this block, reset the metadata for this field
+					// If this name was not yet present in this block, reset the metadata for this field
 					else if (!in_array($name, $metadata_block))
 					{
 						$metadata[$name] = array();
 						array_push($metadata_block, $name);
 					}
-					// Add the new value to the metadata array
-					array_push($metadata[$name], $value);
+
+					// If no value has been provided, remove the name from the metadata array
+					if (empty($value))
+					{
+						unset($metadata[$name]);
+					}
+					// Otherwise, add the value to the metadata array
+					else
+					{
+						array_push($metadata[$name], $value);
+					}
 				}
 				else
 				{
