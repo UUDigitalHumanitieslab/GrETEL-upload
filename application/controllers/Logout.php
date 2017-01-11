@@ -9,7 +9,8 @@ class Logout extends CI_Controller
 	}
 
 	/**
-	 * Destroys the current sessions and redirects to the login view.
+	 * Destroys the current session.
+	 * @return void redirects to the login view
 	 */
 	public function index()
 	{

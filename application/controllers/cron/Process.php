@@ -41,7 +41,7 @@ class Process extends CI_Controller
 	/**
 	 * Processes a single Treebank.
 	 * @param  integer $treebank_id The ID of the Treebank.
-	 * @return Redirects to the previous page.
+	 * @return void                 Redirects to the previous page.
 	 */
 	public function by_id($treebank_id)
 	{
