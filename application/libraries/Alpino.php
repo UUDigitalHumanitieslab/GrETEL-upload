@@ -10,6 +10,15 @@ class Alpino
 		$this->CI =& get_instance();
 	}
 
+	/**
+	 * Parses a plain-text file with possible metadata using the Alpino dependency parser.
+	 * @param  integer $id           the ID of the current sentence, used if there are no sentence labels
+	 * @param  integer $importrun_id the ID of the current ImportRun
+	 * @param  string $dir           the directory of the current file
+	 * @param  string $file          the current file
+	 * @param  boolean $has_labels   whether or not the current file has sentence labels
+	 * @return integer               the last processed sentence identifier in this file
+	 */
 	public function parse($id, $importrun_id, $dir, $file, $has_labels)
 	{
 		// Instantiate variables for Metadata processing
@@ -114,6 +123,16 @@ class Alpino
 		}
 	}
 
+	/**
+	 * Splits the label of the sentence if the file has labels.
+	 * If not, sets the identifier to $label, and the sentence to $in.
+	 * @param  integer $id         the ID of the current sentence, used if there are no sentence labels
+	 * @param  string $line        the current line
+	 * @param  boolean $has_labels whether or not the current file has sentence labels
+	 * @param  string &$label      the label for the current line
+	 * @param  string &$in         the current line, stripped of the label
+	 * @return void                passes $label and $in by reference
+	 */
 	private function split_label($id, $line, $has_labels, &$label, &$in)
 	{
 		$label = $id;
@@ -136,6 +155,11 @@ class Alpino
 		}
 	}
 
+	/**
+	 * Calls the Alpino server via a socket on $in, and returns the parsed sentence in (Alpino-)XML.
+	 * @param  string $in  the input sentence, tokenized but not yet parsed
+	 * @return string      the parsed sentence in XML
+	 */
 	private function call_alpino($in)
 	{
 		// Open a socket to Alpino
@@ -161,6 +185,11 @@ class Alpino
 		return $result;
 	}
 
+	/**
+	 * Attaches the label to the current Alpino-XML DomDocument.
+	 * @param DomDocument $xml the current XML DomDocument
+	 * @param string $label    the label
+	 */
 	private function add_label($xml, $label)
 	{
 		foreach ($xml->getElementsByTagName('sentence') as $sentence)
@@ -169,6 +198,12 @@ class Alpino
 		}
 	}
 
+	/**
+	 * Attaches the metadata to the current Alpino-XML DomDocument.
+	 * @param DomDocument $xml      the current XML DomDocument
+	 * @param array $metadata       the metadata present the file
+	 * @param array $metadata_types the metadata types present in the file
+	 */
 	private function add_metadata($xml, $metadata, $metadata_types)
 	{
 		$mdElement = $xml->createElement('metadata');
@@ -192,9 +227,13 @@ class Alpino
 		$xml->documentElement->appendChild($mdElement);
 	}
 
+	/**
+	 * Word-tokenizes a file using Alpino's built-in word tokenizer.
+	 * @param  string $file the current file
+	 * @return void         replaces the .txt-file with a tokenized file
+	 */
 	public function word_tokenize($file)
 	{
-		// Rename the in-file
 		$in = $this->replace_extension($file, 'in');
 		$out = $file;
 		rename($file, $in);
@@ -237,6 +276,11 @@ class Alpino
 		}
 	}
 
+	/**
+	 * Sentence-tokenizes a file, using Alpino's built-in sentence tokenizer.
+	 * @param  string $file the current file
+	 * @return void         overwrites the current file with a tokenized file
+	 */
 	public function paragraph_per_line($file)
 	{
 		$cmd = '/usr/bin/perl -w ' . ALPINO_HOME . '/Tokenization/paragraph_per_line ' . $file;
@@ -258,6 +302,12 @@ class Alpino
 		}
 	}
 
+	/**
+	 * Replaces the extension of a file.
+	 * @param  string $filename      the current filename
+	 * @param  string $new_extension the new extension
+	 * @return string                the filename with a new extension
+	 */
 	private function replace_extension($filename, $new_extension)
 	{
     	$info = pathinfo($filename);
