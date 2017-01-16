@@ -10,12 +10,13 @@ class Metadata extends CI_Controller
 
 	/**
 	 * Updates the facet for the given metadata field
+	 * @param  integer $metadata_id the ID of the Metadata model
+	 * @return void                 redirects to the Treebank detail view
 	 */
 	public function update_facet($metadata_id)
 	{
 		$metadata = $this->metadata_model->get_metadata_by_id($metadata_id);
 
-		// Validate treebank
 		if (!$this->validate_metadata())
 		{
 			// Show form again with error messages
@@ -32,7 +33,10 @@ class Metadata extends CI_Controller
 	}
 
 	/**
-	 * Updates whether the field is shown for the given metadata field
+	 * Updates whether the field is shown for the given Metadata field
+	 * @param  integer $metadata_id the ID of the Metadata model
+	 * @param  boolean $show        whether or not to show the field
+	 * @return void                 redirects to the Treebank detail view
 	 */
 	public function update_shown($metadata_id, $show)
 	{
@@ -49,7 +53,7 @@ class Metadata extends CI_Controller
 
 	/**
 	 * Validates the input.
-	 * @return boolean Whether the validation has succeeded.
+	 * @return boolean whether the validation has succeeded
 	 */
 	private function validate_metadata()
 	{
@@ -59,8 +63,8 @@ class Metadata extends CI_Controller
 	}
 
 	/**
-	 * Posts the metadata data.
-	 * @return array
+	 * Posts the Metadata data.
+	 * @return array an array with the fields that will be updated
 	 */
 	private function post_metadata()
 	{

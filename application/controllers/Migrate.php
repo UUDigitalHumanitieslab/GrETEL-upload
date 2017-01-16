@@ -10,6 +10,9 @@ class Migrate extends CI_Controller
 		$this->load->library('migration');
 	}
 
+	/**
+	 * Migrates the database to the latest and greatest.
+	 */
 	public function index()
 	{
 		if (!is_cli())
@@ -28,6 +31,10 @@ class Migrate extends CI_Controller
 		}
 	}
 
+	/**
+	 * Migrates the database to the given version identifier.
+	 * @param  integer $id the version identifier
+	 */
 	public function version($id)
 	{
 		if (!is_cli())
