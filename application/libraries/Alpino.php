@@ -51,15 +51,15 @@ class Alpino
 				if (substr($line, 0, 6) === '##META')
 				{
 					$parts = array_map('trim', explode('=', $line));
-					if (count($parts) !== 2)
+					if (count($parts) == 1)
 					{
 						$msg = 'Metadata line not properly separated';
 						$this->CI->importlog_model->add_log($importrun_id, LogLevel::Warn, $msg, $filename, $linenumber);
 						continue;
 					}
 
-					$specs = array_map('trim', explode(' ', $parts[0]));
-					$value = $parts[1];
+					$specs = array_map('trim', explode(' ', $parts[0]));  // => everything before the first '=', separated by spaces
+					$value = trim(substr($line, strpos($line, '=') + 1)); // => everything after the first '='
 
 					if (count($specs) !== 3)
 					{
@@ -252,10 +252,13 @@ class Alpino
 		{
 			while (($line = fgets($handle)) !== FALSE)
 			{
+				// Remove the end of line character
+				$line = rtrim($line, "\r\n");
+
 				// Skip empty/metadata lines
 				if (trim($line) == '' || substr($line, 0, 6) === '##META')
 				{
-					file_put_contents($out, $line . PHP_EOL, FILE_APPEND);
+					file_put_contents($out, $line . "\n", FILE_APPEND);
 					continue;
 				}
 
@@ -270,7 +273,7 @@ class Alpino
 
 				if (is_resource($process))
 				{
-					file_put_contents($out, stream_get_contents($pipes[1]) . PHP_EOL, FILE_APPEND);
+					file_put_contents($out, stream_get_contents($pipes[1]), FILE_APPEND);
 					fclose($pipes[1]);
 
 					proc_close($process);
