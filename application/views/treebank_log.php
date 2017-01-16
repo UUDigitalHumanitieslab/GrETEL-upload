@@ -29,3 +29,7 @@
 		<?php endforeach ?>
 	</tbody>
 </table>
+
+<p>
+	<?=anchor($this->agent->referrer(), lang('back')); ?>
+</p>

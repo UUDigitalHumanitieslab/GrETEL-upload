@@ -77,7 +77,7 @@
 <?php } ?>
 
 <p>
-	<?=anchor('treebank', lang('back')); ?>
+	<?=anchor($this->agent->referrer(), lang('back')); ?>
 </p>
 
 <script>
