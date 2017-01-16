@@ -9,7 +9,7 @@ class Treebank extends CI_Controller
 	}
 
 	/**
-	 * Returns all public Treebanks (=public and processed)
+	 * Returns all public Treebanks (=public and processed).
 	 * @return Loads the list view.
 	 */
 	public function index()
@@ -97,6 +97,8 @@ class Treebank extends CI_Controller
 
 		$t = array('public' => !$treebank->public);
 		$this->treebank_model->update_treebank($treebank_id, $t);
+
+		$this->session->set_flashdata('message', lang('treebank_access_modified'));
 		redirect($this->agent->referrer(), 'refresh');
 	}
 
