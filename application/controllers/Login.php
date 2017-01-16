@@ -10,10 +10,16 @@ class Login extends CI_Controller
 
 	/**
 	 * Allows users to login with their e-mail address and password.
+	 * If there is already a logged in user, redirects to the upload view.
 	 * @return Loads the base login view.
 	 */
 	public function index()
 	{
+		if (current_user_id())
+		{
+			redirect('upload');
+		}
+
 		$data['page_title'] = lang('login');
 		$data['action'] = 'login/submit';
 
