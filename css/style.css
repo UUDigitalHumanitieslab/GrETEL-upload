@@ -67,6 +67,10 @@ td.actions a {
 	border: 1px solid blue;
 }
 
+.success p, .failed p, .warning p, .info p {
+	margin: 0;
+}
+
 /* Pure CSS add-ons */
 
 .pure-menu-custom { 

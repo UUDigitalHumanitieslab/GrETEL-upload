@@ -50,6 +50,7 @@ $lang['delete']				= 'Delete';
 $lang['not_authorized']		= 'You are not authorized to view this page.';
 
 $lang['login_warning']		= 'Currently, logging in is limited to users with a Solis-ID and password of the Faculty of Humanities of Utrecht University. We are working on extending login options.';
+$lang['login_guest']		= 'If you want to have a sneak peak of the functionality, use <a href="%s">the guest account</a>.';
 $lang['login_help']			= 'Please log in with your Solis-ID and password below.';
 
 $lang['mail_processed_title'] = 'Processing of your treebank finished';

@@ -44,29 +44,65 @@ class Login extends CI_Controller
 		{
 			$username = $this->input->post('username');
 			$user = $this->user_model->get_user_by_username($username);
+
+			// If we can't find the User, create a new one
 			if (!$user)
 			{
 				$email = $this->ldap->get_user_attributes($username, array('mail'))['mail'][0];
+
 				$user = array(
 					'username'	=> $username,
 					'email'		=> $email,
 				);
 				$user_id = $this->user_model->create_user($user);
 			}
+			// Else, retrieve the ID from the found User
 			else
 			{
 				$user_id = $user->id;
 			}
 
+			// Set the userdata, and redirect to the upload page
 			$this->session->set_userdata(array(
-				'logged_in' => TRUE,
-				'user_id'   => $user_id,
+				'logged_in'	=> TRUE,
+				'user_id'	=> $user_id,
 			));
 			redirect('upload');
 		}
 	}
 
-	private function validate() 
+	public function guest()
+	{
+		$user = $this->user_model->get_user_by_username(GUEST_USERNAME);
+
+		// If we can't find the User, create a new one
+		if (!$user)
+		{
+			$user = array(
+				'username'	=> GUEST_USERNAME,
+				'email'		=> GUEST_EMAIL,
+			);
+			$user_id = $this->user_model->create_user($user);
+		}
+		// Else, retrieve the ID from the found User
+		else
+		{
+			$user_id = $user->id;
+		}
+
+		// Set the userdata, and redirect to the upload page
+		$this->session->set_userdata(array(
+			'logged_in' => TRUE,
+			'user_id'   => $user_id,
+		));
+		redirect('upload');
+	}
+	
+	/////////////////////////
+	// Form handling
+	/////////////////////////
+
+	private function validate()
 	{
 		$this->form_validation->set_rules('username', lang('username'), 'required|callback_password_check');
 		$this->form_validation->set_rules('password', lang('password'), 'required');
@@ -77,6 +113,7 @@ class Login extends CI_Controller
 	public function password_check($username)
 	{
 		$password = $this->input->post('password');
+
 		if (!$this->ldap->check_credentials($username, $password))
 		{
 			$this->form_validation->set_message('password_check', lang('invalid_credentials'));

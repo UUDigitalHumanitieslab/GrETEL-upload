@@ -4,6 +4,12 @@
 	<?=lang('login_help'); ?>
 </p>
 
+<?php if (validation_errors()) { ?>
+<div class="failed">
+	<?=validation_errors(); ?>
+</div>
+<?php } ?>
+
 <?=form_open($action, array('class' => 'pure-form')); ?>
 
 <?=form_input('username', '', array('placeholder' => lang('username'))); ?>
@@ -11,8 +17,12 @@
 <?=form_submit('submit', lang('login'), array('class' => 'pure-button pure-button-primary')); ?>
 
 <?=form_close(); ?>
-<?=validation_errors(); ?>
 
 <p>
 	<?=lang('login_warning'); ?>
 </p>
+<?php if (GUEST_USERNAME) { ?>
+<p>
+	<?=sprintf(lang('login_guest'), site_url('login/guest')); ?>
+</p>
+<?php } ?>

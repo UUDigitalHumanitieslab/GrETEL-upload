@@ -111,3 +111,7 @@ defined('UPLOAD_DIR')	OR define('UPLOAD_DIR',	'./uploads/');
 defined('GRETEL_URL')	OR define('GRETEL_URL',	'http://localhost/gretel');
 defined('TMP_DIR')  	OR define('TMP_DIR', '/tmp');
 defined('ADMIN_EMAIL') 	OR define('ADMIN_EMAIL', 'M.H.vanderKlis@uu.nl');
+
+// Guest User. Leave GUEST_USERNAME empty to disable.
+defined('GUEST_USERNAME')	OR define('GUEST_USERNAME', 'test');
+defined('GUEST_EMAIL')		OR define('GUEST_EMAIL', 'test@test.nl');
