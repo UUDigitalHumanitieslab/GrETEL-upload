@@ -15,7 +15,7 @@ class Treebank extends CI_Controller
 	public function index()
 	{
 		$data['page_title'] = lang('public_treebanks');
-		$data['treebanks'] = $this->treebank_model->get_public_treebanks();
+		$data['treebanks'] = $this->treebank_model->get_public_treebanks(current_user_id());
 
 		$this->load->view('header', $data);
 		$this->load->view('treebank_list', $data);
@@ -38,7 +38,7 @@ class Treebank extends CI_Controller
 		$treebank = $this->treebank_model->get_treebank_by_title($title);
 
 		// If this Treebank is private, only allow access to its owner.
-		if (!$treebank->public && $treebank->user_id != $this->session->userdata('user_id'))
+		if (!$treebank->public && $treebank->user_id != current_user_id())
 		{
 			show_error(lang('not_authorized'), 403);
 		}
@@ -66,7 +66,7 @@ class Treebank extends CI_Controller
 		$importrun = $this->importrun_model->get_last_importrun_by_treebank($treebank);
 
 		// Only allow the owner to view the logs of a Treebank
-		if ($treebank->user_id != $this->session->userdata('user_id'))
+		if ($treebank->user_id != current_user_id())
 		{
 			show_error(lang('not_authorized'), 403);
 		}
@@ -90,7 +90,7 @@ class Treebank extends CI_Controller
 		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
 
 		// Only allow the owner to change accessibility of a Treebank
-		if ($treebank->user_id != $this->session->userdata('user_id'))
+		if ($treebank->user_id != current_user_id())
 		{
 			show_error(lang('not_authorized'), 403);
 		}
@@ -110,7 +110,7 @@ class Treebank extends CI_Controller
 		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
 
 		// Only allow the owner to delete a Treebank
-		if ($treebank->user_id != $this->session->userdata('user_id'))
+		if ($treebank->user_id != current_user_id())
 		{
 			show_error(lang('not_authorized'), 403);
 		}
@@ -140,7 +140,7 @@ class Treebank extends CI_Controller
 	public function user($user_id)
 	{
 		// Only allow the owner to delete a Treebank
-		if ($user_id != $this->session->userdata('user_id'))
+		if ($user_id != current_user_id())
 		{
 			show_error(lang('not_authorized'), 403);
 		}

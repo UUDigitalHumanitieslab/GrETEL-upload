@@ -5,7 +5,7 @@
 		{
 			$links = array(
 				array('url' => 'upload', 'name' => 'upload_treebank'),
-				array('url' => 'treebank/user/' . $this->session->userdata('user_id'), 'name' => 'my_treebanks'),
+				array('url' => 'treebank/user/' . current_user_id(), 'name' => 'my_treebanks'),
 				array('url' => 'treebank', 'name' => 'public_treebanks'),
 				array('url' => GRETEL_URL, 'name' => 'GrETEL'),
 				array('url' => 'logout', 'name' => 'logout'),

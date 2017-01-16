@@ -9,7 +9,7 @@ if (!function_exists('treebank_actions'))
 
 		$actions = array(array('url' => 'treebank/show/' . $treebank->title, 'img' => 'details'));
 
-		if ($treebank->user_id == $CI->session->userdata('user_id'))
+		if ($treebank->user_id == current_user_id())
 		{
 			array_push($actions,
 				array('url' => 'treebank/log/' . $treebank->id, 'img' => 'view_log'),

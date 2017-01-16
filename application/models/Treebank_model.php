@@ -59,10 +59,13 @@ class Treebank_model extends CI_Model
 		return $this->db->get()->result();
 	}
 
-	public function get_public_treebanks()
+	public function get_public_treebanks($user_id = NULL)
 	{
-		$this->db->where('public', TRUE);
 		$this->db->where('processed IS NOT NULL');
+		$this->db->group_start();
+		$this->db->where('public', TRUE);
+		if ($user_id) $this->db->or_where('user_id', $user_id);
+		$this->db->group_end();
 		return $this->get_api_treebanks();
 	}
 

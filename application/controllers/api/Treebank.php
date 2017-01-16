@@ -16,7 +16,7 @@ class Treebank extends REST_Controller
 	 */
 	public function index_get()
 	{
-		$this->response($this->treebank_model->get_public_treebanks());
+		$this->response($this->treebank_model->get_public_treebanks(current_user_id()));
 	}
 	
 	/**

@@ -60,7 +60,7 @@ class Upload extends CI_Controller
 
 			// Show my treebanks
 			$this->session->set_flashdata('message', lang('upload_success'));
-			redirect('/treebank/user/' . $this->session->userdata('user_id'), 'refresh');
+			redirect('/treebank/user/' . current_user_id(), 'refresh');
 		}
 	}
 	
@@ -93,7 +93,7 @@ class Upload extends CI_Controller
 	private function post_treebank()
 	{
 		return array(
-			'user_id'			=> $this->session->userdata('user_id'),
+			'user_id'			=> current_user_id(),
 			'title'				=> $this->input->post('title'),
 			'filename'			=> $this->uploaded_treebank,
 			'public'			=> $this->input->post('public') === '1',
