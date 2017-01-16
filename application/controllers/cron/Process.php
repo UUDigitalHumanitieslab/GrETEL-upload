@@ -23,18 +23,21 @@ class Process extends CI_Controller
 		$treebanks = $this->treebank_model->get_to_be_processed_treebanks();
 		foreach ($treebanks as $treebank)
 		{
-			$this->process_treebank($treebank);
+			if (!$treebank->processing)
+			{
+				$this->process_treebank($treebank);
 
-			// Send e-mail to User when Treebank is processed
-			$user = $this->user_model->get_user_by_id($treebank->user_id);
+				// Send e-mail to User when Treebank is processed
+				$user = $this->user_model->get_user_by_id($treebank->user_id);
 
-			$this->email->clear();
+				$this->email->clear();
 
-			$this->email->from(ADMIN_EMAIL, lang('site_title'));
-			$this->email->to(in_development() ? ADMIN_EMAIL : $user->email);
-			$this->email->subject(lang('mail_processed_title'));
-			$this->email->message(sprintf(lang('mail_processed_body'), $treebank->title, GRETEL_URL));
-			$this->email->send();
+				$this->email->from(ADMIN_EMAIL, lang('site_title'));
+				$this->email->to(in_development() ? ADMIN_EMAIL : $user->email);
+				$this->email->subject(lang('mail_processed_title'));
+				$this->email->message(sprintf(lang('mail_processed_body'), $treebank->title, GRETEL_URL));
+				$this->email->send();
+			}
 		}
 	}
 
@@ -116,7 +119,7 @@ class Process extends CI_Controller
 
 				// Merge the (created) XML files, and upload them to BaseX
 				$this->merge_xml_files($dir, $component_id, $treebank->id);
-				$this->basex->upload($basex_db, $dir . '/total.xml');
+				$this->basex->upload($importrun_id, $basex_db, $dir . '/total.xml');
 			}
 
 			// Create the complete treebank, consisting of the individual directories.
@@ -134,7 +137,7 @@ class Process extends CI_Controller
 				}
 			}
 			file_put_contents($root_dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
-			$this->basex->upload($basex_db, $root_dir . '/total.xml');
+			$this->basex->upload($importrun_id, $basex_db, $root_dir . '/total.xml');
 
 			$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');
 		}

@@ -14,7 +14,6 @@ class Treebank_model extends CI_Model
 	public function get_to_be_processed_treebanks()
 	{
 		$this->db->where('processed', NULL);
-		$this->db->where('processing', FALSE);
 		return $this->db->get('treebanks')->result();
 	}
 

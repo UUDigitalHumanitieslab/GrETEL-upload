@@ -2,18 +2,23 @@
 
 class BaseX
 {
+	protected $CI;
+
     public function __construct()
     {
+		$this->CI =& get_instance();
+
         require_once APPPATH . 'third_party/BaseXClient.php';
     }
 
 	/**
 	 * Uploads a .xml-file to a BaseX database
-	 * @param  string $db   The BaseX database
-	 * @param  string $file The .xml-file
+	 * @param  integer $importrun_id the ID of the current ImportRun
+	 * @param  string $db            the BaseX database
+	 * @param  string $file          the .xml-file
 	 * @return void
 	 */
-	public function upload($db, $file)
+	public function upload($importrun_id, $db, $file)
 	{
 		try
 		{
@@ -22,22 +27,22 @@ class BaseX
 
 			// Create new database
 			$session->create($db, file_get_contents($file));
-			echo $session->info();
+			$this->CI->importlog_model->add_log($importrun_id, LogLevel::Trace, $session->info());
 
 			// Close session
 			$session->close();
 		} 
 		catch (Exception $e) 
 		{
-			// Print exception
-			echo $e->getMessage();
+			// Log exception
+			$this->CI->importlog_model->add_log($importrun_id, LogLevel::Fatal, $e->getMessage());
 		}
 	}
 
 	/**
 	 * Deletes a database from BaseX.
-	 * @param  string $db The database.
-	 * @return Nothing.
+	 * @param  string $db the BaseX database
+	 * @return void
 	 */
 	public function delete($db)
 	{
