@@ -207,7 +207,7 @@ class Alpino
 				// Skip empty/metadata lines
 				if (trim($line) == '' || substr($line, 0, 6) === '##META')
 				{
-					file_put_contents($out, $line, FILE_APPEND);
+					file_put_contents($out, $line . PHP_EOL, FILE_APPEND);
 					continue;
 				}
 
@@ -222,7 +222,7 @@ class Alpino
 
 				if (is_resource($process))
 				{
-					file_put_contents($out, stream_get_contents($pipes[1]), FILE_APPEND);
+					file_put_contents($out, stream_get_contents($pipes[1]) . PHP_EOL, FILE_APPEND);
 					fclose($pipes[1]);
 
 					proc_close($process);
