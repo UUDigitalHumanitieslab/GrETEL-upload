@@ -40,11 +40,17 @@ class Process extends CI_Controller
 
 	/**
 	 * Processes a single Treebank.
+	 * Only available in development mode.
 	 * @param  integer $treebank_id The ID of the Treebank.
 	 * @return void                 Redirects to the previous page.
 	 */
 	public function by_id($treebank_id)
 	{
+		if (!in_development())
+		{
+			show_404();
+		}
+
 		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
 		$this->process_treebank($treebank);
 
