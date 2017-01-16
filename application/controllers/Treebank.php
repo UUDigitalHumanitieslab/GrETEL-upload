@@ -24,7 +24,7 @@ class Treebank extends CI_Controller
 
 	public function detail($treebank_id)
 	{
-		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
+		$treebank = $this->get_or_404($treebank_id);
 		redirect('treebank/show/' . $treebank->title);
 	}
 
@@ -62,14 +62,10 @@ class Treebank extends CI_Controller
 	 */
 	public function log($treebank_id)
 	{
-		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
-		$importrun = $this->importrun_model->get_last_importrun_by_treebank($treebank);
+		$treebank = $this->get_or_404($treebank_id);
+		$this->check_is_owner($treebank->user_id);
 
-		// Only allow the owner to view the logs of a Treebank
-		if ($treebank->user_id != current_user_id())
-		{
-			show_error(lang('not_authorized'), 403);
-		}
+		$importrun = $this->importrun_model->get_last_importrun_by_treebank($treebank);
 
 		$data['page_title'] = sprintf(lang('treebank_log'), $treebank->title);
 		$data['importlogs'] = $this->importlog_model->get_importlogs_by_importrun($importrun->id);
@@ -79,7 +75,6 @@ class Treebank extends CI_Controller
 		$this->load->view('footer');
 	}
 
-
 	/**
 	 * Alters the accessibility of a Treebank (public <-> private).
 	 * @param  integer $treebank_id The ID of the Treebank.
@@ -87,13 +82,8 @@ class Treebank extends CI_Controller
 	 */
 	public function change_access($treebank_id)
 	{
-		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
-
-		// Only allow the owner to change accessibility of a Treebank
-		if ($treebank->user_id != current_user_id())
-		{
-			show_error(lang('not_authorized'), 403);
-		}
+		$treebank = $this->get_or_404($treebank_id);
+		$this->check_is_owner($treebank->user_id);
 
 		$t = array('public' => !$treebank->public);
 		$this->treebank_model->update_treebank($treebank_id, $t);
@@ -109,13 +99,8 @@ class Treebank extends CI_Controller
 	 */
 	public function delete($treebank_id)
 	{
-		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
-
-		// Only allow the owner to delete a Treebank
-		if ($treebank->user_id != current_user_id())
-		{
-			show_error(lang('not_authorized'), 403);
-		}
+		$treebank = $this->get_or_404($treebank_id);
+		$this->check_is_owner($treebank->user_id);
 
 		// Delete the treebank from BaseX
 		$components = $this->component_model->get_components_by_treebank($treebank_id);
@@ -141,11 +126,7 @@ class Treebank extends CI_Controller
 	 */
 	public function user($user_id)
 	{
-		// Only allow the owner to delete a Treebank
-		if ($user_id != current_user_id())
-		{
-			show_error(lang('not_authorized'), 403);
-		}
+		$this->check_is_owner($user_id);
 
 		$data['page_title'] = lang('my_treebanks');
 		$data['treebanks'] = $this->treebank_model->get_treebanks_by_user($user_id);
@@ -153,5 +134,23 @@ class Treebank extends CI_Controller
 		$this->load->view('header', $data);
 		$this->load->view('treebank_list', $data);
 		$this->load->view('footer');
+	}
+
+	private function get_or_404($treebank_id)
+	{
+		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
+		if (!$treebank)
+		{
+			show_404();
+		}
+		return $treebank;
+	}
+
+	private function check_is_owner($user_id)
+	{
+		if ($user_id != current_user_id())
+		{
+			show_error(lang('not_authorized'), 403);
+		}
 	}
 }
