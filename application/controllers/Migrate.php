@@ -1,8 +1,10 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Migrate extends CI_Controller
 {
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -52,4 +54,5 @@ class Migrate extends CI_Controller
 			echo 'Successfully migrated to version ' . $id . '.' . PHP_EOL;
 		}
 	}
+
 }

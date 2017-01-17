@@ -1,15 +1,17 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Component extends REST_Controller 
+class Component extends REST_Controller
 {
+
 	public function __construct()
 	{
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Returns the metadata of a Component, given its title.
 	 * @param  interger $treebank_id The id of the Treebank.
@@ -27,4 +29,5 @@ class Component extends REST_Controller
 
 		$this->response($this->metadata_model->get_metadata_by_component($component->id, FALSE));
 	}
+
 }

@@ -1,10 +1,14 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Metadata extends CI_Controller 
+class Metadata extends CI_Controller
 {
+
 	public function __construct()
 	{
+		$this->allowed_routes = array();  // All routes should be blocked for non-authenticated Users
+
 		parent::__construct();
 	}
 
@@ -22,7 +26,7 @@ class Metadata extends CI_Controller
 			// Show form again with error messages
 			redirect('/treebank/detail/' . $metadata->treebank_id, 'refresh');
 		}
-		else 
+		else
 		{
 			// Update the metadata facet
 			$this->metadata_model->update_metadata($metadata_id, $this->post_metadata());
@@ -46,7 +50,7 @@ class Metadata extends CI_Controller
 		// Show the treebank detail data
 		redirect('/treebank/detail/' . $metadata->treebank_id, 'refresh');
 	}
-	
+
 	/////////////////////////
 	// Form handling
 	/////////////////////////
@@ -69,7 +73,8 @@ class Metadata extends CI_Controller
 	private function post_metadata()
 	{
 		return array(
-			'facet'	=> $this->input->post('facet'),
+			'facet' => $this->input->post('facet'),
 		);
 	}
+
 }

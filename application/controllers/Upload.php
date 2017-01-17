@@ -1,8 +1,10 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Upload extends CI_Controller 
+class Upload extends MY_Controller
 {
+
 	/**
 	 * Temporary variable for the uploaded Treebank.
 	 * @var File
@@ -15,11 +17,13 @@ class Upload extends CI_Controller
 	 */
 	public function __construct()
 	{
+		$this->allowed_routes = array();  // All routes should be blocked for non-authenticated Users
+
 		parent::__construct();
 
-		$config['upload_path']		= UPLOAD_DIR;
-		$config['allowed_types']	= 'zip';
-		$config['max_size']			= 16384;
+		$config['upload_path'] = UPLOAD_DIR;
+		$config['allowed_types'] = 'zip';
+		$config['max_size'] = 16384;
 
 		$this->load->library('upload', $config);
 
@@ -52,7 +56,7 @@ class Upload extends CI_Controller
 			// Show form again with error messages
 			$this->index();
 		}
-		else 
+		else
 		{
 			// Add treebank to database
 			$treebank = $this->post_treebank();
@@ -63,7 +67,7 @@ class Upload extends CI_Controller
 			redirect('/treebank/user/' . current_user_id(), 'refresh');
 		}
 	}
-	
+
 	/////////////////////////
 	// Form handling
 	/////////////////////////
@@ -93,14 +97,14 @@ class Upload extends CI_Controller
 	private function post_treebank()
 	{
 		return array(
-			'user_id'			=> current_user_id(),
-			'title'				=> $this->input->post('title'),
-			'filename'			=> $this->uploaded_treebank,
-			'public'			=> $this->input->post('public') === '1',
-			'is_txt'			=> $this->input->post('is_txt') === '1',
-			'is_sent_tokenised'	=> $this->input->post('is_sent_tokenised') === '1',
-			'is_word_tokenised'	=> $this->input->post('is_word_tokenised') === '1',
-			'has_labels'		=> $this->input->post('has_labels') === '1',
+			'user_id' => current_user_id(),
+			'title' => $this->input->post('title'),
+			'filename' => $this->uploaded_treebank,
+			'public' => $this->input->post('public') === '1',
+			'is_txt' => $this->input->post('is_txt') === '1',
+			'is_sent_tokenised' => $this->input->post('is_sent_tokenised') === '1',
+			'is_word_tokenised' => $this->input->post('is_word_tokenised') === '1',
+			'has_labels' => $this->input->post('has_labels') === '1',
 		);
 	}
 
@@ -122,11 +126,12 @@ class Upload extends CI_Controller
 		else
 		{
 			$data = $this->upload->data();
-			if ($data['file_name']) 
+			if ($data['file_name'])
 			{
 				$this->uploaded_treebank = $data['file_name'];
 			}
 			return TRUE;
 		}
 	}
+
 }

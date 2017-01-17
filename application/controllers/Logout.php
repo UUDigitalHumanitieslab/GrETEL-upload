@@ -1,10 +1,14 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Logout extends CI_Controller 
+class Logout extends MY_Controller
 {
+
 	public function __construct()
 	{
+		$this->allowed_routes = array();  // All routes should be blocked for non-authenticated Users
+
 		parent::__construct();
 	}
 
@@ -17,4 +21,5 @@ class Logout extends CI_Controller
 		$this->session->sess_destroy();
 		redirect('login');
 	}
+
 }

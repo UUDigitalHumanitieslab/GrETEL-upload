@@ -1,10 +1,14 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Login extends CI_Controller 
+class Login extends MY_Controller
 {
+
 	public function __construct()
 	{
+		$this->allowed_routes = array('index', 'submit', 'guest');
+
 		parent::__construct();
 	}
 
@@ -51,8 +55,8 @@ class Login extends CI_Controller
 				$email = $this->ldap->get_user_attributes($username, array('mail'))['mail'][0];
 
 				$user = array(
-					'username'	=> $username,
-					'email'		=> $email,
+					'username' => $username,
+					'email' => $email,
 				);
 				$user_id = $this->user_model->create_user($user);
 			}
@@ -64,8 +68,8 @@ class Login extends CI_Controller
 
 			// Set the userdata, and redirect to the upload page
 			$this->session->set_userdata(array(
-				'logged_in'	=> TRUE,
-				'user_id'	=> $user_id,
+				'logged_in' => TRUE,
+				'user_id' => $user_id,
 			));
 			redirect('upload');
 		}
@@ -79,8 +83,8 @@ class Login extends CI_Controller
 		if (!$user)
 		{
 			$user = array(
-				'username'	=> GUEST_USERNAME,
-				'email'		=> GUEST_EMAIL,
+				'username' => GUEST_USERNAME,
+				'email' => GUEST_EMAIL,
 			);
 			$user_id = $this->user_model->create_user($user);
 		}
@@ -93,11 +97,11 @@ class Login extends CI_Controller
 		// Set the userdata, and redirect to the upload page
 		$this->session->set_userdata(array(
 			'logged_in' => TRUE,
-			'user_id'   => $user_id,
+			'user_id' => $user_id,
 		));
 		redirect('upload');
 	}
-	
+
 	/////////////////////////
 	// Form handling
 	/////////////////////////
@@ -125,4 +129,5 @@ class Login extends CI_Controller
 			return TRUE;
 		}
 	}
+
 }

@@ -1,10 +1,14 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Treebank extends CI_Controller 
+class Treebank extends MY_Controller
 {
+
 	public function __construct()
 	{
+		$this->allowed_routes = array('index', 'show');
+
 		parent::__construct();
 	}
 
@@ -20,12 +24,6 @@ class Treebank extends CI_Controller
 		$this->load->view('header', $data);
 		$this->load->view('treebank_list', $data);
 		$this->load->view('footer');
-	}
-
-	public function detail($treebank_id)
-	{
-		$treebank = $this->get_or_404($treebank_id);
-		redirect('treebank/show/' . $treebank->title);
 	}
 
 	/**
@@ -53,6 +51,16 @@ class Treebank extends CI_Controller
 		$this->load->view('header', $data);
 		$this->load->view('treebank_detail', $data);
 		$this->load->view('footer');
+	}
+
+	/**
+	 * Redirect for the 'show' method above, using the ID instead of the title
+	 * @param integer $treebank_id the ID of the Treebank
+	 */
+	public function detail($treebank_id)
+	{
+		$treebank = $this->get_or_404($treebank_id);
+		redirect('treebank/show/' . $treebank->title);
 	}
 
 	/**
@@ -109,9 +117,9 @@ class Treebank extends CI_Controller
 			$this->basex->delete($component->basex_db);
 		}
 		$this->basex->delete(strtoupper($treebank->title . '_ID'));
-		
+
 		// Delete the treebank from the database
-		$treebank = $this->treebank_model->delete_treebank($treebank_id);
+		$this->treebank_model->delete_treebank($treebank_id);
 
 		// Return to the previous page
 		$this->session->set_flashdata('message', lang('treebank_deleted'));
@@ -153,4 +161,5 @@ class Treebank extends CI_Controller
 			show_error(lang('not_authorized'), 403);
 		}
 	}
+
 }

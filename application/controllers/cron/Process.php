@@ -1,8 +1,10 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Process extends CI_Controller 
+class Process extends CI_Controller
 {
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -88,7 +90,7 @@ class Process extends CI_Controller
 			}
 
 			// Create databases per component
-			foreach(glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
+			foreach (glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
 			{
 				// Create a Component for each directory in the .zip-file.
 				$slug = basename($dir);
@@ -96,20 +98,20 @@ class Process extends CI_Controller
 				$title = $metadata ? $metadata->$slug->description : $slug;
 
 				$component = array(
-					'treebank_id' 	=> $treebank->id,
-					'title'			=> $title,
-					'slug'			=> $slug,
-					'basex_db'		=> $basex_db);
+					'treebank_id' => $treebank->id,
+					'title' => $title,
+					'slug' => $slug,
+					'basex_db' => $basex_db);
 				$component_id = $this->component_model->add_component($component);
 
 				// If the Treebank consists of plain text items, tokenize and parse it.
 				if ($treebank->is_txt)
 				{
-					if (!$treebank->is_sent_tokenised) 
+					if (!$treebank->is_sent_tokenised)
 					{
 						$this->paragraph_tokenize($dir);
 					}
-					if (!$treebank->is_word_tokenised) 
+					if (!$treebank->is_word_tokenised)
 					{
 						$this->word_tokenize($dir);
 					}
@@ -127,7 +129,7 @@ class Process extends CI_Controller
 			$treebank_xml = new DOMDocument();
 			$treebank_xml->loadXML('<treebank/>');
 			foreach (glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
-			{				
+			{
 				$file_xml = new DOMDocument();
 				$file_xml->loadXML(file_get_contents($dir . '/total.xml'));
 				foreach ($file_xml->getElementsByTagName('alpino_ds') as $tree)
@@ -145,7 +147,7 @@ class Process extends CI_Controller
 		{
 			$this->importlog_model->add_log($importrun_id, LogLevel::Fatal, 'File not found');
 		}
-		
+
 		// Mark treebank as processed
 		$this->importrun_model->end_importrun($importrun_id, $treebank->id);
 	}
@@ -173,7 +175,7 @@ class Process extends CI_Controller
 	 * @param  boolean $has_labels	Whether the sentence has a label or not.
 	 * @return void
 	 */
-	private function alpino_parse($importrun_id, $dir, $has_labels) 
+	private function alpino_parse($importrun_id, $dir, $has_labels)
 	{
 		$id = 0;
 		foreach (glob($dir . '/*.txt') as $file)
@@ -237,10 +239,10 @@ class Process extends CI_Controller
 				else
 				{
 					$metadata = array(
-						'treebank_id'	=> $treebank_id,
-						'field'			=> $field,
-						'type'			=> $type,
-						'facet'			=> default_facet($type),
+						'treebank_id' => $treebank_id,
+						'field' => $field,
+						'type' => $type,
+						'facet' => default_facet($type),
 					);
 					$metadata_id = $this->metadata_model->add_metadata($metadata);
 				}
@@ -250,10 +252,11 @@ class Process extends CI_Controller
 		}
 
 		$c = array(
-			'nr_sentences'	=> $nr_sentences, 
-			'nr_words' 		=> $nr_words);
+			'nr_sentences' => $nr_sentences,
+			'nr_words' => $nr_words);
 		$this->component_model->update_component($component_id, $c);
 
 		file_put_contents($dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
 	}
+
 }

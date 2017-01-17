@@ -1,10 +1,12 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Treebank extends REST_Controller 
+class Treebank extends REST_Controller
 {
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -18,7 +20,7 @@ class Treebank extends REST_Controller
 	{
 		$this->response($this->treebank_model->get_public_treebanks(current_user_id()));
 	}
-	
+
 	/**
 	 * Returns the Components of a Treebank, given its title.
 	 * @param  string $title The title of the Treebank.
@@ -35,7 +37,7 @@ class Treebank extends REST_Controller
 
 		$this->response($this->component_model->get_components_by_treebank($treebank->id));
 	}
-	
+
 	/**
 	 * Returns the Metadata of a Treebank, given its title.
 	 * @param  string $title The title of the Treebank.
@@ -52,7 +54,7 @@ class Treebank extends REST_Controller
 
 		$this->response($this->metadata_model->get_metadata_by_treebank($treebank->id, FALSE));
 	}
-	
+
 	/**
 	 * Returns all Treebanks for a User.
 	 * TODO: limit access to current User.
@@ -64,4 +66,5 @@ class Treebank extends REST_Controller
 	{
 		$this->response($this->treebank_model->get_treebanks_by_user($user_id));
 	}
+
 }
