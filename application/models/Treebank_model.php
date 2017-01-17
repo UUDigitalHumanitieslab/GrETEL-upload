@@ -1,8 +1,12 @@
 <?php
-class Treebank_model extends CI_Model 
+
+class Treebank_model extends CI_Model
 {
+
 	public function __construct()
 	{
+		parent::__construct();
+
 		$this->load->database();
 	}
 
@@ -40,7 +44,7 @@ class Treebank_model extends CI_Model
 		$this->db->where('id', $treebank_id);
 		$this->db->update('treebanks', $treebank);
 	}
-	
+
 	public function delete_treebank($treebank_id)
 	{
 		$this->db->delete('treebanks', array('id' => $treebank_id));
@@ -63,7 +67,8 @@ class Treebank_model extends CI_Model
 		$this->db->where('processed IS NOT NULL');
 		$this->db->group_start();
 		$this->db->where('public', TRUE);
-		if ($user_id) $this->db->or_where('user_id', $user_id);
+		if ($user_id)
+			$this->db->or_where('user_id', $user_id);
 		$this->db->group_end();
 		return $this->get_api_treebanks();
 	}
@@ -73,4 +78,5 @@ class Treebank_model extends CI_Model
 		$this->db->where('user_id', $user_id);
 		return $this->get_api_treebanks();
 	}
+
 }

@@ -1,8 +1,12 @@
 <?php
-class Importrun_model extends CI_Model 
+
+class Importrun_model extends CI_Model
 {
+
 	public function __construct()
 	{
+		parent::__construct();
+
 		$this->load->database();
 	}
 
@@ -29,4 +33,5 @@ class Importrun_model extends CI_Model
 		$this->db->order_by('time_ended', 'DESC');
 		return $this->db->get('importruns')->row();
 	}
+
 }
