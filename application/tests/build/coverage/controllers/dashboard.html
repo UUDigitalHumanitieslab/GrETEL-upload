@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /var/www/html/gretel-upload/application/controllers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../css/nv.d3.min.css" rel="stylesheet">
+  <link href="../css/style.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="../js/html5shiv.min.js"></script>
+  <script src="../js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">/var/www/html/gretel-upload/application</a></li>
+        <li><a href="index.html">controllers</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Logout.php.html#5">Logout</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#5">Metadata</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Migrate.php.html#5">Migrate</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Treebank.php.html#7">Treebank</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Upload.php.html#5">Upload</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Component.php.html#7">Component</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="cron/Process.php.html#5">Process</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="cron/Process.php.html#5">Process</a></td><td class="text-right">870</td></tr>
+       <tr><td><a href="Upload.php.html#5">Upload</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Migrate.php.html#5">Migrate</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="api/Treebank.php.html#7">Treebank</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Metadata.php.html#5">Metadata</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="api/Component.php.html#7">Component</a></td><td class="text-right">12</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="cron/Process.php.html#201"><abbr title="Process::merge_xml_files">merge_xml_files</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Upload.php.html#37"><abbr title="Upload::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="cron/Process.php.html#178"><abbr title="Process::alpino_parse">alpino_parse</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="cron/Process.php.html#163"><abbr title="Process::word_tokenize">word_tokenize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="cron/Process.php.html#155"><abbr title="Process::paragraph_tokenize">paragraph_tokenize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="cron/Process.php.html#71"><abbr title="Process::process_treebank">process_treebank</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="cron/Process.php.html#52"><abbr title="Process::by_id">by_id</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="cron/Process.php.html#17"><abbr title="Process::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="cron/Process.php.html#8"><abbr title="Process::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Component.php.html#21"><abbr title="Component::metadata_get">metadata_get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Component.php.html#10"><abbr title="Component::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Upload.php.html#119"><abbr title="Upload::upload_treebank">upload_treebank</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Upload.php.html#97"><abbr title="Upload::post_treebank">post_treebank</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Upload.php.html#79"><abbr title="Upload::validate_treebank">validate_treebank</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Upload.php.html#51"><abbr title="Upload::submit">submit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Upload.php.html#18"><abbr title="Upload::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Logout.php.html#8"><abbr title="Logout::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Treebank.php.html#65"><abbr title="Treebank::user_get">user_get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Treebank.php.html#46"><abbr title="Treebank::metadata_get">metadata_get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Treebank.php.html#29"><abbr title="Treebank::show_get">show_get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Treebank.php.html#19"><abbr title="Treebank::index_get">index_get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="api/Treebank.php.html#10"><abbr title="Treebank::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Migrate.php.html#40"><abbr title="Migrate::version">version</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Migrate.php.html#18"><abbr title="Migrate::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Migrate.php.html#8"><abbr title="Migrate::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#73"><abbr title="Metadata::post_metadata">post_metadata</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#62"><abbr title="Metadata::validate_metadata">validate_metadata</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#45"><abbr title="Metadata::update_shown">update_shown</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#20"><abbr title="Metadata::update_facet">update_facet</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#8"><abbr title="Metadata::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Logout.php.html#19"><abbr title="Logout::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Login.php.html#20"><abbr title="Login::index">index</abbr></a></td><td class="text-right">87%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="cron/Process.php.html#71"><abbr title="Process::process_treebank">process_treebank</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="cron/Process.php.html#17"><abbr title="Process::index">index</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="cron/Process.php.html#201"><abbr title="Process::merge_xml_files">merge_xml_files</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Migrate.php.html#18"><abbr title="Migrate::index">index</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Migrate.php.html#40"><abbr title="Migrate::version">version</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Upload.php.html#119"><abbr title="Upload::upload_treebank">upload_treebank</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="cron/Process.php.html#178"><abbr title="Process::alpino_parse">alpino_parse</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Metadata.php.html#20"><abbr title="Metadata::update_facet">update_facet</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="api/Treebank.php.html#29"><abbr title="Treebank::show_get">show_get</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="api/Treebank.php.html#46"><abbr title="Treebank::metadata_get">metadata_get</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Upload.php.html#51"><abbr title="Upload::submit">submit</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="api/Component.php.html#21"><abbr title="Component::metadata_get">metadata_get</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="cron/Process.php.html#52"><abbr title="Process::by_id">by_id</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="cron/Process.php.html#155"><abbr title="Process::paragraph_tokenize">paragraph_tokenize</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="cron/Process.php.html#163"><abbr title="Process::word_tokenize">word_tokenize</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Login.php.html#20"><abbr title="Login::index">index</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 4.0.4</a> using <a href="https://secure.php.net/" target="_top">PHP 7.0.13-0ubuntu0.16.04.1</a> with <a href="https://xdebug.org/">Xdebug 2.5.0</a> and <a href="https://phpunit.de/">PHPUnit 5.7.5</a> at Tue Jan 17 11:02:04 CET 2017.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../js/jquery.min.js" type="text/javascript"></script>
+  <script src="../js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../js/holder.min.js" type="text/javascript"></script>
+  <script src="../js/d3.min.js" type="text/javascript"></script>
+  <script src="../js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([7,0,0,0,0,0,0,0,0,0,1,0], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([31,0,0,0,0,0,0,0,0,1,0,5], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[90.909090909091,11,"<a href=\"Login.php.html#5\">Login<\/a>"],[0,2,"<a href=\"Logout.php.html#5\">Logout<\/a>"],[0,6,"<a href=\"Metadata.php.html#5\">Metadata<\/a>"],[0,7,"<a href=\"Migrate.php.html#5\">Migrate<\/a>"],[0,7,"<a href=\"api\/Treebank.php.html#7\">Treebank<\/a>"],[0,9,"<a href=\"Upload.php.html#5\">Upload<\/a>"],[0,3,"<a href=\"api\/Component.php.html#7\">Component<\/a>"],[0,29,"<a href=\"cron\/Process.php.html#5\">Process<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Login.php.html#8\">Login::__construct<\/a>"],[87.5,2,"<a href=\"Login.php.html#20\">Login::index<\/a>"],[100,3,"<a href=\"Login.php.html#41\">Login::submit<\/a>"],[100,2,"<a href=\"Login.php.html#78\">Login::guest<\/a>"],[100,1,"<a href=\"Login.php.html#109\">Login::validate<\/a>"],[100,2,"<a href=\"Login.php.html#117\">Login::password_check<\/a>"],[0,1,"<a href=\"Logout.php.html#8\">Logout::__construct<\/a>"],[0,1,"<a href=\"Logout.php.html#19\">Logout::index<\/a>"],[0,1,"<a href=\"Metadata.php.html#8\">Metadata::__construct<\/a>"],[0,2,"<a href=\"Metadata.php.html#20\">Metadata::update_facet<\/a>"],[0,1,"<a href=\"Metadata.php.html#45\">Metadata::update_shown<\/a>"],[0,1,"<a href=\"Metadata.php.html#62\">Metadata::validate_metadata<\/a>"],[0,1,"<a href=\"Metadata.php.html#73\">Metadata::post_metadata<\/a>"],[0,1,"<a href=\"Migrate.php.html#8\">Migrate::__construct<\/a>"],[0,3,"<a href=\"Migrate.php.html#18\">Migrate::index<\/a>"],[0,3,"<a href=\"Migrate.php.html#40\">Migrate::version<\/a>"],[0,1,"<a href=\"api\/Treebank.php.html#10\">Treebank::__construct<\/a>"],[0,1,"<a href=\"api\/Treebank.php.html#19\">Treebank::index_get<\/a>"],[0,2,"<a href=\"api\/Treebank.php.html#29\">Treebank::show_get<\/a>"],[0,2,"<a href=\"api\/Treebank.php.html#46\">Treebank::metadata_get<\/a>"],[0,1,"<a href=\"api\/Treebank.php.html#65\">Treebank::user_get<\/a>"],[0,1,"<a href=\"Upload.php.html#18\">Upload::__construct<\/a>"],[0,1,"<a href=\"Upload.php.html#37\">Upload::index<\/a>"],[0,2,"<a href=\"Upload.php.html#51\">Upload::submit<\/a>"],[0,1,"<a href=\"Upload.php.html#79\">Upload::validate_treebank<\/a>"],[0,1,"<a href=\"Upload.php.html#97\">Upload::post_treebank<\/a>"],[0,3,"<a href=\"Upload.php.html#119\">Upload::upload_treebank<\/a>"],[0,1,"<a href=\"api\/Component.php.html#10\">Component::__construct<\/a>"],[0,2,"<a href=\"api\/Component.php.html#21\">Component::metadata_get<\/a>"],[0,1,"<a href=\"cron\/Process.php.html#8\">Process::__construct<\/a>"],[0,5,"<a href=\"cron\/Process.php.html#17\">Process::index<\/a>"],[0,2,"<a href=\"cron\/Process.php.html#52\">Process::by_id<\/a>"],[0,10,"<a href=\"cron\/Process.php.html#71\">Process::process_treebank<\/a>"],[0,2,"<a href=\"cron\/Process.php.html#155\">Process::paragraph_tokenize<\/a>"],[0,2,"<a href=\"cron\/Process.php.html#163\">Process::word_tokenize<\/a>"],[0,3,"<a href=\"cron\/Process.php.html#178\">Process::alpino_parse<\/a>"],[0,4,"<a href=\"cron\/Process.php.html#201\">Process::merge_xml_files<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

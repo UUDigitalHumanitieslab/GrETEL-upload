@@ -4,17 +4,6 @@ GrETEL-upload is an extension package for [GrETEL](https://github.com/UiL-OTS-la
 The application will then automatically transform your corpus in an Alpino XML-treebank. 
 After processing, the treebanks are searchable in GrETEL.
 
-## API
-
-* treebank/: Returns all publicly available treebanks.
-* treebank/show/[title]: Returns the components of the treebank given by title.
-* treebank/metadata/[title]: Returns the metadata of the treebank given by title.
-* treebank/user/[user_id]: Returns all treebanks available to the currently logged in user. This might include private treebanks.
-
-## Demo
-
-A working version is available on http://gretel.hum.uu.nl.
-
 ## Local installation
 
 ### Requirements
@@ -47,6 +36,8 @@ Start both Alpino and BaseX as server instances by running the following two com
 	basexserver -S
 	./alpino.sh
 
+Then, navigate to the installation directory in your web browser to start using GrETEL-upload.
+
 ## Libraries
 
 ### PHP
@@ -62,7 +53,7 @@ The application uses the following libraries:
 
 ### Javascript
 
-GrETEL-upload uses the following libraries:
+GrETEL-upload uses the following JavaScript libraries:
 
 * [jQuery](https://jquery.com/)
 * [qTip2](http://qtip2.com/)
@@ -70,3 +61,20 @@ GrETEL-upload uses the following libraries:
 ### CSS
 
 GrETEL-upload is created with [Pure CSS](http://purecss.io/).
+
+## API
+
+* treebank/: Returns all publicly available treebanks.
+* treebank/show/[title]: Returns the components of the treebank given by title.
+* treebank/metadata/[title]: Returns the metadata of the treebank given by title.
+* treebank/user/[user_id]: Returns all treebanks available to the currently logged in user. This might include private treebanks.
+
+## Tests
+
+The test suite is created using [ci-phpunit-test](https://github.com/kenjis/ci-phpunit-test).
+This uses [PHPUnit](https://phpunit.de/).
+You can run the tests by navigating to the `application\tests` directory and calling `phpunit`.
+
+## Demo
+
+A working version is available on http://gretel.hum.uu.nl.
