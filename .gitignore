@@ -1,2 +1,6 @@
+# Configuration files
 /application/config/database.php
 /application/config/ldap.php
+
+# IDE-specific
+/nbproject/
