@@ -1,5 +1,7 @@
 <?php
 
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Component_model extends CI_Model
 {
 
@@ -11,16 +13,16 @@ class Component_model extends CI_Model
 	}
 
 	/**
-	 * Retrieves all Components from the database
+	 * Retrieves all Components
 	 * @return array the found Components
 	 */
 	public function get_all_components()
 	{
 		return $this->db->get('components')->result();
 	}
-	
+
 	/**
-	 * Retrieves a Component from the database using its ID
+	 * Retrieves a Component using its ID
 	 * @param integer $component_id the ID of the Component
 	 * @return Component_model      the found Component
 	 */
@@ -31,7 +33,7 @@ class Component_model extends CI_Model
 	}
 
 	/**
-	 * Retrieves a Component from the database using the ID of the Treebank and its title
+	 * Retrieves a Component using the ID of the Treebank and its title
 	 * @param integer $treebank_id the ID of the Treebank
 	 * @param string $title        the title of the Component
 	 * @return Component_model     the found Component
@@ -44,7 +46,7 @@ class Component_model extends CI_Model
 	}
 
 	/**
-	 * Creates a new component
+	 * Creates a new Component
 	 * @param array $component the fields for the Component
 	 * @return integer         the new ID for the Component
 	 */
@@ -83,7 +85,7 @@ class Component_model extends CI_Model
 	/////////////////////////
 
 	/**
-	 * Retrieves the Components from the database using the ID of the Treebank
+	 * Retrieves all Components for a Treebank
 	 * @param integer $treebank_id the ID of the Treebank
 	 * @return array               the found Components
 	 */

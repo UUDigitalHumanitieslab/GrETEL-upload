@@ -1,8 +1,11 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 // Copied from http://stackoverflow.com/a/254543
 abstract class BasicEnum
 {
+
 	private static $constCacheArray = NULL;
 
 	public static function getConstants()
@@ -40,23 +43,28 @@ abstract class BasicEnum
 		$values = array_values(self::getConstants());
 		return in_array($value, $values, $strict);
 	}
+
 }
 
 if (!function_exists('in_development'))
 {
 	/* Checks whether we are in development mode */
+
 	function in_development()
 	{
 		return ENVIRONMENT === 'development';
 	}
+
 }
 
 if (!function_exists('current_user_id'))
 {
+
 	/** Returns the user_id of the current user */
 	function current_user_id()
 	{
-		$CI =& get_instance();
+		$CI = & get_instance();
 		return $CI->session->userdata('user_id');
 	}
+
 }

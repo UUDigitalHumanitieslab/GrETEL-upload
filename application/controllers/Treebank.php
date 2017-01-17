@@ -73,7 +73,7 @@ class Treebank extends MY_Controller
 		$treebank = $this->get_or_404($treebank_id);
 		$this->check_is_owner($treebank->user_id);
 
-		$importrun = $this->importrun_model->get_last_importrun_by_treebank($treebank);
+		$importrun = $this->importrun_model->get_last_importrun_by_treebank($treebank_id);
 
 		$data['page_title'] = sprintf(lang('treebank_log'), $treebank->title);
 		$data['importlogs'] = $this->importlog_model->get_importlogs_by_importrun($importrun->id);

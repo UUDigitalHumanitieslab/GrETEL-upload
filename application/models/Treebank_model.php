@@ -1,5 +1,7 @@
 <?php
 
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Treebank_model extends CI_Model
 {
 
@@ -56,7 +58,9 @@ class Treebank_model extends CI_Model
 
 	public function get_api_treebanks()
 	{
-		$this->db->select(array('treebanks.id', 'treebanks.title', 'users.id AS user_id', 'users.email', 'treebanks.uploaded', 'treebanks.processed', 'treebanks.public'));
+		$this->db->select(array('treebanks.id', 'treebanks.title',
+			'users.id AS user_id', 'users.email',
+			'treebanks.uploaded', 'treebanks.processed', 'treebanks.public'));
 		$this->db->from('treebanks');
 		$this->db->join('users', 'users.id = treebanks.user_id');
 		return $this->db->get()->result();
@@ -68,7 +72,9 @@ class Treebank_model extends CI_Model
 		$this->db->group_start();
 		$this->db->where('public', TRUE);
 		if ($user_id)
+		{
 			$this->db->or_where('user_id', $user_id);
+		}	
 		$this->db->group_end();
 		return $this->get_api_treebanks();
 	}
