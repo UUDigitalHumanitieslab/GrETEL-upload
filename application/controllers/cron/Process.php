@@ -120,25 +120,13 @@ class Process extends CI_Controller
 				}
 
 				// Merge the (created) XML files, and upload them to BaseX
-				$this->merge_xml_files($dir, $component_id, $treebank->id);
+				$this->merge_xml_files($dir, $importrun_id, $treebank->id, $component_id);
 				$this->basex->upload($importrun_id, $basex_db, $dir . '/total.xml');
 			}
 
-			// Create the complete treebank, consisting of the individual directories.
+			// Merge all the directories, and upload them to BaseX
+			$this->merge_dirs($root_dir, $importrun_id);
 			$basex_db = strtoupper($treebank->title . '_ID');
-			$treebank_xml = new DOMDocument();
-			$treebank_xml->loadXML('<treebank/>');
-			foreach (glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
-			{
-				$file_xml = new DOMDocument();
-				$file_xml->loadXML(file_get_contents($dir . '/total.xml'));
-				foreach ($file_xml->getElementsByTagName('alpino_ds') as $tree)
-				{
-					$node = $treebank_xml->importNode($tree, TRUE);
-					$treebank_xml->documentElement->appendChild($node);
-				}
-			}
-			$treebank_xml->save($root_dir . '/total.xml');
 			$this->basex->upload($importrun_id, $basex_db, $root_dir . '/total.xml');
 
 			$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');
@@ -195,17 +183,23 @@ class Process extends CI_Controller
 	/**
 	 * Merges all Alpino-DS .xml-files in a directory to a single DomDocument and counts the number of words/sentences.
 	 * @param  string $dir           The directory which contains the Alpino-DS .xml-files
+	 * @param  integer $importrun_id The ID of the current ImportRun
+	 * @param  integer $treebank_id  The ID of the current Treebank
 	 * @param  integer $component_id The ID of the current Component
-	 * @return void
 	 */
-	private function merge_xml_files($dir, $component_id, $treebank_id)
+	private function merge_xml_files($dir, $importrun_id, $treebank_id, $component_id)
 	{
+		$this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Starting merge of directory ' . $dir);
+
 		$nr_sentences = 0;
 		$nr_words = 0;
 
-		$treebank_xml = new DOMDocument();
-		$treebank_xml->loadXML('<treebank/>');
+		$xmlWriter = new XMLWriter();
+		$xmlWriter->openMemory();
+		$xmlWriter->startDocument('1.0', 'UTF-8');
+		$xmlWriter->startElement('treebank');
 
+		$i = 0;
 		foreach (glob($dir . '/*.xml') as $file)
 		{
 			$file_xml = new DOMDocument();
@@ -219,8 +213,8 @@ class Process extends CI_Controller
 			$nr_words += intval($xp->query('//node[@cat="top"]')->item(0)->getAttribute('end'));
 
 			// Attach the document to the original folder
-			$node = $treebank_xml->importNode($file_xml->documentElement, TRUE);
-			$treebank_xml->documentElement->appendChild($node);
+			$str = $file_xml->saveXML($file_xml->documentElement);
+			$xmlWriter->writeRaw($str);
 
 			// Save any existing metadata to the database
 			$metadata_nodes = $xp->query('//meta');
@@ -249,6 +243,14 @@ class Process extends CI_Controller
 
 				$this->metadata_model->update_minmax($metadata_id, $value);
 			}
+
+			// Flush XML in memory to file every 1000 iterations
+			if ($i % 1000 == 0)
+			{
+				file_put_contents($dir . '/total.xml', $xmlWriter->flush(true), FILE_APPEND);
+			}
+
+			$i++;
 		}
 
 		$c = array(
@@ -256,7 +258,38 @@ class Process extends CI_Controller
 			'nr_words' => $nr_words);
 		$this->component_model->update_component($component_id, $c);
 
-		$treebank_xml->save($dir . '/total.xml');
+		$xmlWriter->endElement();
+		file_put_contents($dir . '/total.xml', $xmlWriter->flush(true), FILE_APPEND);
+
+		$this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished merge of directory ' . $dir);
 	}
 
+	/**
+	 * Create the complete Treebank, consisting of the individual directories.
+	 * @param string $root_dir      The root directory
+	 * @param integer $importrun_id The ID of the current ImportRun
+	 */
+	private function merge_dirs($root_dir, $importrun_id)
+	{
+		$this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Started total merge');
+
+		$xmlWriter = new XMLWriter();
+		$xmlWriter->openMemory();
+		$xmlWriter->startDocument('1.0', 'UTF-8');
+		$xmlWriter->startElement('treebank');
+		foreach (glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
+		{
+			$file_xml = new DOMDocument();
+			$file_xml->loadXML(file_get_contents($dir . '/total.xml'));
+			foreach ($file_xml->getElementsByTagName('alpino_ds') as $tree)
+			{
+				$str = $file_xml->saveXML($tree);
+				$xmlWriter->writeRaw($str);
+			}
+		}
+		$xmlWriter->endElement();
+		file_put_contents($root_dir . '/total.xml', $xmlWriter->flush(true), FILE_APPEND);
+
+		$this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished total merge');
+	}
 }
