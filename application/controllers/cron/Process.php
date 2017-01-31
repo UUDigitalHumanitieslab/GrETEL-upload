@@ -247,7 +247,7 @@ class Process extends CI_Controller
 			// Flush XML in memory to file every 1000 iterations
 			if ($i % 1000 == 0)
 			{
-				file_put_contents($dir . '/total.xml', $xmlWriter->flush(true), FILE_APPEND);
+				file_put_contents($dir . '/total.xml', $xmlWriter->flush(), FILE_APPEND);
 			}
 
 			$i++;
@@ -259,7 +259,8 @@ class Process extends CI_Controller
 		$this->component_model->update_component($component_id, $c);
 
 		$xmlWriter->endElement();
-		file_put_contents($dir . '/total.xml', $xmlWriter->flush(true), FILE_APPEND);
+		$xmlWriter->endDocument();
+		file_put_contents($dir . '/total.xml', $xmlWriter->flush(), FILE_APPEND);
 
 		$this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished merge of directory ' . $dir);
 	}
@@ -277,17 +278,34 @@ class Process extends CI_Controller
 		$xmlWriter->openMemory();
 		$xmlWriter->startDocument('1.0', 'UTF-8');
 		$xmlWriter->startElement('treebank');
+
+		$i = 0;
 		foreach (glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
 		{
-			$file_xml = new DOMDocument();
-			$file_xml->loadXML(file_get_contents($dir . '/total.xml'));
-			foreach ($file_xml->getElementsByTagName('alpino_ds') as $tree)
+			$xmlReader = new XMLReader();
+			$xmlReader->open($dir . '/total.xml');
+
+			// Select all alpino_ds elements, write to the total file
+			while ($xmlReader->read() && $xmlReader->name !== 'alpino_ds');
+			while ($xmlReader->name === 'alpino_ds')
 			{
-				$str = $file_xml->saveXML($tree);
-				$xmlWriter->writeRaw($str);
+				$xmlWriter->writeRaw($xmlReader->readOuterXML());
+				$xmlReader->next('alpino_ds');
 			}
+
+			$xmlReader->close();
+
+			// Flush XML in memory to file every 1000 iterations
+			if ($i % 1000 == 0)
+			{
+				file_put_contents($root_dir . '/total.xml', $xmlWriter->flush(true), FILE_APPEND);
+			}
+
+			$i++;
 		}
+
 		$xmlWriter->endElement();
+		$xmlWriter->endDocument();
 		file_put_contents($root_dir . '/total.xml', $xmlWriter->flush(true), FILE_APPEND);
 
 		$this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished total merge');
