@@ -1,6 +1,6 @@
 # GrETEL-upload
 
-GrETEL-upload is an extension package for [GrETEL](https://github.com/UiL-OTS-labs/GrETEL) that allows to upload your own corpus or dataset.
+GrETEL-upload is an extension package for [GrETEL](http://gretel.ccl.kuleuven.be/gretel3/) that allows to upload your own corpus or dataset.
 The application will then automatically transform your corpus in an Alpino XML-treebank. 
 After processing, the treebanks are searchable in GrETEL.
 
