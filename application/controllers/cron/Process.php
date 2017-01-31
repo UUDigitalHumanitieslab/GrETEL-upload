@@ -138,7 +138,7 @@ class Process extends CI_Controller
 					$treebank_xml->documentElement->appendChild($node);
 				}
 			}
-			file_put_contents($root_dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
+			$treebank_xml->save($root_dir . '/total.xml');
 			$this->basex->upload($importrun_id, $basex_db, $root_dir . '/total.xml');
 
 			$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');
@@ -256,7 +256,7 @@ class Process extends CI_Controller
 			'nr_words' => $nr_words);
 		$this->component_model->update_component($component_id, $c);
 
-		file_put_contents($dir . '/total.xml', $treebank_xml->saveXML($treebank_xml->documentElement));
+		$treebank_xml->save($dir . '/total.xml');
 	}
 
 }
