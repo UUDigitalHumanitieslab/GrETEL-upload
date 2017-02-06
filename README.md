@@ -13,6 +13,7 @@ On top of a default LAMP installation, the following packages are required:
 * [basex](https://packages.debian.org/stable/basex): Storing processed treebanks into a XML-database.
 * [php-zip](https://packages.debian.org/sid/php-zip): Required to process .zip-files.
 * [php-ldap](https://packages.debian.org/sid/php-ldap): Authentication via LDAP.
+* [php-sqlite3](https://packages.debian.org/sid/php-sqlite3): SQLite3 module for PHP, allows tests with in-memory database.
 
 ### Configuration
 

@@ -2,10 +2,17 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Initial extends CI_Migration 
+class Migration_Initial extends CI_Migration
 {
+
 	public function up()
 	{
+		$engine = array();
+		if (!in_testing())
+		{
+			$engine = array('ENGINE' => 'InnoDB');
+		}
+
 		// Create table for Users
 		$this->dbforge->add_field(array(
 			'id' => array(
@@ -24,7 +31,7 @@ class Migration_Initial extends CI_Migration
 			),
 		));
 		$this->dbforge->add_key('id', TRUE);
-		$this->dbforge->create_table('users', FALSE, array('ENGINE' => 'InnoDB'));
+		$this->dbforge->create_table('users', FALSE, $engine);
 
 		// Create table for Treebanks
 		$this->dbforge->add_field(array(
@@ -59,7 +66,7 @@ class Migration_Initial extends CI_Migration
 		));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key('user_id');
-		$this->dbforge->create_table('treebanks', FALSE, array('ENGINE' => 'InnoDB'));
+		$this->dbforge->create_table('treebanks', FALSE, $engine);
 
 		// Create table for Components
 		$this->dbforge->add_field(array(
@@ -91,15 +98,18 @@ class Migration_Initial extends CI_Migration
 		));
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->add_key('treebank_id');
-		$this->dbforge->create_table('components', FALSE, array('ENGINE' => 'InnoDB'));
+		$this->dbforge->create_table('components', FALSE, $engine);
 
-		# Add FOREIGN KEYs via SQL. 
-		$this->db->query("ALTER TABLE `treebanks`
-			ADD FOREIGN KEY (`user_id`)
-			REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;");
-		$this->db->query("ALTER TABLE `components`
-			ADD FOREIGN KEY (`treebank_id`)
-			REFERENCES `treebanks` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;");
+		# Add FOREIGN KEYs via SQL.
+		if (!in_testing())
+		{
+			$this->db->query("ALTER TABLE `treebanks`
+				ADD FOREIGN KEY (`user_id`)
+				REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;");
+			$this->db->query("ALTER TABLE `components`
+				ADD FOREIGN KEY (`treebank_id`)
+				REFERENCES `treebanks` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;");
+		}
 	}
 
 	public function down()
@@ -108,4 +118,5 @@ class Migration_Initial extends CI_Migration
 		$this->dbforge->drop_table('treebanks');
 		$this->dbforge->drop_table('users');
 	}
+
 }

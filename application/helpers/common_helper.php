@@ -57,6 +57,17 @@ if (!function_exists('in_development'))
 
 }
 
+if (!function_exists('in_testing'))
+{
+	/* Checks whether we are in test mode */
+
+	function in_testing()
+	{
+		return ENVIRONMENT === 'testing';
+	}
+
+}
+
 if (!function_exists('current_user_id'))
 {
 
