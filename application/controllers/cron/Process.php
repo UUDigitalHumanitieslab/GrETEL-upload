@@ -124,7 +124,7 @@ class Process extends CI_Controller
 				$this->basex->upload($importrun_id, $basex_db, $dir . '/total.xml');
 			}
 
-			// Merge all the directories, and upload them to BaseX
+			// Merge all the directories, and upload the merged file to BaseX
 			$this->merge_dirs($root_dir, $importrun_id);
 			$basex_db = strtoupper($treebank->title . '_ID');
 			$this->basex->upload($importrun_id, $basex_db, $root_dir . '/total.xml');

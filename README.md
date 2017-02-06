@@ -38,6 +38,23 @@ Start both Alpino and BaseX as server instances by running the following two com
 
 Then, navigate to the installation directory in your web browser to start using GrETEL-upload.
 
+## Uploading corpora
+
+### Formats
+
+Currently, two formats are supported: LASSY-XML and plain text (UTF-8 encoded).
+When you upload a set of texts (always in a zipped folder, possibly consisting of multiple directories),
+you can specify whether the text is already sentence- and/or word-tokenized.
+If not, the application will do this for you.
+
+### Metadata
+
+GrETEL-upload allows metadata annotation using the [PaQu metadata format](http://zardoz.service.rug.nl:8067/info.html#cormeta).
+This metadata will be converted to LASSY-XML during import.
+The interface then allows you to select which facet you would want to use to filter the data.
+You can e.g. choose to display a metadata column called 'year' as a slider, dropdown list or set of checkboxes.
+You can also choose to hide certain columns.
+
 ## Libraries
 
 ### PHP
@@ -62,7 +79,13 @@ GrETEL-upload uses the following JavaScript libraries:
 
 GrETEL-upload is created with [Pure CSS](http://purecss.io/).
 
+### Images
+
+GrETEL-upload uses the [FamFamFam silk icon set](http://www.famfamfam.com/). 
+
 ## API
+
+GrETEL-upload has an API for retrieving data from the database:
 
 * treebank/: Returns all publicly available treebanks.
 * treebank/show/[title]: Returns the components of the treebank given by title.
@@ -73,7 +96,7 @@ GrETEL-upload is created with [Pure CSS](http://purecss.io/).
 
 The test suite is created using [ci-phpunit-test](https://github.com/kenjis/ci-phpunit-test).
 This uses [PHPUnit](https://phpunit.de/).
-You can run the tests by navigating to the `application\tests` directory and calling `phpunit`.
+You can run the tests by navigating to the `application/tests` directory and calling `phpunit`.
 
 ## Demo
 
