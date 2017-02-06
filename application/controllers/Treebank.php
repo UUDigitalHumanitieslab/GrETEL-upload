@@ -7,7 +7,7 @@ class Treebank extends MY_Controller
 
 	public function __construct()
 	{
-		$this->allowed_routes = array('index', 'show');
+		$this->allowed_routes = array('index', 'show', 'detail');
 
 		parent::__construct();
 	}
@@ -29,10 +29,16 @@ class Treebank extends MY_Controller
 	/**
 	 * Returns details for a Treebank.
 	 * @param  string $title The title of the Treebank.
-	 * @return Loads the detail view.
+	 * @return               Loads the detail view.
 	 */
 	public function show($title)
 	{
+		// If no title is provided, show a 404
+		if (!isset($title))
+		{
+			show_404();
+		}
+
 		$treebank = $this->treebank_model->get_treebank_by_title($title);
 
 		// If this Treebank is private, only allow access to its owner.
@@ -66,7 +72,7 @@ class Treebank extends MY_Controller
 	/**
 	 * Returns the ImportLogs from the most recent ImportRun for a Treebank.
 	 * @param  integer $treebank_id The ID of the Treebank.
-	 * @return Loads the log view.
+	 * @return                      Loads the log view.
 	 */
 	public function log($treebank_id)
 	{
@@ -86,7 +92,7 @@ class Treebank extends MY_Controller
 	/**
 	 * Alters the accessibility of a Treebank (public <-> private).
 	 * @param  integer $treebank_id The ID of the Treebank.
-	 * @return Redirects to the previous page.
+	 * @return                      Redirects to the previous page.
 	 */
 	public function change_access($treebank_id)
 	{
@@ -103,7 +109,7 @@ class Treebank extends MY_Controller
 	/**
 	 * Deletes a Treebank from both BaseX as well as the database.
 	 * @param  integer $treebank_id The ID of the Treebank.
-	 * @return Redirects to the previous page.
+	 * @return                      Redirects to the previous page.
 	 */
 	public function delete($treebank_id)
 	{
@@ -128,9 +134,9 @@ class Treebank extends MY_Controller
 
 	/**
 	 * Returns all Treebanks of the current User.
-	 * TODO: only allow current user or admins access.
+	 * TODO: allow admins all access?
 	 * @param  integer $user_id The ID of the User.
-	 * @return Loads the list view.
+	 * @return                  Loads the list view.
 	 */
 	public function user($user_id)
 	{
@@ -144,16 +150,27 @@ class Treebank extends MY_Controller
 		$this->load->view('footer');
 	}
 
+	/**
+	 * Retrieves the Treebank by its ID, shows a 404 if no Treebank is found.
+	 * @param  integer $treebank_id The ID of the Treebank.
+	 * @return                      The found Treebank.
+	 */
 	private function get_or_404($treebank_id)
 	{
 		$treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
+
 		if (!$treebank)
 		{
 			show_404();
 		}
+
 		return $treebank;
 	}
 
+	/**
+	 * Checks if the given User ID is the current User ID, if not, shows a 403.
+	 * @param integer $user_id The ID of the User.
+	 */
 	private function check_is_owner($user_id)
 	{
 		if ($user_id != current_user_id())
