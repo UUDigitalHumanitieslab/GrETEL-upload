@@ -3,21 +3,6 @@
 class User_model_test extends TestCase
 {
 
-	public static function setUpBeforeClass()
-	{
-		parent::setUpBeforeClass();
-
-		$CI = &get_instance();
-
-		$CI->load->database('test', FALSE, TRUE);
-
-		$CI->load->library('migration');
-		$CI->migration->current();
-
-		$CI->load->library('Seeder');
-		$CI->seeder->call('UserSeeder');
-	}
-
 	public function test_get_user_by_id()
 	{
 		$CI = &get_instance();

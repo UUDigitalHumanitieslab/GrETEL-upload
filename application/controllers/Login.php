@@ -35,7 +35,7 @@ class Login extends MY_Controller
 	/**
 	 * Validates the given e-mail address and password against the LDAP database. 
 	 * If correct, the session cookie will be created.
-	 * If not correct, register an unsuccesful login for this IP and return to the login page.
+	 * TODO: If not correct, register an unsuccessful login for this IP and return to the login page.
 	 * @return Loads the success view.
 	 */
 	public function submit()
