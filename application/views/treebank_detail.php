@@ -57,17 +57,30 @@
 			<td><?=$m->max_value; ?></td>
 			<td>
 				<?php
-					echo form_open('metadata/update_facet/' . $m->id);
-					echo form_dropdown('facet', facet_options(), $m->facet);
-					echo form_close();
+					if ($this->session->userdata('logged_in'))
+					{
+						echo form_open('metadata/update_facet/' . $m->id);
+						echo form_dropdown('facet', facet_options(), $m->facet);
+						echo form_close();
+					}
+					else
+					{
+						echo lang('facet-' . $m->facet);
+					}
 				?>
 			</td>
 			<td>
 				<?php
-					$url = 'metadata/update_shown/' . $m->id . '/' . ($m->show === '1' ? '0' : '1');
 					$src = $m->show === '1' ? 'images/tick.png' : 'images/cross.png';
-
-					echo anchor($url, img(array('src' => $src)));
+					if ($this->session->userdata('logged_in'))
+					{
+						$url = 'metadata/update_shown/' . $m->id . '/' . ($m->show === '1' ? '0' : '1');
+						echo anchor($url, img(array('src' => $src)));
+					}
+					else
+					{
+						echo img(array('src' => $src));
+					}
 				?>
 			</td>
 		</tr>

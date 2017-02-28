@@ -19,6 +19,11 @@ class Metadata extends CI_Controller
 	 */
 	public function update_facet($metadata_id)
 	{
+		if (!current_user_id())
+		{
+			show_error(lang('not_authorized'), 403);
+		}
+		
 		$metadata = $this->metadata_model->get_metadata_by_id($metadata_id);
 
 		if (!$this->validate_metadata())
@@ -44,6 +49,11 @@ class Metadata extends CI_Controller
 	 */
 	public function update_shown($metadata_id, $show)
 	{
+		if (!$this->session->userdata('logged_in'))
+		{
+			show_error(lang('not_authorized'), 403);
+		}
+
 		$metadata = $this->metadata_model->get_metadata_by_id($metadata_id);
 		$this->metadata_model->update_metadata($metadata_id, array('show' => $show));
 
