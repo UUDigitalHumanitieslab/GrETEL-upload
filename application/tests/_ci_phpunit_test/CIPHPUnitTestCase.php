@@ -8,6 +8,12 @@
  * @link       https://github.com/kenjis/ci-phpunit-test
  */
 
+// Support PHPUnit 6.0
+if (! class_exists('PHPUnit_Framework_TestCase'))
+{
+	class_alias('PHPUnit\Framework\TestCase', 'PHPUnit_Framework_TestCase');
+}
+
 /**
  * @property CIPHPUnitTestRequest    $request
  * @property CIPHPUnitTestDouble     $double
@@ -75,19 +81,60 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 		$this->CI =& get_instance();
 	}
 
-    /**
-     * Create a controller instance
-     *
-     * @param string $classname
-     * @return CI_Controller
-     */
-    public function newController($classname)
-    {
-        reset_instance();
-        $controller = new $classname;
-        $this->CI =& get_instance();
-        return $controller;
-    }
+	/**
+	 * Create a controller instance
+	 *
+	 * @param string $classname
+	 * @return CI_Controller
+	 */
+	public function newController($classname)
+	{
+		reset_instance();
+		$controller = new $classname;
+		$this->CI =& get_instance();
+		return $controller;
+	}
+
+	/**
+	 * Create a model instance
+	 *
+	 * @param string $classname
+	 * @return CI_Model
+	 */
+	public function newModel($classname)
+	{
+		$this->resetInstance();
+		$this->CI->load->model($classname);
+
+		// Is the model in a sub-folder?
+		if (($last_slash = strrpos($classname, '/')) !== FALSE)
+		{
+			$classname = substr($classname, ++$last_slash);
+		}
+
+		return $this->CI->$classname;
+	}
+
+	/**
+	 * Create a library instance
+	 *
+	 * @param string $classname
+	 * @return object
+	 */
+	public function newLibrary($classname)
+	{
+		$this->resetInstance();
+		$this->CI->load->library($classname);
+
+		// Is the library in a sub-folder?
+		if (($last_slash = strrpos($classname, '/')) !== FALSE)
+		{
+			$classname = substr($classname, ++$last_slash);
+		}
+		$classname = strtolower($classname);
+
+		return $this->CI->$classname;
+	}
 
 	protected function tearDown()
 	{

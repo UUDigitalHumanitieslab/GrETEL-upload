@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 1.0.0
@@ -132,6 +132,8 @@ class CI_Loader {
 	 * Sets component load paths, gets the initial output buffering level.
 	 *
 	 * @return	void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __construct()
 	{
@@ -151,6 +153,8 @@ class CI_Loader {
 	 * @uses	CI_Loader::_ci_autoloader()
 	 * @used-by	CI_Controller::__construct()
 	 * @return	void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function initialize()
 	{
@@ -168,6 +172,8 @@ class CI_Loader {
 	 *
 	 * @param 	string		$class	Class name to check for
 	 * @return 	string|bool	Class object name if loaded or FALSE
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function is_loaded($class)
 	{
@@ -186,6 +192,8 @@ class CI_Loader {
 	 * @param	array	$params		Optional parameters to pass to the library class constructor
 	 * @param	string	$object_name	An optional object name to assign to
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function library($library, $params = NULL, $object_name = NULL)
 	{
@@ -368,6 +376,8 @@ class CI_Loader {
 	 *
 	 * @return	object|bool	Database object if $return is set to TRUE,
 	 *					FALSE on failure, CI_Loader instance in any other case
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function database($params = '', $return = FALSE, $query_builder = NULL)
 	{
@@ -404,6 +414,8 @@ class CI_Loader {
 	 * @param	object	$db	Database object
 	 * @param	bool	$return	Whether to return the DB Utilities class object or not
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function dbutil($db = NULL, $return = FALSE)
 	{
@@ -436,6 +448,8 @@ class CI_Loader {
 	 * @param	object	$db	Database object
 	 * @param	bool	$return	Whether to return the DB Forge class object or not
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function dbforge($db = NULL, $return = FALSE)
 	{
@@ -485,10 +499,12 @@ class CI_Loader {
 	 * @param	bool	$return	Whether to return the view output
 	 *				or leave it to the Output class
 	 * @return	object|string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function view($view, $vars = array(), $return = FALSE)
 	{
-		return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return));
+		return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_prepare_view_vars($vars), '_ci_return' => $return));
 	}
 
 	// --------------------------------------------------------------------
@@ -499,6 +515,8 @@ class CI_Loader {
 	 * @param	string	$path	File path
 	 * @param	bool	$return	Whether to return the file output
 	 * @return	object|string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function file($path, $return = FALSE)
 	{
@@ -518,22 +536,18 @@ class CI_Loader {
 	 *					to be set, or a value's name if string
 	 * @param 	string	$val	Value to set, only used if $vars is a string
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function vars($vars, $val = '')
 	{
-		if (is_string($vars))
-		{
-			$vars = array($vars => $val);
-		}
+		$vars = is_string($vars)
+			? array($vars => $val)
+			: $this->_ci_prepare_view_vars($vars);
 
-		$vars = $this->_ci_object_to_array($vars);
-
-		if (is_array($vars) && count($vars) > 0)
+		foreach ($vars as $key => $val)
 		{
-			foreach ($vars as $key => $val)
-			{
-				$this->_ci_cached_vars[$key] = $val;
-			}
+			$this->_ci_cached_vars[$key] = $val;
 		}
 
 		return $this;
@@ -547,6 +561,8 @@ class CI_Loader {
 	 * Clears the cached variables.
 	 *
 	 * @return	CI_Loader
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function clear_vars()
 	{
@@ -563,6 +579,8 @@ class CI_Loader {
 	 *
 	 * @param	string	$key	Variable name
 	 * @return	mixed	The variable or NULL if not found
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function get_var($key)
 	{
@@ -577,6 +595,8 @@ class CI_Loader {
 	 * Retrieves all loaded variables.
 	 *
 	 * @return	array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function get_vars()
 	{
@@ -590,18 +610,26 @@ class CI_Loader {
 	 *
 	 * @param	string|string[]	$helpers	Helper name(s)
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function helper($helpers = array())
 	{
-		foreach ($this->_ci_prep_filename($helpers, '_helper') as $helper)
+		is_array($helpers) OR $helpers = array($helpers);
+		foreach ($helpers as &$helper)
 		{
+			$filename = basename($helper);
+			$filepath = ($filename === $helper) ? '' : substr($helper, 0, strlen($helper) - strlen($filename));
+			$filename = strtolower(preg_replace('#(_helper)?(.php)?$#i', '', $filename)).'_helper';
+			$helper   = $filepath.$filename;
+
 			if (isset($this->_ci_helpers[$helper]))
 			{
 				continue;
 			}
 
 			// Is this a helper extension request?
-			$ext_helper = config_item('subclass_prefix').$helper;
+			$ext_helper = config_item('subclass_prefix').$filename;
 			$ext_loaded = FALSE;
 			foreach ($this->_ci_helper_paths as $path)
 			{
@@ -661,6 +689,8 @@ class CI_Loader {
 	 * @uses	CI_Loader::helper()
 	 * @param	string|string[]	$helpers	Helper name(s)
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function helpers($helpers = array())
 	{
@@ -677,6 +707,8 @@ class CI_Loader {
 	 * @param	string|string[]	$files	List of language file names to load
 	 * @param	string		Language name
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function language($files, $lang = '')
 	{
@@ -696,6 +728,8 @@ class CI_Loader {
 	 * @param	bool	$use_sections		Whether configuration values should be loaded into their own section
 	 * @param	bool	$fail_gracefully	Whether to just return FALSE or display an error message
 	 * @return	bool	TRUE if the file was loaded correctly or FALSE on failure
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function config($file, $use_sections = FALSE, $fail_gracefully = FALSE)
 	{
@@ -715,6 +749,8 @@ class CI_Loader {
 	 *
 	 * @return	object|bool	Object or FALSE on failure if $library is a string
 	 *				and $object_name is set. CI_Loader instance otherwise.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function driver($library, $params = NULL, $object_name = NULL)
 	{
@@ -771,6 +807,8 @@ class CI_Loader {
 	 * @param	string	$path		Path to add
 	 * @param 	bool	$view_cascade	(default: TRUE)
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function add_package_path($path, $view_cascade = TRUE)
 	{
@@ -798,6 +836,8 @@ class CI_Loader {
 	 *
 	 * @param	bool	$include_base	Whether to include BASEPATH (default: FALSE)
 	 * @return	array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function get_package_paths($include_base = FALSE)
 	{
@@ -815,6 +855,8 @@ class CI_Loader {
 	 *
 	 * @param	string	$path	Path to remove
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function remove_package_path($path = '')
 	{
@@ -874,6 +916,8 @@ class CI_Loader {
 	 * @used-by	CI_Loader::file()
 	 * @param	array	$_ci_data	Data to load
 	 * @return	object
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function _ci_load($_ci_data)
 	{
@@ -936,18 +980,7 @@ class CI_Loader {
 		 * the two types and cache them so that views that are embedded within
 		 * other views can have access to these variables.
 		 */
-		if (is_array($_ci_vars))
-		{
-			foreach (array_keys($_ci_vars) as $key)
-			{
-				if (strncmp($key, '_ci_', 4) === 0)
-				{
-					unset($_ci_vars[$key]);
-				}
-			}
-
-			$this->_ci_cached_vars = array_merge($this->_ci_cached_vars, $_ci_vars);
-		}
+		empty($_ci_vars) OR $this->_ci_cached_vars = array_merge($this->_ci_cached_vars, $_ci_vars);
 		extract($this->_ci_cached_vars);
 
 		/*
@@ -1045,6 +1078,12 @@ class CI_Loader {
 		}
 
 		$class = ucfirst($class);
+
+		// Replace library in ci-phpuni-test
+		if (file_exists(APPPATH.'tests/_ci_phpunit_test/replacing/libraries/'.$subdir.$class.'.php'))
+		{
+			return $this->_ci_load_stock_library($class, $subdir, $params, $object_name);
+		}
 
 		// Is this a stock library? There are a few special conditions if so ...
 		if (file_exists(BASEPATH.'libraries/'.$subdir.$class.'.php'))
@@ -1167,7 +1206,15 @@ class CI_Loader {
 			}
 		}
 
-		include_once(BASEPATH.'libraries/'.$file_path.$library_name.'.php');
+		// Replace library in ci-phpuni-test
+		if (file_exists(APPPATH.'tests/_ci_phpunit_test/replacing/libraries/'.$file_path.$library_name.'.php'))
+		{
+			include_once(APPPATH.'tests/_ci_phpunit_test/replacing/libraries/'.$file_path.$library_name.'.php');
+		}
+		else
+		{
+			include_once(BASEPATH.'libraries/'.$file_path.$library_name.'.php');
+		}
 
 		// Check for extensions
 		$subclass = config_item('subclass_prefix').$library_name;
@@ -1207,6 +1254,8 @@ class CI_Loader {
 	 *						array containing configuration data
 	 * @param	string		$object_name	Optional object name to assign to
 	 * @return	void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function _ci_init_library($class, $prefix, $config = FALSE, $object_name = NULL)
 	{
@@ -1307,6 +1356,8 @@ class CI_Loader {
 	 *
 	 * @used-by	CI_Loader::initialize()
 	 * @return	void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function _ci_autoloader()
 	{
@@ -1382,17 +1433,34 @@ class CI_Loader {
 	// --------------------------------------------------------------------
 
 	/**
-	 * CI Object to Array translator
+	 * Prepare variables for _ci_vars, to be later extract()-ed inside views
 	 *
-	 * Takes an object as input and converts the class variables to
-	 * an associative array with key/value pairs.
+	 * Converts objects to associative arrays and filters-out internal
+	 * variable names (i.e. keys prexied with '_ci_').
 	 *
-	 * @param	object	$object	Object data to translate
+	 * @param	mixed	$vars
 	 * @return	array
+	 *
+	 * @codeCoverageIgnore
 	 */
-	protected function _ci_object_to_array($object)
+	protected function _ci_prepare_view_vars($vars)
 	{
-		return is_object($object) ? get_object_vars($object) : $object;
+		if ( ! is_array($vars))
+		{
+			$vars = is_object($vars)
+				? get_object_vars($object)
+				: array();
+		}
+
+		foreach (array_keys($vars) as $key)
+		{
+			if (strncmp($key, '_ci_', 4) === 0)
+			{
+				unset($vars[$key]);
+			}
+		}
+
+		return $vars;
 	}
 
 	// --------------------------------------------------------------------
@@ -1404,40 +1472,13 @@ class CI_Loader {
 	 *
 	 * @param 	string	$component	Component name
 	 * @return	bool
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function &_ci_get_component($component)
 	{
 		$CI =& get_instance();
 		return $CI->$component;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Prep filename
-	 *
-	 * This function prepares filenames of various items to
-	 * make their loading more reliable.
-	 *
-	 * @param	string|string[]	$filename	Filename(s)
-	 * @param 	string		$extension	Filename extension
-	 * @return	array
-	 */
-	protected function _ci_prep_filename($filename, $extension)
-	{
-		if ( ! is_array($filename))
-		{
-			return array(strtolower(str_replace(array($extension, '.php'), '', $filename).$extension));
-		}
-		else
-		{
-			foreach ($filename as $key => $val)
-			{
-				$filename[$key] = strtolower(str_replace(array($extension, '.php'), '', $val).$extension);
-			}
-
-			return $filename;
-		}
 	}
 
 }
