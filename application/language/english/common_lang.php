@@ -1,6 +1,6 @@
 <?php
 
-$lang['site_title'] 		= 'Upload treebanks for GrETEL 2.0';
+$lang['site_title'] 		= 'Upload treebanks for GrETEL';
 $lang['back'] 				= 'Back';
 
 $lang['upload_treebank'] 	= 'Upload your treebank';
