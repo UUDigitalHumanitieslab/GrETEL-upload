@@ -60,7 +60,7 @@ class Process extends CI_Controller
 		$this->process_treebank($treebank);
 
 		$this->session->set_flashdata('message', lang('treebank_processed'));
-		redirect($this->agent->referrer(), 'refresh');
+		//redirect($this->agent->referrer(), 'refresh');
 	}
 
 	/**
@@ -88,9 +88,10 @@ class Process extends CI_Controller
 			{
 				$metadata = json_decode(file_get_contents($root_dir . '/metadata.json'));
 			}
-
+			
 			// Create databases per component
-			foreach (glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
+			$dirs = $this->retrieve_dirs($root_dir, $treebank->title);
+			foreach ($dirs as $dir)
 			{
 				// Create a Component for each directory in the .zip-file.
 				$slug = basename($dir);
@@ -125,7 +126,7 @@ class Process extends CI_Controller
 			}
 
 			// Merge all the directories, and upload the merged file to BaseX
-			$this->merge_dirs($root_dir, $importrun_id);
+			$this->merge_dirs($root_dir, $dirs, $importrun_id);
 			$basex_db = strtoupper($treebank->title . '_ID');
 			$this->basex->upload($importrun_id, $basex_db, $root_dir . '/total.xml');
 
@@ -138,6 +139,30 @@ class Process extends CI_Controller
 
 		// Mark treebank as processed
 		$this->importrun_model->end_importrun($importrun_id, $treebank->id);
+	}
+	
+	private function retrieve_dirs($root_dir, $treebank_title)
+	{
+		// Retrieve the directories in this .zip-file
+		$dirs = glob($root_dir . '/*', GLOB_ONLYDIR);
+
+		// If no directories are found, create a new folder and move files there
+		if (!$dirs)
+		{
+			$filenames = scandir($root_dir);
+			$new_dir = $root_dir . '/' . $treebank_title;
+			mkdir($new_dir, 0755, TRUE);
+			foreach ($filenames as $filename)
+			{
+				if ($filename != '.' && $filename != '..')
+				{
+					rename($root_dir . '/' . $filename, $new_dir . '/' . $filename);
+				}
+			}
+			$dirs = array($new_dir);
+		}
+		
+		return $dirs;
 	}
 
 	private function paragraph_tokenize($dir)
@@ -268,9 +293,10 @@ class Process extends CI_Controller
 	/**
 	 * Create the complete Treebank, consisting of the individual directories.
 	 * @param string $root_dir      The root directory
+	 * @param array $dirs           The Component directories
 	 * @param integer $importrun_id The ID of the current ImportRun
 	 */
-	private function merge_dirs($root_dir, $importrun_id)
+	private function merge_dirs($root_dir, $dirs, $importrun_id)
 	{
 		$this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Started total merge');
 
@@ -280,7 +306,7 @@ class Process extends CI_Controller
 		$xmlWriter->startElement('treebank');
 
 		$i = 0;
-		foreach (glob($root_dir . '/*', GLOB_ONLYDIR) as $dir)
+		foreach ($dirs as $dir)
 		{
 			$xmlReader = new XMLReader();
 			$xmlReader->open($dir . '/total.xml');
@@ -310,4 +336,5 @@ class Process extends CI_Controller
 
 		$this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished total merge');
 	}
+
 }
