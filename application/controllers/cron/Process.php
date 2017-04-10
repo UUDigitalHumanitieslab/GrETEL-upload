@@ -88,7 +88,7 @@ class Process extends CI_Controller
 			{
 				$metadata = json_decode(file_get_contents($root_dir . '/metadata.json'));
 			}
-			
+
 			// Create databases per component
 			$dirs = $this->retrieve_dirs($root_dir, $treebank->title);
 			foreach ($dirs as $dir)
@@ -106,7 +106,7 @@ class Process extends CI_Controller
 				$component_id = $this->component_model->add_component($component);
 
 				// If the Treebank consists of plain text items, tokenize and parse it.
-				if ($treebank->is_txt)
+				if (in_array($treebank->file_type, array(FileType::CHAT, FileType::TXT)))
 				{
 					if (!$treebank->is_sent_tokenised)
 					{
@@ -140,7 +140,7 @@ class Process extends CI_Controller
 		// Mark treebank as processed
 		$this->importrun_model->end_importrun($importrun_id, $treebank->id);
 	}
-	
+
 	private function retrieve_dirs($root_dir, $treebank_title)
 	{
 		// Retrieve the directories in this .zip-file
@@ -161,7 +161,7 @@ class Process extends CI_Controller
 			}
 			$dirs = array($new_dir);
 		}
-		
+
 		return $dirs;
 	}
 

@@ -97,8 +97,12 @@ td.actions a {
 
 .pure-form-aligned .pure-control-group .pure-radio {
 	text-align: left;
-	width: 7.5em;
+	width: 7em;
 	font-size: 0.9em;
+}
+
+.pure-form-aligned .pure-control-group .help {
+	margin-right: 2em;
 }
 
 .pure-form-aligned .pure-controls {

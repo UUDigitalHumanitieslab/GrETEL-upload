@@ -81,7 +81,7 @@ class Upload extends MY_Controller
 		$this->form_validation->set_rules('title', lang('title'), 'trim|required|is_unique[treebanks.title]|max_length[200]');
 		$this->form_validation->set_rules('treebank', lang('treebank'), 'callback_upload_treebank');
 		$this->form_validation->set_rules('public', lang('public'), 'trim');
-		$this->form_validation->set_rules('is_txt', lang('is_txt'), 'trim');
+		$this->form_validation->set_rules('file_type', lang('file_type'), 'trim');
 		$this->form_validation->set_rules('is_sent_tokenised', lang('is_sent_tokenised'), 'trim');
 		$this->form_validation->set_rules('is_word_tokenised', lang('is_word_tokenised'), 'trim');
 		$this->form_validation->set_rules('has_labels', lang('has_labels'), 'trim');
@@ -101,7 +101,7 @@ class Upload extends MY_Controller
 			'title' => $this->input->post('title'),
 			'filename' => $this->uploaded_treebank,
 			'public' => $this->input->post('public') === '1',
-			'is_txt' => $this->input->post('is_txt') === '1',
+			'file_type' => $this->input->post('file_type'),
 			'is_sent_tokenised' => $this->input->post('is_sent_tokenised') === '1',
 			'is_word_tokenised' => $this->input->post('is_word_tokenised') === '1',
 			'has_labels' => $this->input->post('has_labels') === '1',

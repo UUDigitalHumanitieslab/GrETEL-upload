@@ -33,14 +33,22 @@
 <?=form_fieldset_close(); ?>
 
 <?=form_fieldset(lang('parse_flags')); ?>
-<?=form_single_checkbox_and_label('is_txt', '1'); ?>
-<?=form_help('help_is_txt'); ?>
+
+<div class="pure-control-group">
+<?=form_label(lang('file_type'), 'file_type'); ?>
+<?=form_radio_and_label('file_type', FileType::TXT, 'txt', 'Plain text'); ?><?=form_help('help_ft_txt'); ?>
+<?=form_radio_and_label('file_type', FileType::CHAT, '', 'CHAT files'); ?><?=form_help('help_ft_chat'); ?>
+<?=form_radio_and_label('file_type', FileType::LASSY, '', 'LASSY-XML'); ?><?=form_help('help_ft_lassy'); ?>
+</div>
+
+<div class="parse_flags_txt">
 <?=form_single_checkbox_and_label('is_sent_tokenised', '1'); ?>
 <?=form_help('help_is_sent_tokenised'); ?>
 <?=form_single_checkbox_and_label('is_word_tokenised', '1'); ?>
 <?=form_help('help_is_word_tokenised'); ?>
 <?=form_single_checkbox_and_label('has_labels', '1'); ?>
 <?=form_help('help_has_labels'); ?>
+</div>
 
 <?=form_controls(); ?>
 <?=form_fieldset_close(); ?>
@@ -74,5 +82,11 @@ $(document).ready(function() {
 
     // Hides all tooltiptext-spans
     $('.tooltiptext').hide();
+	
+	// If txt is selected, show additional parse flags
+	$('input[name="file_type"]').change(function() {
+		$('.parse_flags_txt').toggle($(this).val() === 'txt');
+	});
+	$('input[name="file_type_txt').change();
 });
 </script>

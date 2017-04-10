@@ -28,7 +28,7 @@ class Upload_test extends TestCase
 			'user_id' => current_user_id(),
 			'title' => $treebank_title,
 			'public' => TRUE,
-			'is_txt' => TRUE,
+			'file_type' => FileType::TXT,
 			'is_sent_tokenised' => TRUE,
 			'is_word_tokenised' => FALSE,
 			'has_labels' => FALSE,

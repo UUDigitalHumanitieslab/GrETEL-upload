@@ -2,8 +2,21 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/** File types */
+class FileType extends BasicEnum
+{
+
+	const CHAT = 'CHAT';
+	const TXT = 'txt';
+	const LASSY = 'LASSY';
+	const FOLIA = 'FoLiA';
+	const TEI = 'TEI';
+
+}
+
 if (!function_exists('treebank_actions'))
 {
+
 	/**
 	 * Returns the available actions for a Treebank
 	 * @param integer $treebank_id The ID of the Treebank.

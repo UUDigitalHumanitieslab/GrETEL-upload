@@ -26,7 +26,7 @@ $lang['treebank_access_modified']	= 'Successfully changed access rights of your 
 $lang['actions']			= 'Actions';
 
 $lang['parse_flags']		= 'Parse flags';
-$lang['is_txt']				= 'This is a collection of .txt files.';
+$lang['file_type']			= 'The type of files included in the archive:';
 $lang['is_sent_tokenised']	= 'The files are sentence-tokenised.';
 $lang['is_word_tokenised']	= 'The files are word-tokenised.';
 $lang['has_labels']			= 'Each sentence has a label.';
