@@ -104,9 +104,16 @@ class Process extends CI_Controller
 					'slug' => $slug,
 					'basex_db' => $basex_db);
 				$component_id = $this->component_model->add_component($component);
+				
+				// If the Treebank consists of CHAT files, tokenize and parse it.
+				if (in_array($treebank->file_type, array(FileType::CHAT)))
+				{
+					$this->chat_preprocess($importrun_id, $dir);
+					$this->alpino_parse($importrun_id, $dir, FALSE);
+				}
 
 				// If the Treebank consists of plain text items, tokenize and parse it.
-				if (in_array($treebank->file_type, array(FileType::CHAT, FileType::TXT)))
+				if (in_array($treebank->file_type, array(FileType::TXT)))
 				{
 					if (!$treebank->is_sent_tokenised)
 					{
@@ -179,6 +186,13 @@ class Process extends CI_Controller
 		{
 			$this->alpino->word_tokenize($file);
 		}
+	}
+	
+	private function chat_preprocess($importrun_id, $dir)
+	{
+		$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started CHAT preprocessing');
+		shell_exec('python3 /opt/chamd/chamd.py --path=' . $dir . ' --outpath=' . $dir . ' --logfile=chamd.log');
+		$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Completed CHAT preprocessing');
 	}
 
 	/**
