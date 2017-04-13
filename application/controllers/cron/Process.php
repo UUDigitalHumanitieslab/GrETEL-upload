@@ -60,7 +60,7 @@ class Process extends CI_Controller
 		$this->process_treebank($treebank);
 
 		$this->session->set_flashdata('message', lang('treebank_processed'));
-		//redirect($this->agent->referrer(), 'refresh');
+		redirect($this->agent->referrer(), 'refresh');
 	}
 
 	/**
@@ -104,11 +104,11 @@ class Process extends CI_Controller
 					'slug' => $slug,
 					'basex_db' => $basex_db);
 				$component_id = $this->component_model->add_component($component);
-				
+
 				// If the Treebank consists of CHAT files, tokenize and parse it.
 				if (in_array($treebank->file_type, array(FileType::CHAT)))
 				{
-					$this->chat_preprocess($importrun_id, $dir);
+					$this->chat_preprocess($importrun_id, $root_dir, $dir);
 					$this->alpino_parse($importrun_id, $dir, FALSE);
 				}
 
@@ -187,11 +187,35 @@ class Process extends CI_Controller
 			$this->alpino->word_tokenize($file);
 		}
 	}
-	
-	private function chat_preprocess($importrun_id, $dir)
+
+	/**
+	 * Preprocesses CHAT files using the program CHAMD by Jan Odijk.
+	 * @param integer $importrun_id The ID of the current ImportRun
+	 * @param string $root_dir      The root directory
+	 * @param string $dir           The directory which contains the .cha-files
+	 */
+	private function chat_preprocess($importrun_id, $root_dir, $dir)
 	{
 		$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started CHAT preprocessing');
-		shell_exec('python3 /opt/chamd/chamd.py --path=' . $dir . ' --outpath=' . $dir . ' --logfile=chamd.log');
+
+		$logfile = $dir . '/chamd.log';
+		$command = 'python3 ' . CHAMD_HOME . '/chamd.py';
+		$command .= ' --path=' . $dir;
+		$command .= ' --outpath=' . $root_dir;
+		$command .= ' --logfile=' . $logfile;
+		shell_exec($command);
+
+		$handle = fopen($logfile, 'r');
+		if ($handle)
+		{
+			while (($line = fgets($handle)) !== FALSE)
+			{
+				$this->importlog_model->add_log($importrun_id, LogLevel::Warn, $line);
+			}
+
+			fclose($handle);
+		}
+		
 		$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Completed CHAT preprocessing');
 	}
 

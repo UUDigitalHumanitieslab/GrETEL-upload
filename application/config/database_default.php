@@ -128,6 +128,9 @@ defined('ALPINO_HOME')  OR define('ALPINO_HOME', '/opt/Alpino');
 defined('ALPINO_HOST')  OR define('ALPINO_HOST', '127.0.0.1');
 defined('ALPINO_PORT')  OR define('ALPINO_PORT', '7001');
 
+// CHAMD variables
+defined('CHAMD_HOME')  OR define('CHAMD_HOME', '/opt/chamd');
+
 // Other settings
 defined('UPLOAD_DIR')	OR define('UPLOAD_DIR',	'./uploads/');
 defined('GRETEL_URL')	OR define('GRETEL_URL',	'http://localhost/gretel');
