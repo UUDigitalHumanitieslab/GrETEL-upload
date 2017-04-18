@@ -13,8 +13,9 @@
 	with each folder containing one of the below:
 </p>
 <ul>
-	<li>sentences parsed by Alpino (<em>*.xml</em>-files)</li>
 	<li><abbr title="<?=lang('help_plain_text'); ?>">plain-text files</abbr> (with extension <em>*.txt</em>)</li>
+	<li>CHAT files (with extension <em>*.cha</em>)</li>
+	<li>sentences parsed by Alpino, in LASSY-XML format (<em>*.xml</em>-files)</li>
 </ul>
 <p>
 	Choose an appropriate title for your treebank and upload your <em>.zip</em>-file below.
