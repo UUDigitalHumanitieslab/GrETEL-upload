@@ -6,7 +6,7 @@ class Login_test extends TestCase
 	public function test_index()
 	{
 		$output = $this->request('GET', '/');
-		$this->assertContains('<h1>Upload treebanks for GrETEL 2.0</h1>', $output);
+		$this->assertContains('<h1>Upload treebanks for GrETEL</h1>', $output);
 	}
 
 	public function test_method_404()

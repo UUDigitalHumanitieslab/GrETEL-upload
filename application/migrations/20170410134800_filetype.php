@@ -11,6 +11,14 @@ class Migration_FileType extends CI_Migration
 			'file_type' => array('type' => 'ENUM("CHAT", "txt", "LASSY", "FoLiA", "TEI")', 'default' => 'txt', 'null' => FALSE),
 		);
 
+		// Simpler column type in SQLite
+		if (in_testing())
+		{
+			$fields = array(
+				'file_type' => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => 'txt', 'null' => FALSE),
+			);
+		}
+
 		$this->dbforge->add_column('treebanks', $fields);
 
 		foreach ($this->treebank_model->get_all_treebanks() as $treebank)
@@ -20,7 +28,11 @@ class Migration_FileType extends CI_Migration
 			$this->treebank_model->update_treebank($treebank->id, $t);
 		}
 
-		$this->dbforge->drop_column('treebanks', 'is_txt');
+		// Don't drop columns during testing
+		if (!in_testing())
+		{
+			$this->dbforge->drop_column('treebanks', 'is_txt');
+		}
 	}
 
 	public function down()
