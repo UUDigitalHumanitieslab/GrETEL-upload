@@ -24,6 +24,7 @@
 
 <?=form_fieldset($page_title); ?>
 <?=form_input_and_label('title'); ?>
+<?=form_help('help_title'); ?>
 <div class="pure-control-group">
 <?=form_label(lang('file'), 'treebank'); ?>
 <input type="file" name="treebank" size="20" class="pure-input-rounded" />

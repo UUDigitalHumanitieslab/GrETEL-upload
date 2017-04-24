@@ -1,5 +1,6 @@
 <?php
 
+$lang['help_title']			= 'Please do not use spaces in your title.';
 $lang['help_plain_text'] 	= 'Plain text is data that represents only characters, not graphical representations nor other objects.';
 $lang['help_ft_chat']		= 'If you check this box, your .zip-file contains files in the CHAT format, and they will be pre-processed and then parsed using the Alpino parser.';
 $lang['help_ft_txt']		= 'If you check this box, your .zip-file contains plain-text files (see definition above), and they will be parsed using the Alpino parser.';

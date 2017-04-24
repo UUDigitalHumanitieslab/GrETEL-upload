@@ -78,7 +78,7 @@ class Upload extends MY_Controller
 	 */
 	private function validate_treebank()
 	{
-		$this->form_validation->set_rules('title', lang('title'), 'trim|required|is_unique[treebanks.title]|max_length[200]');
+		$this->form_validation->set_rules('title', lang('title'), 'trim|required|alpha_dash|is_unique[treebanks.title]|max_length[200]');
 		$this->form_validation->set_rules('treebank', lang('treebank'), 'callback_upload_treebank');
 		$this->form_validation->set_rules('public', lang('public'), 'trim');
 		$this->form_validation->set_rules('file_type', lang('file_type'), 'trim');
