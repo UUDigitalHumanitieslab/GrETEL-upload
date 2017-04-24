@@ -4,7 +4,7 @@
 
 export ALPINO_HOME=/opt/Alpino
 export PORT=7001
-export TIMEOUT=60000
+export TIMEOUT=600000
 export MEMLIMIT=1500M
 export TMPDIR=/tmp
 
