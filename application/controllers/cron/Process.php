@@ -148,12 +148,19 @@ class Process extends CI_Controller
 		$this->importrun_model->end_importrun($importrun_id, $treebank->id);
 	}
 
+	/**
+	 * Scans the root directory for sub-directories. 
+	 * If there are none, a sub-directory is created and files in the root directory are moved there.
+	 * @param string $root_dir       The root directory
+	 * @param string $treebank_title The title of the Treebank
+	 * @return array                 The array of subdirectories in this directory.
+	 */
 	private function retrieve_dirs($root_dir, $treebank_title)
 	{
 		// Retrieve the directories in this .zip-file
 		$dirs = glob($root_dir . '/*', GLOB_ONLYDIR);
 
-		// If no directories are found, create a new folder and move files there
+		// If no directories are found, create a new folder and move files in the root directory there
 		if (!$dirs)
 		{
 			$filenames = scandir($root_dir);
@@ -171,7 +178,11 @@ class Process extends CI_Controller
 
 		return $dirs;
 	}
-
+	
+	/**
+	 * Paragraph-tokenizes each .txt-file in the specified directory.
+	 * @param string $dir The directory.
+	 */
 	private function paragraph_tokenize($dir)
 	{
 		foreach (glob($dir . '/*.txt') as $file)
@@ -180,6 +191,10 @@ class Process extends CI_Controller
 		}
 	}
 
+	/**
+	 * Sentence-tokenizes each .txt-file in the specified directory.
+	 * @param string $dir The directory.
+	 */
 	private function word_tokenize($dir)
 	{
 		foreach (glob($dir . '/*.txt') as $file)

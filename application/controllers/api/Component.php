@@ -14,7 +14,7 @@ class Component extends REST_Controller
 
 	/**
 	 * Returns the metadata of a Component, given its title.
-	 * @param  interger $treebank_id The id of the Treebank.
+	 * @param  integer $treebank_id The id of the Treebank.
 	 * @param  string $title The title of the Component.
 	 * @return JSON response.
 	 */

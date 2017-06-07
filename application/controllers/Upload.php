@@ -73,8 +73,8 @@ class Upload extends MY_Controller
 	/////////////////////////
 
 	/**
-	 * Validates the input.
-	 * @return boolean Whether the validation has succeeded.
+	 * Validates the form.
+	 * @return bool Whether or not the validation has succeeded.
 	 */
 	private function validate_treebank()
 	{

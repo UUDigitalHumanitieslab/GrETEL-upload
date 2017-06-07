@@ -35,7 +35,6 @@ class Login extends MY_Controller
 	/**
 	 * Validates the given e-mail address and password against the LDAP database. 
 	 * If correct, the session cookie will be created.
-	 * TODO: If not correct, register an unsuccessful login for this IP and return to the login page.
 	 * @return Loads the success view.
 	 */
 	public function submit()
@@ -75,6 +74,9 @@ class Login extends MY_Controller
 		}
 	}
 
+	/**
+	 * Allows a guest User to log in.
+	 */
 	public function guest()
 	{
 		$user = $this->user_model->get_user_by_username(GUEST_USERNAME);
@@ -106,6 +108,10 @@ class Login extends MY_Controller
 	// Form handling
 	/////////////////////////
 
+	/**
+	 * Validates the form.
+	 * @return bool Whether or not the validation has succeeded.
+	 */
 	private function validate()
 	{
 		$this->form_validation->set_rules('username', lang('username'), 'required|callback_password_check');
@@ -114,6 +120,15 @@ class Login extends MY_Controller
 		return $this->form_validation->run();
 	}
 
+	/////////////////////////
+	// Callbacks
+	/////////////////////////
+
+	/**
+	 * Checks the password against the LDAP database.
+	 * @param string $username The supplied username.
+	 * @return boolean         Whether or not the authentication has succeeded.
+	 */
 	public function password_check($username)
 	{
 		$password = $this->input->post('password');
@@ -121,7 +136,6 @@ class Login extends MY_Controller
 		if (!$this->ldap->check_credentials($username, $password))
 		{
 			$this->form_validation->set_message('password_check', lang('invalid_credentials'));
-			// TODO: Mark this as a failed login for this IP.
 			return FALSE;
 		}
 		else

@@ -35,7 +35,7 @@ class Migrate extends CI_Controller
 
 	/**
 	 * Migrates the database to the given version identifier.
-	 * @param  integer $id the version identifier
+	 * @param integer $id The version identifier
 	 */
 	public function version($id)
 	{
