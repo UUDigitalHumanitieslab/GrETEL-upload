@@ -11,6 +11,15 @@ class Treebank extends REST_Controller
 	{
 		parent::__construct();
 	}
+	
+	/**
+	 * Downloads a big XML-file containing all the parsed tree.
+	 */
+	public function download_get($title) {
+		// TODO: validate security
+		$treebank = $this->treebank_model->get_treebank_by_title($title);
+		$this->basex->download(strtoupper($treebank->title . '_ID'));
+	}
 
 	/**
 	 * Returns all public Treebanks (=public and processed)

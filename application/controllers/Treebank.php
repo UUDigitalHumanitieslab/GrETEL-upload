@@ -13,15 +13,6 @@ class Treebank extends MY_Controller
 	}
 
 	/**
-	 * Downloads a big XML-file containing all the parsed tree.
-	 */
-	public function download($title) {
-		// TODO: validate security
-		$treebank = $this->treebank_model->get_treebank_by_title($title);
-		$this->basex->download(strtoupper($treebank->title . '_ID'));
-	}
-
-	/**
 	 * Returns all public Treebanks (=public and processed).
 	 * @return Loads the list view.
 	 */

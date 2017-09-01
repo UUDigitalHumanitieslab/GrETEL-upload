@@ -33,7 +33,7 @@ if (!function_exists('treebank_actions'))
 			array_push($actions,
 				array('url' => 'treebank/log/' . $treebank->id, 'img' => 'view_log'), 
 				array('url' => 'treebank/change_access/' . $treebank->id, 'img' => ($treebank->public ? 'make_private' : 'make_public')), 
-				array('url' => 'treebank/download/' . $treebank->title, 'img' => 'drive_web'),
+				array('url' => 'api/treebank/download/' . $treebank->title, 'img' => 'drive_web'),
 				array('url' => 'treebank/delete/' . $treebank->id, 'img' => 'delete'));
 
 			if (!$treebank->processed && !$treebank->processing && in_development())
