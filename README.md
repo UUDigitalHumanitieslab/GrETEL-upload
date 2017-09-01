@@ -17,15 +17,16 @@ On top of a default LAMP installation, the following packages are required:
 
 GrETEL-upload also requires the following external programs to be installed:
 
-* [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/). Download and then unpack (preferably) into `/opt/Alpino/`. You can change the installation directory in the `application/database_default.php`.
-* [CHAMD](https://github.com/JanOdijk/chamd). Download and then unpack (preferably) into `/opt/chamd/`. You can change the installation directory in the `application/database_default.php`.
+* [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/). Download and then unpack (preferably) into `/opt/Alpino/`. You can change the installation directory in the `application/config/database_default.php`. It also need to be changed in `alpino.sh`.
+* [CHAMD](https://github.com/JanOdijk/chamd). Download and then unpack (preferably) into `/opt/chamd/`. You can change the installation directory in the `application/config/database_default.php`.
 
 ### Configuration
 
-You will have to provide configuration details in two files:
+You will have to provide configuration details in three files:
 
-* `application/database.php`: Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex). An example configuration can be found in `application/database_default.php`.
-* `application/ldap.php`: Settings for LDAP authentication. An example configuration can be found in `application/ldap_default.php`.
+* `application/config/config.php`: Codeigniter settings.
+* `application/config/database.php`: Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex). An example configuration can be found in `application/config/database_default.php`.
+* `application/config/ldap.php`: Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php`.
 
 ### Database schema
 
