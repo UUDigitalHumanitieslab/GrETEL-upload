@@ -30,8 +30,11 @@ if (!function_exists('treebank_actions'))
 
 		if ($treebank->user_id == current_user_id())
 		{
-			array_push($actions, array('url' => 'treebank/log/' . $treebank->id, 'img' => 'view_log'), array('url' => 'treebank/change_access/' . $treebank->id, 'img' => ($treebank->public ? 'make_private' : 'make_public')), array('url' => 'treebank/delete/' . $treebank->id, 'img' => 'delete')
-			);
+			array_push($actions,
+				array('url' => 'treebank/log/' . $treebank->id, 'img' => 'view_log'), 
+				array('url' => 'treebank/change_access/' . $treebank->id, 'img' => ($treebank->public ? 'make_private' : 'make_public')), 
+				array('url' => 'treebank/download/' . $treebank->id, 'img' => 'drive_web'),
+				array('url' => 'treebank/delete/' . $treebank->id, 'img' => 'delete'));
 
 			if (!$treebank->processed && !$treebank->processing && in_development())
 			{
