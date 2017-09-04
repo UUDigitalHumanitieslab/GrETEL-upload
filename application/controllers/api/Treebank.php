@@ -17,6 +17,7 @@ class Treebank extends REST_Controller
 	 */
 	public function download_get($title) {
 		// TODO: validate security
+		set_time_limit(0);
 		$treebank = $this->treebank_model->get_treebank_by_title($title);
 		$this->basex->download(strtoupper($treebank->title . '_ID'));
 	}
