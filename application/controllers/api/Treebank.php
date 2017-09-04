@@ -14,10 +14,9 @@ class Treebank extends REST_Controller
 	
 	/**
 	 * Downloads a big XML-file containing all the parsed tree.
+	 * TODO: limit access to public/owned treebanks
 	 */
 	public function download_get($title) {
-		// TODO: validate security
-		ini_set('memory_limit', '4096M');
 		set_time_limit(0);
 		$treebank = $this->treebank_model->get_treebank_by_title($title);
 		$this->basex->download(strtoupper($treebank->title . '_ID'));

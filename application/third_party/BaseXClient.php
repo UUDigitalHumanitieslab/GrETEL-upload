@@ -56,13 +56,8 @@ class BaseXSession {
     // send command to server
     socket_write($this->socket, $com.chr(0));
 
-    // receive result
-    $result = $this->receive();
+    $this->init();
     $this->printString();
-    if($this->ok() != True) {
-      throw new Exception($this->info);
-    }
-    return $result;
   }
 
   public function query($q) {
