@@ -52,6 +52,19 @@ class BaseXSession {
     return $result;
   }
 
+  public function executeAndPrint($com) {
+    // send command to server
+    socket_write($this->socket, $com.chr(0));
+
+    // receive result
+    $result = $this->receive();
+    $this->printString();
+    if($this->ok() != True) {
+      throw new Exception($this->info);
+    }
+    return $result;
+  }
+
   public function query($q) {
     return new Query($this, $q);
   }
@@ -86,6 +99,13 @@ class BaseXSession {
     $this->bsize = 0;
   }
 
+  public function printString() {
+    while(($d = $this->read()) != chr(0)) {
+      print($d);
+      flush();
+    }
+  }
+  
   public function readString() {
     $com = "";
     while(($d = $this->read()) != chr(0)) {

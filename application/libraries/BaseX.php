@@ -16,11 +16,10 @@ class BaseX
     public function download($db)
     {
         $session = new BaseXSession(BASEX_HOST, BASEX_PORT, BASEX_USER, BASEX_PWD);
-        $result = $session->execute('XQUERY db:open("'. $db . '")/treebank');
         
         header('Content-type: text/xml');
         header('Content-Disposition: attachment; filename="' . $db . '.xml"');
-        print($result);
+        $result = $session->executeAndPrint('XQUERY db:open("'. $db . '")/treebank');
         
         // Close session
         $session->close();
