@@ -23,7 +23,7 @@ class Upload extends MY_Controller
 
 		$config['upload_path'] = UPLOAD_DIR;
 		$config['allowed_types'] = 'zip';
-		$config['max_size'] = 16384;
+		$config['max_size'] = 65536;
 
 		$this->load->library('upload', $config);
 
