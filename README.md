@@ -29,6 +29,8 @@ You will have to provide configuration details in three files:
 * `application/config/database.php`: Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex). An example configuration can be found in `application/config/database_default.php`.
 * `application/config/ldap.php`: Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php`.
 
+Update the apache config, to allow read-write access to gretel-upload (and gretel)
+
 ### Database schema
 
 Create the mysql database gretel_upload 
