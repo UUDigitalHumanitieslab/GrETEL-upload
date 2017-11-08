@@ -14,6 +14,7 @@ On top of a default LAMP installation, the following packages are required:
 * [php-zip](https://packages.debian.org/sid/php-zip): Required to process .zip-files.
 * [php-ldap](https://packages.debian.org/sid/php-ldap): Authentication via LDAP.
 * [php-sqlite3](https://packages.debian.org/sid/php-sqlite3): SQLite3 module for PHP, allows tests with in-memory database.
+* [php-libxml]
 
 GrETEL-upload also requires the following external programs to be installed:
 
@@ -30,6 +31,7 @@ You will have to provide configuration details in three files:
 
 ### Database schema
 
+Create the mysql database gretel_upload 
 You can use the command `php index.php migrate` in the source directory to create/migrate the database schema.
 See `docs/schema.png` for the current database schema (exported from [phpMyAdmin](https://www.phpmyadmin.net/)).
 
