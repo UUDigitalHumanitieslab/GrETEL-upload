@@ -94,8 +94,9 @@ class Process extends CI_Controller
 			foreach ($dirs as $dir)
 			{
 				// Create a Component for each directory in the .zip-file.
-				$slug = basename($dir);
-				$basex_db = strtoupper($treebank->title . '_ID_' . $slug);
+				$slug = substr(basename($dir), 0, 100);
+				// make sure the database name does not exceed the filename limit of 255 characters
+				$basex_db = strtoupper(substr($treebank->title, 0, 251 - strlen($slug)) . '_ID_' . $slug);
 				$title = $metadata ? $metadata->$slug->description : $slug;
 
 				$component = array(
@@ -134,7 +135,7 @@ class Process extends CI_Controller
 
 			// Merge all the directories, and upload the merged file to BaseX
 			$this->merge_dirs($root_dir, $dirs, $importrun_id);
-			$basex_db = strtoupper($treebank->title . '_ID');
+			$basex_db = strtoupper(substr($treebank->title, 0, 252) . '_ID');
 			$this->basex->upload($importrun_id, $basex_db, $root_dir . '/total.xml');
 
 			$this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');

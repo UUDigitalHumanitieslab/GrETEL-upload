@@ -59,7 +59,7 @@ class Migration_ImportLog extends CI_Migration
 			),
 			'filename' => array(
 				'type' => 'VARCHAR',
-				'constraint' => '200',
+				'constraint' => '255',
 				'null' => TRUE,
 			),
 			'linenumber' => array(
