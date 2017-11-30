@@ -129,19 +129,8 @@ class Treebank extends MY_Controller
         }
         $file_path_without_extension = UPLOAD_DIR.substr($treebank->filename, 0, -4);
         if (file_exists($file_path_without_extension)) {
-            // yes, this is how you delete a directory completely in PHP...
-            $it = new RecursiveDirectoryIterator($file_path_without_extension,
-                RecursiveDirectoryIterator::SKIP_DOTS);
-            $files = new RecursiveIteratorIterator($it,
-                RecursiveIteratorIterator::CHILD_FIRST);
-            foreach ($files as $file) {
-                if ($file->isDir()) {
-                    rmdir($file->getRealPath());
-                } else {
-                    unlink($file->getRealPath());
-                }
-            }
-            rmdir($file_path_without_extension);
+            $this->load->helper('file');
+            delete_files($file_path_without_extension, true);
         }
 
         // Return to the previous page

@@ -1,10 +1,12 @@
 <h2><?=$page_title; ?></h2>
 
-<?php if ($this->session->flashdata('message')) { ?>
+<?php if ($this->session->flashdata('message')) {
+    ?>
 	<div class="success">
 		<?=$this->session->flashdata('message'); ?>
 	</div>
-<?php } ?>
+<?php
+} ?>
 
 <?=form_open_multipart($action, array('class' => 'pure-form pure-form-aligned')); ?>
 
@@ -38,7 +40,8 @@
 
 <div class="pure-control-group">
 <?=form_label(lang('file_type'), 'file_type'); ?>
-<?=form_radio_and_label('file_type', FileType::TXT, 'txt', 'Plain text'); ?><?=form_help('help_ft_txt'); ?>
+<?=form_radio_and_label('file_type', FileType::TXT, FileType::TXT, 'Plain text'); ?><?=form_help('help_ft_txt'); ?>
+<?=form_radio_and_label('file_type', FileType::FOLIA, '', 'FoLiA-XML'); ?><?=form_help('help_ft_folia'); ?>
 <?=form_radio_and_label('file_type', FileType::CHAT, '', 'CHAT files'); ?><?=form_help('help_ft_chat'); ?>
 <?=form_radio_and_label('file_type', FileType::LASSY, '', 'LASSY-XML'); ?><?=form_help('help_ft_lassy'); ?>
 </div>
