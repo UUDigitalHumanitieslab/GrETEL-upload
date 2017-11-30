@@ -86,9 +86,7 @@ class Process extends CI_Controller
             $dirs = $this->retrieve_dirs($root_dir, $treebank->title);
             foreach ($dirs as $dir) {
                 // Create a Component for each directory in the .zip-file.
-                $slug = substr(basename($dir), 0, 100);
-                // make sure the database name does not exceed the filename limit of 255 characters
-                $basex_db = strtoupper(substr($treebank->title, 0, 251 - strlen($slug)).'_ID_'.$slug);
+                $basex_db = $this->get_db_name($treebank->title, $dir, $slug);
                 $title = $metadata ? $metadata->$slug->description : $slug;
 
                 $component = array(
@@ -128,7 +126,7 @@ class Process extends CI_Controller
 
             // Merge all the directories, and upload the merged file to BaseX
             $this->merge_dirs($root_dir, $dirs, $importrun_id);
-            $basex_db = strtoupper(substr($treebank->title, 0, 252).'_ID');
+            $basex_db = $this->get_db_name($treebank->title);
             $this->basex->upload($importrun_id, $basex_db, $root_dir.'/total.xml');
 
             $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');
@@ -138,6 +136,24 @@ class Process extends CI_Controller
 
         // Mark treebank as processed
         $this->importrun_model->end_importrun($importrun_id, $treebank->id);
+    }
+
+    /**
+     * Gets a BaseX database name which is safe to use.
+     *
+     * @param string $title Treebank title
+     * @param string $dir   component directory (if any)
+     * @param string $slug  slug name for this component
+     */
+    private function get_db_name($title, $dir = null, &$slug = null)
+    {
+        if ($dir == null) {
+            return strtoupper(substr($title, 0, 252).'_ID');
+        } else {
+            $slug = substr(basename($dir), 0, 100);
+            // make sure the database name does not exceed the filename limit of 255 characters
+            return strtoupper(substr($title, 0, 251 - strlen($slug)).'_ID_'.$slug);
+        }
     }
 
     /**
