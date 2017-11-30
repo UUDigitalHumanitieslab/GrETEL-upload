@@ -48,7 +48,7 @@ class Migration_Initial extends CI_Migration
 			),
 			'filename' => array(
 				'type' => 'VARCHAR',
-				'constraint' => '200',
+				'constraint' => '255',
 				'null' => TRUE,
 			),
 			'public' => array(
@@ -83,11 +83,11 @@ class Migration_Initial extends CI_Migration
 			),
 			'slug' => array(
 				'type' => 'VARCHAR',
-				'constraint' => '20',
+				'constraint' => '100',
 			),
 			'basex_db' => array(
 				'type' => 'VARCHAR',
-				'constraint' => '20',
+				'constraint' => '255',
 			),
 			'nr_sentences' => array(
 				'type' => 'INT',
