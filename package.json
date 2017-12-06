@@ -1,0 +1,12 @@
+{
+    "name": "gretel-upload",
+    "version": "0.1.142",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/UUDigitalHumanitieslab/GrETEL-upload.git"
+    },
+    "scripts": {
+        "version": "node version.js"
+    }
+}
