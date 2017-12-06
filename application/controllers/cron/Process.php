@@ -72,7 +72,7 @@ class Process extends CI_Controller
         if ($res === true) {
             $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing started');
 
-            $root_dir = UPLOAD_DIR.substr($treebank->filename, 0, -4);
+            $root_dir = UPLOAD_DIR.pathinfo($treebank->filename, PATHINFO_EXTENSION);
             $zip->extractTo($root_dir);
             $zip->close();
 
