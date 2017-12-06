@@ -72,7 +72,7 @@ class Process extends CI_Controller
         if ($res === true) {
             $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing started');
 
-            $root_dir = UPLOAD_DIR.substr($treebank->filename, 0, -4);
+            $root_dir = UPLOAD_DIR.pathinfo($treebank->filename, PATHINFO_EXTENSION);
             $zip->extractTo($root_dir);
             $zip->close();
 
@@ -112,6 +112,11 @@ class Process extends CI_Controller
                     }
 
                     $this->alpino_parse($importrun_id, $dir, $treebank->has_labels);
+                }
+
+                if (in_array($treebank->file_type, array(FileType::FOLIA))) {
+                    $this->folia_preprocess($importrun_id, $root_dir, $dir);
+                    $this->alpino_parse($importrun_id, $dir, true);
                 }
 
                 // Merge the (created) XML files, and upload them to BaseX
@@ -236,6 +241,48 @@ class Process extends CI_Controller
     }
 
     /**
+     * Pre-processes FoLiA files using the folia2alpino program.
+     *
+     * @param int    $importrun_id The ID of the current ImportRun
+     * @param string $root_dir     The root directory
+     * @param string $dir          The directory which contains the FoLiA-files
+     */
+    private function folia_preprocess($importrun_id, $root_dir, $dir)
+    {
+        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started FoLiA preprocessing');
+        foreach (glob($dir.'/*.xml') as $file) {
+            if (!$this->folia2alpino($dir, $file, $importrun_id)) {
+                $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Aborted FoLiA preprocessing');
+
+                return;
+            }
+        }
+
+        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Completed FoLiA preprocessing');
+    }
+
+    /**
+     * Converts a FoLiA file to readable input.
+     *
+     * @param string $dir          the current directory
+     * @param string $file_path    the full path of the FoLiA file to parse
+     * @param int    $importrun_id The ID of the current ImportRun
+     */
+    private function folia2alpino($dir, $file_path, $importrun_id)
+    {
+        $file_out = substr($file_path, 0, -4).'.txt';
+        $command = "folia2alpino {$file_path} -o {$file_out}";
+        exec($command, $output, $return_var);
+        if ($return_var != 0) {
+            $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Problem executing folia2alpino. Is it installed? Check the Apache log.');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Parses all files in the input to Alpino-DS XML.
      *
      * @param int    $importrun_id The ID of the current ImportRun
@@ -279,7 +326,13 @@ class Process extends CI_Controller
         $i = 0;
         foreach (glob($dir.'/*.xml') as $file) {
             $file_xml = new DOMDocument();
-            $file_xml->loadXML(file_get_contents($file));
+            $file_content = file_get_contents($file);
+            if (substr_count($file_content, 'folia2html.xsl', 0, 100) > 0) {
+                // skip FoLiA files: these should already have been pre-processed
+                continue;
+            }
+
+            $file_xml->loadXML($file_content);
 
             // Set the id attribute as the filename in the root element
             $file_xml->documentElement->setAttribute('id', basename($dir).'-'.basename($file));

@@ -12,9 +12,7 @@ class Treebank extends MY_Controller
     }
 
     /**
-     * Returns all public Treebanks (=public and processed).
-     *
-     * @return Loads the list view
+     * Returns all public Treebanks (=public and processed). Loads the list view.
      */
     public function index()
     {
@@ -27,11 +25,9 @@ class Treebank extends MY_Controller
     }
 
     /**
-     * Returns details for a Treebank.
+     * Returns details for a Treebank. Loads the detail view.
      *
      * @param string $title the title of the Treebank
-     *
-     * @return Loads the detail view
      */
     public function show($title)
     {
@@ -71,11 +67,9 @@ class Treebank extends MY_Controller
     }
 
     /**
-     * Returns the ImportLogs from the most recent ImportRun for a Treebank.
+     * Returns the ImportLogs from the most recent ImportRun for a Treebank. Loads the log view.
      *
      * @param int $treebank_id the ID of the Treebank
-     *
-     * @return Loads the log view
      */
     public function log($treebank_id)
     {
@@ -93,11 +87,9 @@ class Treebank extends MY_Controller
     }
 
     /**
-     * Alters the accessibility of a Treebank (public <-> private).
+     * Alters the accessibility of a Treebank (public <-> private). Redirects to the previous page.
      *
      * @param int $treebank_id the ID of the Treebank
-     *
-     * @return Redirects to the previous page
      */
     public function change_access($treebank_id)
     {
@@ -112,11 +104,9 @@ class Treebank extends MY_Controller
     }
 
     /**
-     * Deletes a Treebank from both BaseX as well as the database.
+     * Deletes a Treebank from both BaseX, the database and the filesystem. Redirects to the previous page.
      *
      * @param int $treebank_id the ID of the Treebank
-     *
-     * @return Redirects to the previous page
      */
     public function delete($treebank_id)
     {
@@ -133,18 +123,26 @@ class Treebank extends MY_Controller
         // Delete the treebank from the database
         $this->treebank_model->delete_treebank($treebank_id);
 
+        // Delete files
+        if (file_exists(UPLOAD_DIR.$treebank->filename)) {
+            unlink(UPLOAD_DIR.$treebank->filename);
+        }
+        $file_path_without_extension = UPLOAD_DIR.pathinfo($treebank->filename, PATHINFO_EXTENSION);
+        if (file_exists($file_path_without_extension)) {
+            $this->load->helper('file');
+            delete_files($file_path_without_extension, true);
+        }
+
         // Return to the previous page
         $this->session->set_flashdata('message', lang('treebank_deleted'));
         redirect($this->agent->referrer(), 'refresh');
     }
 
     /**
-     * Returns all Treebanks of the current User.
+     * Returns all Treebanks of the current User. Loads the list view
      * TODO: allow admins all access?
      *
      * @param int $user_id the ID of the User
-     *
-     * @return Loads the list view
      */
     public function user($user_id)
     {
@@ -163,7 +161,7 @@ class Treebank extends MY_Controller
      *
      * @param int $treebank_id the ID of the Treebank
      *
-     * @return The found Treebank
+     * @return Treebank_model The found Treebank
      */
     private function get_or_404($treebank_id)
     {
