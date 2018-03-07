@@ -221,7 +221,7 @@ class Process extends CI_Controller
         $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started CHAT preprocessing');
 
         $logfile = $dir.'/chamd.log';
-        $command = 'chamd';
+        $command = 'export LANG=nl_NL.UTF8 && chamd';
         $command .= ' --path='.$dir;
         $command .= ' --outpath='.$root_dir;
         $command .= ' --logfile='.$logfile;
@@ -333,6 +333,9 @@ class Process extends CI_Controller
                 continue;
             }
 
+            echo $file;
+            // CHAT time alignment character, replaced with middle dot because DOMDocument does not like this entity at all
+            $file_content = str_replace('', '&#183;', $file_content);
             $file_xml->loadXML($file_content);
 
             // Set the id attribute as the filename in the root element
