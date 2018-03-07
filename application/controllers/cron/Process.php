@@ -221,7 +221,7 @@ class Process extends CI_Controller
         $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started CHAT preprocessing');
 
         $logfile = $dir.'/chamd.log';
-        $command = 'python3 '.CHAMD_HOME.'/chamd.py';
+        $command = 'chamd';
         $command .= ' --path='.$dir;
         $command .= ' --outpath='.$root_dir;
         $command .= ' --logfile='.$logfile;

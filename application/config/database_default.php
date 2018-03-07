@@ -1,5 +1,6 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -71,72 +72,69 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | the query builder class.
 */
 $active_group = 'default';
-$query_builder = TRUE;
+$query_builder = true;
 
 $db['default'] = array(
-	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => 'root++',
-	'database' => 'gretel_upload',
-	'dbdriver' => 'mysqli',
-	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => (ENVIRONMENT !== 'production'),
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
-	'failover' => array(),
-	'save_queries' => TRUE
+    'dsn' => '',
+    'hostname' => 'localhost',
+    'username' => 'root',
+    'password' => 'root++',
+    'database' => 'gretel_upload',
+    'dbdriver' => 'mysqli',
+    'dbprefix' => '',
+    'pconnect' => false,
+    'db_debug' => (ENVIRONMENT !== 'production'),
+    'cache_on' => false,
+    'cachedir' => '',
+    'char_set' => 'utf8',
+    'dbcollat' => 'utf8_general_ci',
+    'swap_pre' => '',
+    'encrypt' => false,
+    'compress' => false,
+    'stricton' => false,
+    'failover' => array(),
+    'save_queries' => true,
 );
 
 $db['test'] = array(
-	'dsn'	=> '',
-	'hostname' => 'sqlite::memory:',
-	'username' => '',
-	'password' => '',
-	'database' => '',
-	'dbdriver' => 'pdo',
-	'dbprefix' => '',
-	'pconnect' => TRUE,
-	'db_debug' => TRUE,
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
-	'failover' => array(),
-	'save_queries' => TRUE
+    'dsn' => '',
+    'hostname' => 'sqlite::memory:',
+    'username' => '',
+    'password' => '',
+    'database' => '',
+    'dbdriver' => 'pdo',
+    'dbprefix' => '',
+    'pconnect' => true,
+    'db_debug' => true,
+    'cache_on' => false,
+    'cachedir' => '',
+    'char_set' => 'utf8',
+    'dbcollat' => 'utf8_general_ci',
+    'swap_pre' => '',
+    'encrypt' => false,
+    'compress' => false,
+    'stricton' => false,
+    'failover' => array(),
+    'save_queries' => true,
 );
 
-// BaseX database variables 
-defined('BASEX_HOST') 	OR define('BASEX_HOST',	'localhost');
-defined('BASEX_PORT') 	OR define('BASEX_PORT',	'1984');
-defined('BASEX_USER') 	OR define('BASEX_USER',	'admin');
-defined('BASEX_PWD')	OR define('BASEX_PWD',	'admin');
+// BaseX database variables
+defined('BASEX_HOST') or define('BASEX_HOST', 'localhost');
+defined('BASEX_PORT') or define('BASEX_PORT', '1984');
+defined('BASEX_USER') or define('BASEX_USER', 'admin');
+defined('BASEX_PWD') or define('BASEX_PWD', 'admin');
 
 // Alpino variables
-defined('ALPINO_HOME')  OR define('ALPINO_HOME', '/opt/Alpino');
-defined('ALPINO_HOST')  OR define('ALPINO_HOST', '127.0.0.1');
-defined('ALPINO_PORT')  OR define('ALPINO_PORT', '7001');
-
-// CHAMD variables
-defined('CHAMD_HOME')  OR define('CHAMD_HOME', '/opt/chamd');
+defined('ALPINO_HOME') or define('ALPINO_HOME', '/opt/Alpino');
+defined('ALPINO_HOST') or define('ALPINO_HOST', '127.0.0.1');
+defined('ALPINO_PORT') or define('ALPINO_PORT', '7001');
 
 // Other settings
-defined('UPLOAD_DIR')	OR define('UPLOAD_DIR',	'./uploads/');
-defined('GRETEL_URL')	OR define('GRETEL_URL',	'http://localhost/gretel');
-defined('TMP_DIR')  	OR define('TMP_DIR', '/tmp');
-defined('ADMIN_EMAIL') 	OR define('ADMIN_EMAIL', 'M.H.vanderKlis@uu.nl');
+defined('UPLOAD_DIR') or define('UPLOAD_DIR', './uploads/');
+defined('GRETEL_URL') or define('GRETEL_URL', 'http://localhost/gretel');
+defined('TMP_DIR') or define('TMP_DIR', '/tmp');
+defined('ADMIN_EMAIL') or define('ADMIN_EMAIL', 's.j.j.spoel@uu.nl');
 
 // Guest User. Leave GUEST_USERNAME empty to disable.
-defined('GUEST_USERNAME')	OR define('GUEST_USERNAME', 'test');
-defined('GUEST_EMAIL')		OR define('GUEST_EMAIL', 'test@test.nl');
+defined('GUEST_USERNAME') or define('GUEST_USERNAME', 'test');
+defined('GUEST_EMAIL') or define('GUEST_EMAIL', 'test@test.nl');
