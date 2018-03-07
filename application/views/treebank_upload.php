@@ -40,10 +40,13 @@
 
 <div class="pure-control-group">
 <?=form_label(lang('file_type'), 'file_type'); ?>
-<?=form_radio_and_label('file_type', FileType::TXT, FileType::TXT, 'Plain text'); ?><?=form_help('help_ft_txt'); ?>
-<?=form_radio_and_label('file_type', FileType::FOLIA, '', 'FoLiA-XML'); ?><?=form_help('help_ft_folia'); ?>
-<?=form_radio_and_label('file_type', FileType::CHAT, '', 'CHAT files'); ?><?=form_help('help_ft_chat'); ?>
+<div class="pure-form-group-box">
+<?=form_radio_and_label('file_type', FileType::TXT, FileType::TXT, 'Plain text'); ?><?=form_help('help_ft_txt'); ?><br />
+<?=form_radio_and_label('file_type', FileType::FOLIA, '', 'FoLiA-XML'); ?><?=form_help('help_ft_folia'); ?><br />
+<?=form_radio_and_label('file_type', FileType::TEI, '', 'TEI-XML'); ?><?=form_help('help_ft_tei'); ?><br />
+<?=form_radio_and_label('file_type', FileType::CHAT, '', 'CHAT files'); ?><?=form_help('help_ft_chat'); ?><br />
 <?=form_radio_and_label('file_type', FileType::LASSY, '', 'LASSY-XML'); ?><?=form_help('help_ft_lassy'); ?>
+</div>
 </div>
 
 <div class="parse_flags_txt">
