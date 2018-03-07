@@ -333,7 +333,6 @@ class Process extends CI_Controller
                 continue;
             }
 
-            echo $file;
             // CHAT time alignment character, replaced with middle dot because DOMDocument does not like this entity at all
             $file_content = str_replace('', '&#183;', $file_content);
             $file_xml->loadXML($file_content);
