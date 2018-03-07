@@ -164,13 +164,19 @@ class Process extends CI_Controller
      *
      * @return array the array of subdirectories in this directory
      */
-    private function retrieve_dirs($root_dir, $treebank_title)
+    private function retrieve_dirs($root_dir, $treebank_title = null)
     {
         // Retrieve the directories in this .zip-file
         $dirs = glob($root_dir.'/*', GLOB_ONLYDIR);
+        foreach ($dirs as $dir) {
+            $subdirs = $this->retrieve_dirs($dir);
+            foreach ($subdirs as $subdir) {
+                $dirs[] = $subdir;
+            }
+        }
 
         // If no directories are found, create a new folder and move files in the root directory there
-        if (!$dirs) {
+        if (!$dirs && $treebank_title != null) {
             $filenames = scandir($root_dir);
             $new_dir = $root_dir.'/'.$treebank_title;
             mkdir($new_dir, 0755, true);
