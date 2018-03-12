@@ -127,10 +127,11 @@ class Treebank extends MY_Controller
         if (file_exists(UPLOAD_DIR.$treebank->filename)) {
             unlink(UPLOAD_DIR.$treebank->filename);
         }
-        $file_path_without_extension = UPLOAD_DIR.pathinfo($treebank->filename, PATHINFO_EXTENSION);
+        $file_path_without_extension = UPLOAD_DIR.pathinfo($treebank->filename)['filename'];
         if (file_exists($file_path_without_extension)) {
             $this->load->helper('file');
             delete_files($file_path_without_extension, true);
+            @rmdir($file_path_without_extension);
         }
 
         // Return to the previous page
