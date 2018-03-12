@@ -272,7 +272,7 @@ class Alpino
      */
     public function paragraph_per_line($file)
     {
-        $cmd = '/usr/bin/perl -w '.ALPINO_HOME.'/Tokenization/paragraph_per_line '.$file;
+        $cmd = '/usr/bin/perl -w '.ALPINO_HOME.'/Tokenization/paragraph_per_line "'.$file.'"';
         $descriptorspec = array(
             0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
             1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to

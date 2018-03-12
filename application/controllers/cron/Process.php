@@ -159,6 +159,9 @@ class Process extends CI_Controller
             $name = strtoupper(substr($title, 0, 251 - strlen($slug)).'_ID_'.$slug);
         }
 
+        // only allow really boring ASCII characters
+        $name = strtoupper(preg_replace('/[^a-zA-Z0-9_]/', '_', $name));
+
         if ($existing_names === null) {
             return $name;
         }
