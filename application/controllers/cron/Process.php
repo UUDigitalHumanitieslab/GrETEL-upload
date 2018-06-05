@@ -72,7 +72,8 @@ class Process extends CI_Controller
         if ($res === true) {
             $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing started');
 
-            $root_dir = UPLOAD_DIR.pathinfo($treebank->filename, PATHINFO_EXTENSION);
+            // create a new random directory, to more easily rerun the task
+            $root_dir = UPLOAD_DIR.pathinfo($treebank->filename)['filename'].'/'.uniqid();
             $zip->extractTo($root_dir);
             $zip->close();
 
@@ -84,9 +85,12 @@ class Process extends CI_Controller
 
             // Create databases per component
             $dirs = $this->retrieve_dirs($root_dir, $treebank->title);
+            $root_len = strlen($root_dir);
+            $basex_db_names = array();
             foreach ($dirs as $dir) {
                 // Create a Component for each directory in the .zip-file.
-                $basex_db = $this->get_db_name($treebank->title, $dir, $slug);
+                $basex_db = $this->get_db_name($treebank->title, substr($dir, $root_len + 1), $slug, $basex_db_names);
+                $basex_db = $basex_db;
                 $title = $metadata ? $metadata->$slug->description : $slug;
 
                 $component = array(
@@ -140,19 +144,47 @@ class Process extends CI_Controller
     /**
      * Gets a BaseX database name which is safe to use.
      *
-     * @param string $title Treebank title
-     * @param string $dir   component directory (if any)
-     * @param string $slug  slug name for this component
+     * @param string $title          Treebank title
+     * @param string $dir            component directory (if any)
+     * @param string $slug           slug name for this component
+     * @param string $existing_names array with existing names
      */
-    private function get_db_name($title, $dir = null, &$slug = null)
+    private function get_db_name($title, $dir = null, &$slug = null, &$existing_names = null)
     {
         if ($dir == null) {
-            return strtoupper(substr($title, 0, 252).'_ID');
+            $name = strtoupper(substr($title, 0, 252).'_ID');
         } else {
-            $slug = substr(basename($dir), 0, 100);
+            $slug = substr(str_replace(array('\\', '/'), '_', $dir), 0, 100);
             // make sure the database name does not exceed the filename limit of 255 characters
-            return strtoupper(substr($title, 0, 251 - strlen($slug)).'_ID_'.$slug);
+            $name = strtoupper(substr($title, 0, 251 - strlen($slug)).'_ID_'.$slug);
         }
+
+        // only allow really boring ASCII characters
+        $name = strtoupper(preg_replace('/[^a-zA-Z0-9_]/', '_', $name));
+
+        if ($existing_names === null) {
+            return $name;
+        }
+
+        $new_name = $name;
+        $duplicate = true;
+        $count = 1;
+        while ($duplicate) {
+            $duplicate = false;
+            foreach ($existing_names as $existing) {
+                if ($existing == $new_name) {
+                    $duplicate = true;
+                }
+            }
+            if ($duplicate) {
+                $new_name = $name.'_'.$count;
+                ++$count;
+            }
+        }
+
+        $existing_names[] = $new_name;
+
+        return $new_name;
     }
 
     /**
@@ -164,13 +196,19 @@ class Process extends CI_Controller
      *
      * @return array the array of subdirectories in this directory
      */
-    private function retrieve_dirs($root_dir, $treebank_title)
+    private function retrieve_dirs($root_dir, $treebank_title = null)
     {
         // Retrieve the directories in this .zip-file
         $dirs = glob($root_dir.'/*', GLOB_ONLYDIR);
+        foreach ($dirs as $dir) {
+            $subdirs = $this->retrieve_dirs($dir);
+            foreach ($subdirs as $subdir) {
+                $dirs[] = $subdir;
+            }
+        }
 
         // If no directories are found, create a new folder and move files in the root directory there
-        if (!$dirs) {
+        if (!$dirs && $treebank_title != null) {
             $filenames = scandir($root_dir);
             $new_dir = $root_dir.'/'.$treebank_title;
             mkdir($new_dir, 0755, true);
