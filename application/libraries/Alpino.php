@@ -168,6 +168,8 @@ class Alpino
         }
 
         // Otherwise, write the sentence to the server and obtain the result
+        // Line must end with a newline
+        $in = rtrim($in, "\n\0")."\n";
         socket_write($socket, $in, strlen($in));
         $result = '';
         while ($out = socket_read($socket, 2048)) {
