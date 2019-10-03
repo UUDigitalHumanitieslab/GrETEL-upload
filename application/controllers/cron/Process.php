@@ -89,7 +89,7 @@ class Process extends CI_Controller
             $basex_db_names = array();
             foreach ($dirs as $dir) {
                 // Create a Component for each directory in the .zip-file.
-                $basex_db = $this->get_db_name($treebank->title, substr($dir, $root_len + 1), $slug, $basex_db_names);
+                $basex_db = $this->treebank_model->get_db_name($treebank->title, substr($dir, $root_len + 1), $slug, $basex_db_names);
                 $basex_db = $basex_db;
                 $title = $metadata ? $metadata->$slug->description : $slug;
 
@@ -129,7 +129,7 @@ class Process extends CI_Controller
 
             // Merge all the directories, and upload the merged file to BaseX
             $this->merge_dirs($root_dir, $dirs, $importrun_id);
-            $basex_db = $this->get_db_name($treebank->title);
+            $basex_db = $this->treebank_model->get_db_name($treebank->title);
             $this->basex->upload($importrun_id, $basex_db, $root_dir.'/total.xml');
 
             $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');
@@ -139,52 +139,6 @@ class Process extends CI_Controller
 
         // Mark treebank as processed
         $this->importrun_model->end_importrun($importrun_id, $treebank->id);
-    }
-
-    /**
-     * Gets a BaseX database name which is safe to use.
-     *
-     * @param string $title          Treebank title
-     * @param string $dir            component directory (if any)
-     * @param string $slug           slug name for this component
-     * @param string $existing_names array with existing names
-     */
-    private function get_db_name($title, $dir = null, &$slug = null, &$existing_names = null)
-    {
-        if ($dir == null) {
-            $name = strtoupper(substr($title, 0, 252).'_ID');
-        } else {
-            $slug = substr(str_replace(array('\\', '/'), '_', $dir), 0, 100);
-            // make sure the database name does not exceed the filename limit of 255 characters
-            $name = strtoupper(substr($title, 0, 251 - strlen($slug)).'_ID_'.$slug);
-        }
-
-        // only allow really boring ASCII characters
-        $name = strtoupper(preg_replace('/[^a-zA-Z0-9_]/', '_', $name));
-
-        if ($existing_names === null) {
-            return $name;
-        }
-
-        $new_name = $name;
-        $duplicate = true;
-        $count = 1;
-        while ($duplicate) {
-            $duplicate = false;
-            foreach ($existing_names as $existing) {
-                if ($existing == $new_name) {
-                    $duplicate = true;
-                }
-            }
-            if ($duplicate) {
-                $new_name = $name.'_'.$count;
-                ++$count;
-            }
-        }
-
-        $existing_names[] = $new_name;
-
-        return $new_name;
     }
 
     /**
@@ -374,12 +328,16 @@ class Process extends CI_Controller
             // CHAT time alignment character, replaced with middle dot because DOMDocument does not like this entity at all
             $file_content = str_replace('', '&#183;', $file_content);
             $file_xml->loadXML($file_content);
+            if (!$file_xml) {
+                $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Could not load the XML of '.$file);
+                continue;
+            }
 
             // Set the id attribute as the filename in the root element
             $file_xml->documentElement->setAttribute('id', basename($dir).'-'.basename($file));
 
             $xp = new DOMXPath($file_xml);
-            $nr_sentences += 1;
+            ++$nr_sentences;
             $node = $xp->query('//node[@cat="top"]')->item(0);
             if ($node != null) {
                 // empty

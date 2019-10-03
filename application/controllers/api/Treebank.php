@@ -23,7 +23,7 @@ class Treebank extends REST_Controller
             $this->response(null, 403);
         }
 
-        $this->basex->download(strtoupper($treebank->title.'_ID'));
+        $this->basex->download($this->treebank_model->get_db_name($treebank->title));
     }
 
     /**

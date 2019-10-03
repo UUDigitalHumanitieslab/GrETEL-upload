@@ -158,4 +158,50 @@ class Treebank_model extends CI_Model
 
         return $this->get_api_treebanks();
     }
+
+    /**
+     * Gets a BaseX database name which is safe to use.
+     *
+     * @param string $title          Treebank title
+     * @param string $dir            component directory (if any)
+     * @param string $slug           slug name for this component
+     * @param string $existing_names array with existing names
+     */
+    public function get_db_name($title, $dir = null, &$slug = null, &$existing_names = null)
+    {
+        if ($dir == null) {
+            $name = strtoupper(substr($title, 0, 252).'_ID');
+        } else {
+            $slug = substr(str_replace(array('\\', '/'), '_', $dir), 0, 100);
+            // make sure the database name does not exceed the filename limit of 255 characters
+            $name = strtoupper(substr($title, 0, 251 - strlen($slug)).'_ID_'.$slug);
+        }
+
+        // only allow really boring ASCII characters
+        $name = strtoupper(preg_replace('/[^a-zA-Z0-9_]/', '_', $name));
+
+        if ($existing_names === null) {
+            return $name;
+        }
+
+        $new_name = $name;
+        $duplicate = true;
+        $count = 1;
+        while ($duplicate) {
+            $duplicate = false;
+            foreach ($existing_names as $existing) {
+                if ($existing == $new_name) {
+                    $duplicate = true;
+                }
+            }
+            if ($duplicate) {
+                $new_name = $name.'_'.$count;
+                ++$count;
+            }
+        }
+
+        $existing_names[] = $new_name;
+
+        return $new_name;
+    }
 }
