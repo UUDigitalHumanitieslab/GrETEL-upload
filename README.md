@@ -26,11 +26,11 @@ GrETEL-upload also requires the following external programs to be installed:
 
 You will have to provide configuration details in three files:
 
-* `application/config/config.php` : Codeigniter settings.
-* `application/config/database.php` : Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex). An example configuration can be found in `application/config/database_default.php` .
-* `application/config/ldap.php` : Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php` .
+* `application/config/config.php` : CodeIgniter settings. An example configuration can be found in `application/config/config_default.php`.
+* `application/config/database.php` : Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex). An example configuration can be found in `application/config/database_default.php`.
+* `application/config/ldap.php` : Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php`.
 
-Update the apache config, to allow read-write access to gretel-upload (and gretel)
+Update the apache config, to allow read-write access to gretel-upload (and gretel).
 
 ### Database schema
 

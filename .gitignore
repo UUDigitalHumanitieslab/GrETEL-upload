@@ -4,6 +4,7 @@ application/cache/*
 !application/cache/index.html
 
 # Configuration files
+/application/config/config.php
 /application/config/database.php
 /application/config/ldap.php
 
