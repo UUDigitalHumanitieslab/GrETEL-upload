@@ -10,25 +10,25 @@ After processing, the treebanks are searchable in GrETEL, and if you supply meta
 
 On top of a default LAMP installation, the following packages are required:
 
-* [basex](https://packages.debian.org/stable/basex): Storing processed treebanks into a XML-database.
-* [php-zip](https://packages.debian.org/sid/php-zip): Required to process .zip-files.
-* [php-ldap](https://packages.debian.org/sid/php-ldap): Authentication via LDAP.
-* [php-sqlite3](https://packages.debian.org/sid/php-sqlite3): SQLite3 module for PHP, allows tests with in-memory database.
-* [php-libxml]
+* [basex](https://packages.debian.org/stretch/basex): Storing processed treebanks into a XML-database.
+* [php-zip](https://packages.debian.org/stretch/php-zip): Required to process .zip-files.
+* [php-ldap](https://packages.debian.org/stretch/php-ldap): Authentication via LDAP.
+* [php-sqlite3](https://packages.debian.org/stretch/php-sqlite3): SQLite3 module for PHP, allows tests with in-memory database.
+* [php-libxml](https://packages.debian.org/stretch/php-xml)
 
 GrETEL-upload also requires the following external programs to be installed:
 
-* [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/). Download and then unpack (preferably) into `/opt/Alpino/`. You can change the installation directory in the `application/config/database_default.php`. It also need to be changed in `alpino.sh`.
-* [CHAMD](https://github.com/JanOdijk/chamd). This can be installed globally using `sudo -H pip3 install chamd`.
-* [Corpus2alpino](https://github.com/UUDigitalHumanitieslab/corpus2alpino). This can be installed globally using `sudo -H pip3 install corpus2alpino`. This requires Python 3.6+.
+* [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/). Download and then unpack (preferably) into `/opt/Alpino/` . You can change the installation directory in the `application/config/database_default.php` . It also need to be changed in `alpino.sh` .
+* [CHAMD](https://github.com/JanOdijk/chamd). This can be installed globally using `sudo -H pip3 install chamd` .
+* [Corpus2alpino](https://github.com/UUDigitalHumanitieslab/corpus2alpino). This can be installed globally using `sudo -H pip3 install corpus2alpino` . This requires Python 3.6+.
 
 ### Configuration
 
 You will have to provide configuration details in three files:
 
-* `application/config/config.php`: Codeigniter settings.
-* `application/config/database.php`: Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex). An example configuration can be found in `application/config/database_default.php`.
-* `application/config/ldap.php`: Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php`.
+* `application/config/config.php` : Codeigniter settings.
+* `application/config/database.php` : Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex). An example configuration can be found in `application/config/database_default.php` .
+* `application/config/ldap.php` : Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php` .
 
 Update the apache config, to allow read-write access to gretel-upload (and gretel)
 
@@ -40,7 +40,7 @@ See `docs/schema.png` for the current database schema (exported from [phpMyAdmin
 
 ### Permissions
 
-Make sure the `uploads` directory is writable for the user running the Apache daemon (usually `www-data`).
+Make sure the `uploads` directory is writable for the user running the Apache daemon (usually `www-data` ).
 
 ### Start-up
 
@@ -49,14 +49,14 @@ Start both Alpino and BaseX as server instances by running the following two com
 	basexserver -S
 	./alpino.sh
 
-Then, navigate to the installation directory in your web browser (e.g. `localhost/gretel-upload/`) to start using GrETEL-upload.
+Then, navigate to the installation directory in your web browser (e.g. `localhost/gretel-upload/` ) to start using GrETEL-upload.
 
 ## Uploading corpora
 
 ### Formats
 
 Currently, three formats are supported: [LASSY-XML](https://www.let.rug.nl/vannoord/Lassy/), [CHAT](http://childes.talkbank.org/) and plain text (UTF-8 encoded).
-When you upload a set of texts (always in a zipped folder, possibly consisting of multiple directories),
+When you upload a set of texts (always in a zipped folder, possibly consisting of multiple directories), 
 you can specify whether the text is already sentence- and/or word-tokenized.
 If not, the application will do this for you.
 
@@ -77,11 +77,11 @@ You can also choose to hide certain columns.
 GrETEL-upload is written in PHP and created with [CodeIgniter 3.1.4](https://www.codeigniter.com/).
 The application uses the following libraries:
 
-* `application/libraries/Alpino.php`: Wrapper around Alpino's dependency parser and tokenisation scripts.
-* `application/libraries/BaseX.php`: [BaseX PHP connector](https://github.com/BaseXdb/basex/blob/master/basex-api/src/main/php/BaseXClient.php). Slightly modified to work in CodeIgniter.
-* `application/libraries/Format.php`: Helper to convert between various formats such as XML, JSON, CSV, etc. Part of CodeIgniter Rest Server (see below).
-* `application/libraries/Ldap.php`: Authentication via LDAP. Inspired by the [LDAP Authentication library](https://github.com/gwojtak/Auth_Ldap).
-* `application/libraries/REST_Controller.php`: [CodeIgniter Rest Server](https://github.com/chriskacerguis/codeigniter-restserver), turns controllers into REST APIs. 
+* `application/libraries/Alpino.php` : Wrapper around Alpino's dependency parser and tokenisation scripts.
+* `application/libraries/BaseX.php` : [BaseX PHP connector](https://github.com/BaseXdb/basex/blob/master/basex-api/src/main/php/BaseXClient.php). Slightly modified to work in CodeIgniter.
+* `application/libraries/Format.php` : Helper to convert between various formats such as XML, JSON, CSV, etc. Part of CodeIgniter Rest Server (see below).
+* `application/libraries/Ldap.php` : Authentication via LDAP. Inspired by the [LDAP Authentication library](https://github.com/gwojtak/Auth_Ldap).
+* `application/libraries/REST_Controller.php` : [CodeIgniter Rest Server](https://github.com/chriskacerguis/codeigniter-restserver), turns controllers into REST APIs.
 
 ### Javascript
 
@@ -96,7 +96,7 @@ GrETEL-upload is created with [Pure CSS](http://purecss.io/).
 
 ### Images
 
-GrETEL-upload uses the [FamFamFam silk icon set](http://www.famfamfam.com/). 
+GrETEL-upload uses the [FamFamFam silk icon set](http://www.famfamfam.com/).
 
 ## API
 
@@ -111,7 +111,7 @@ GrETEL-upload has an API for retrieving data from the database:
 
 The test suite is created using [ci-phpunit-test](https://github.com/kenjis/ci-phpunit-test).
 This uses [PHPUnit](https://phpunit.de/).
-You can run the tests by navigating to the `application/tests` directory and calling `phpunit`.
+You can run the tests by navigating to the `application/tests` directory and calling `phpunit` .
 
 ## Demo
 
