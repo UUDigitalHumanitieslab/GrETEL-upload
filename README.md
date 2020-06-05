@@ -74,7 +74,7 @@ You can also choose to hide certain columns.
 
 ### PHP
 
-GrETEL-upload is written in PHP and created with [CodeIgniter 3.1.4](https://www.codeigniter.com/).
+GrETEL-upload is written in PHP and created with [CodeIgniter 3.1.11](https://www.codeigniter.com/).
 The application uses the following libraries:
 
 * `application/libraries/Alpino.php` : Wrapper around Alpino's dependency parser and tokenisation scripts.
