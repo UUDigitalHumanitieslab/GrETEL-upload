@@ -213,7 +213,7 @@ class Process extends CI_Controller
         $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started CHAT preprocessing');
 
         $logfile = $dir.'/chamd.log';
-        $command = 'export LANG=nl_NL.UTF8 && chamd';
+        $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('chamd_path');
         $command .= ' --path='.$dir;
         $command .= ' --outpath='.$root_dir;
         $command .= ' --logfile='.$logfile;
@@ -267,7 +267,7 @@ class Process extends CI_Controller
     private function corpus2alpino($dir, $file_path, $importrun_id)
     {
         $file_out = substr($file_path, 0, -4).'-alpino.xml';
-        $command = 'export LANG=nl_NL.UTF8 && corpus2alpino -t -s '.ALPINO_HOST.':'.ALPINO_PORT." {$file_path} -o {$file_out}";
+        $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('corpus2alpino_path').' -t -s '.ALPINO_HOST.':'.ALPINO_PORT." {$file_path} -o {$file_out}";
         exec($command, $output, $return_var);
         if ($return_var != 0) {
             $this->importlog_model->add_log($importrun_id, LogLevel::Error, "Problem executing corpus2alpino. Is it installed? Check the Apache log or inspect {$file_path}.");

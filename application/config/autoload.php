@@ -1,5 +1,6 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -84,7 +85,7 @@ $autoload['drivers'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 $autoload['helper'] = array('date', 'form', 'html', 'language', 'url',
-	'common', 'log', 'metadata', 'treebank');
+    'common', 'log', 'metadata', 'treebank', );
 
 /*
 | -------------------------------------------------------------------
@@ -98,7 +99,7 @@ $autoload['helper'] = array('date', 'form', 'html', 'language', 'url',
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('common');
 
 /*
 | -------------------------------------------------------------------
@@ -128,4 +129,4 @@ $autoload['language'] = array('common', 'form', 'help', 'rest_controller');
 |	$autoload['model'] = array('first_model' => 'first');
 */
 $autoload['model'] = array('user_model', 'treebank_model', 'component_model',
-	'metadata_model', 'importrun_model', 'importlog_model');
+    'metadata_model', 'importrun_model', 'importlog_model', );
