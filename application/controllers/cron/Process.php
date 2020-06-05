@@ -269,6 +269,7 @@ class Process extends CI_Controller
         $file_out = substr($file_path, 0, -4).'-alpino.xml';
         $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('corpus2alpino_path').' -t -s '.ALPINO_HOST.':'.ALPINO_PORT." {$file_path} -o {$file_out}";
         exec($command, $output, $return_var);
+        $this->importlog_model->add_log($importrun_id, LogLevel::Debug, $output);
         if ($return_var != 0) {
             $this->importlog_model->add_log($importrun_id, LogLevel::Error, "Problem executing corpus2alpino. Is it installed? Check the Apache log or inspect {$file_path}.");
 
