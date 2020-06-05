@@ -217,7 +217,11 @@ class Process extends CI_Controller
         $command .= ' --path='.$dir;
         $command .= ' --outpath='.$root_dir;
         $command .= ' --logfile='.$logfile;
-        shell_exec($command);
+
+        $shell_msg = shell_exec($command);
+        if ($shell_msg) {
+            $this->importlog_model->add_log($importrun_id, LogLevel::Warn, $shell_msg);
+        }
 
         $handle = fopen($logfile, 'r');
         if ($handle) {
