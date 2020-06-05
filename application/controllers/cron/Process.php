@@ -134,7 +134,7 @@ class Process extends CI_Controller
 
             $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');
         } else {
-            $this->importlog_model->add_log($importrun_id, LogLevel::Fatal, 'File not found');
+            $this->importlog_model->add_log($importrun_id, LogLevel::Fatal, 'File not found: '.UPLOAD_DIR.$treebank->filename);
         }
 
         // Mark treebank as processed
