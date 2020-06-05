@@ -217,6 +217,7 @@ class Process extends CI_Controller
         $command .= ' --path='.$dir;
         $command .= ' --outpath='.$root_dir;
         $command .= ' --logfile='.$logfile;
+        $command .= ' 2>&1';
 
         $shell_msg = shell_exec($command);
         if ($shell_msg) {
