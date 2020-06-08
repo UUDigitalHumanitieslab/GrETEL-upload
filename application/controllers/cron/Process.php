@@ -204,16 +204,16 @@ class Process extends CI_Controller
      */
     private function corpus_parse($importrun_id, $root_dir, $dir)
     {
-        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started corpus2folia preprocessing');
-        foreach (glob($dir.'/*.{xml,cha,txt}') as $file) {
+        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started corpus2alpino preprocessing');
+        foreach (glob($dir.'/*.{xml,cha,txt}', GLOB_BRACE) as $file) {
             if (!$this->corpus2alpino($dir, $file, $importrun_id)) {
-                $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Aborted corpus2folia preprocessing');
+                $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Aborted corpus2alpino preprocessing');
 
                 return;
             }
         }
 
-        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Completed corpus2folia preprocessing');
+        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Completed corpus2alpino preprocessing');
     }
 
     /**
