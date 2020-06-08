@@ -100,12 +100,6 @@ class Process extends CI_Controller
                     'basex_db' => $basex_db, );
                 $component_id = $this->component_model->add_component($component);
 
-                // If the Treebank consists of CHAT files, tokenize and parse it.
-                if (in_array($treebank->file_type, array(FileType::CHAT))) {
-                    $this->chat_preprocess($importrun_id, $root_dir, $dir);
-                    $this->alpino_parse($importrun_id, $dir, false);
-                }
-
                 // If the Treebank consists of plain text items, tokenize and parse it.
                 if (in_array($treebank->file_type, array(FileType::TXT))) {
                     if (!$treebank->is_sent_tokenised) {
@@ -118,7 +112,7 @@ class Process extends CI_Controller
                     $this->alpino_parse($importrun_id, $dir, $treebank->has_labels);
                 }
 
-                if (in_array($treebank->file_type, array(FileType::FOLIA, FileType::TEI))) {
+                if (in_array($treebank->file_type, array(FileType::CHAT, FileType::FOLIA, FileType::TEI))) {
                     $this->corpus_parse($importrun_id, $root_dir, $dir);
                 }
 
@@ -202,42 +196,7 @@ class Process extends CI_Controller
     }
 
     /**
-     * Preprocesses CHAT files using the program CHAMD by Jan Odijk.
-     *
-     * @param int    $importrun_id The ID of the current ImportRun
-     * @param string $root_dir     The root directory
-     * @param string $dir          The directory which contains the .cha-files
-     */
-    private function chat_preprocess($importrun_id, $root_dir, $dir)
-    {
-        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started CHAT preprocessing');
-
-        $logfile = $dir.'/chamd.log';
-        $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('chamd_path');
-        $command .= ' --path='.$dir;
-        $command .= ' --outpath='.$root_dir;
-        $command .= ' --logfile='.$logfile;
-        $command .= ' 2>&1';
-
-        $shell_msg = shell_exec($command);
-        if ($shell_msg) {
-            $this->importlog_model->add_log($importrun_id, LogLevel::Warn, $shell_msg);
-        }
-
-        $handle = fopen($logfile, 'r');
-        if ($handle) {
-            while (($line = fgets($handle)) !== false) {
-                $this->importlog_model->add_log($importrun_id, LogLevel::Warn, $line);
-            }
-
-            fclose($handle);
-        }
-
-        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Completed CHAT preprocessing');
-    }
-
-    /**
-     * Completely parse FoLiA and TEI files using the corpus2alpino program.
+     * Completely parse files using the corpus2alpino program.
      *
      * @param int    $importrun_id The ID of the current ImportRun
      * @param string $root_dir     The root directory
@@ -246,7 +205,7 @@ class Process extends CI_Controller
     private function corpus_parse($importrun_id, $root_dir, $dir)
     {
         $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started corpus2folia preprocessing');
-        foreach (glob($dir.'/*.xml') as $file) {
+        foreach (glob($dir.'/*.{xml,cha,txt}') as $file) {
             if (!$this->corpus2alpino($dir, $file, $importrun_id)) {
                 $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Aborted corpus2folia preprocessing');
 

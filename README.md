@@ -19,7 +19,6 @@ On top of a default LAMP installation, the following packages are required:
 GrETEL-upload also requires the following external programs to be installed:
 
 * [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/). Download and then unpack (preferably) into `/opt/Alpino/` . You can change the installation directory in the `application/config/database_default.php` . It also need to be changed in `alpino.sh` .
-* [CHAMD](https://github.com/JanOdijk/chamd). This can be installed globally using `sudo -H pip3 install chamd` .
 * [Corpus2alpino](https://github.com/UUDigitalHumanitieslab/corpus2alpino). This can be installed globally using `sudo -H pip3 install corpus2alpino` . This requires Python 3.6+.
 
 ### Configuration
@@ -67,7 +66,6 @@ If not, the application will do this for you.
 
 GrETEL-upload allows metadata annotation using the [PaQu metadata format](http://zardoz.service.rug.nl:8067/info.html#cormeta).
 This metadata will be converted to LASSY-XML during import.
-For texts in the CHAT format, we use the program CHAMD to convert the file into the PaQu metadata format, and then run the same import scheme.
 
 The GrETEL-upload interface then allows you to select which facet you would want to use to filter the data in GrETEL.
 You can e.g. choose to display a metadata column called 'year' as a slider, dropdown list or set of checkboxes.
