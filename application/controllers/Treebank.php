@@ -124,6 +124,8 @@ class Treebank extends MY_Controller
         // Clears the processing run from the database
         $this->importrun_model->clear_importrun($treebank_id);
 
+        $this->delete_files($treebank, false);
+
         // Return to the previous page
         $this->session->set_flashdata('message', lang('treebank_reset'));
         redirect($this->agent->referrer(), 'refresh');
@@ -149,16 +151,7 @@ class Treebank extends MY_Controller
         // Delete the treebank from the database
         $this->treebank_model->delete_treebank($treebank_id);
 
-        // Delete files
-        if (file_exists(UPLOAD_DIR.$treebank->filename)) {
-            unlink(UPLOAD_DIR.$treebank->filename);
-        }
-        $file_path_without_extension = UPLOAD_DIR.pathinfo($treebank->filename)['filename'];
-        if (file_exists($file_path_without_extension)) {
-            $this->load->helper('file');
-            delete_files($file_path_without_extension, true);
-            @rmdir($file_path_without_extension);
-        }
+        $this->delete_files($treebank, true);
 
         // Return to the previous page
         $this->session->set_flashdata('message', lang('treebank_deleted'));
@@ -181,6 +174,22 @@ class Treebank extends MY_Controller
         $this->load->view('header', $data);
         $this->load->view('treebank_list', $data);
         $this->load->view('footer');
+    }
+
+    private function delete_files($treebank, $include_zip)
+    {
+        if ($include_zip) {
+            if (file_exists(UPLOAD_DIR.$treebank->filename)) {
+                unlink(UPLOAD_DIR.$treebank->filename);
+            }
+        }
+
+        $file_path_without_extension = UPLOAD_DIR.pathinfo($treebank->filename)['filename'];
+        if (file_exists($file_path_without_extension)) {
+            $this->load->helper('file');
+            delete_files($file_path_without_extension, true);
+            @rmdir($file_path_without_extension);
+        }
     }
 
     /**
