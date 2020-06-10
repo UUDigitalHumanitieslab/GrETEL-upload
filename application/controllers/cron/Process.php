@@ -284,68 +284,76 @@ class Process extends CI_Controller
 
         $i = 0;
         foreach (glob($dir.'/*.xml') as $file) {
-            $file_xml = new DOMDocument();
-            $file_content = file_get_contents($file);
-            $header_length = min(strlen($file_content), 100);
-            if (substr_count($file_content, 'folia2html.xsl', 0, $header_length) > 0 ||
-                substr_count($file_content, '<TEI', 0, $header_length) > 0) {
-                // skip FoLiA and TEI files: these should already have been pre-processed
-                continue;
-            }
-
-            // CHAT time alignment character, replaced with middle dot because DOMDocument does not like this entity at all
-            $file_content = str_replace('', '&#183;', $file_content);
-            $file_xml->loadXML($file_content);
-            if (!$file_xml) {
-                $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Could not load the XML of '.$file);
-                continue;
-            }
-
-            // Set the id attribute as the filename in the root element
-            $file_xml->documentElement->setAttribute('id', basename($dir).'-'.basename($file));
-
-            $xp = new DOMXPath($file_xml);
-            ++$nr_sentences;
-            $node = $xp->query('//node[@cat="top"]')->item(0);
-            if ($node != null) {
-                // empty
-                $nr_words += intval($node->getAttribute('end'));
-            }
-
-            // Attach the document to the original folder
-            $str = $file_xml->saveXML($file_xml->documentElement);
-            $xmlWriter->writeRaw($str);
-
-            // Save any existing metadata to the database
-            $metadata_nodes = $xp->query('//meta');
-            foreach ($metadata_nodes as $metadata_node) {
-                $field = $metadata_node->getAttribute('name');
-                $type = $metadata_node->getAttribute('type');
-                $value = $metadata_node->getAttribute('value');
-
-                $metadata = $this->metadata_model->get_metadata_by_treebank_field($treebank_id, $field);
-
-                if ($metadata) {
-                    $metadata_id = $metadata->id;
-                } else {
-                    $metadata = array(
-                        'treebank_id' => $treebank_id,
-                        'field' => $field,
-                        'type' => $type,
-                        'facet' => default_facet($type),
-                    );
-                    $metadata_id = $this->metadata_model->add_metadata($metadata);
+            try {
+                $file_content = file_get_contents($file);
+                $header_length = min(strlen($file_content), 100);
+                if (substr_count($file_content, 'folia2html.xsl', 0, $header_length) > 0 ||
+                    substr_count($file_content, '<TEI', 0, $header_length) > 0) {
+                    // skip FoLiA and TEI files: these should already have been pre-processed
+                    continue;
                 }
 
-                $this->metadata_model->update_minmax($metadata_id, $value);
-            }
+                // CHAT time alignment character, replaced with middle dot because DOMDocument does not like this entity at all
+                $file_content = str_replace('', '&#183;', $file_content);
+                if (!$file_content) {
+                    $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Empty file '.$file);
+                    continue;
+                }
+                $file_xml = new DOMDocument();
+                $file_xml->loadXML($file_content);
+                if (!$file_xml) {
+                    $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Could not load the XML of '.$file);
+                    continue;
+                }
 
-            // Flush XML in memory to file every 1000 iterations
-            if ($i % 1000 == 0) {
-                file_put_contents($dir.'/total.xml', $xmlWriter->flush(), FILE_APPEND);
-            }
+                // Set the id attribute as the filename in the root element
+                $file_xml->documentElement->setAttribute('id', basename($dir).'-'.basename($file));
 
-            ++$i;
+                $xp = new DOMXPath($file_xml);
+                ++$nr_sentences;
+                $node = $xp->query('//node[@cat="top"]')->item(0);
+                if ($node != null) {
+                    // empty
+                    $nr_words += intval($node->getAttribute('end'));
+                }
+
+                // Attach the document to the original folder
+                $str = $file_xml->saveXML($file_xml->documentElement);
+                $xmlWriter->writeRaw($str);
+
+                // Save any existing metadata to the database
+                $metadata_nodes = $xp->query('//meta');
+                foreach ($metadata_nodes as $metadata_node) {
+                    $field = $metadata_node->getAttribute('name');
+                    $type = $metadata_node->getAttribute('type');
+                    $value = $metadata_node->getAttribute('value');
+
+                    $metadata = $this->metadata_model->get_metadata_by_treebank_field($treebank_id, $field);
+
+                    if ($metadata) {
+                        $metadata_id = $metadata->id;
+                    } else {
+                        $metadata = array(
+                            'treebank_id' => $treebank_id,
+                            'field' => $field,
+                            'type' => $type,
+                            'facet' => default_facet($type),
+                        );
+                        $metadata_id = $this->metadata_model->add_metadata($metadata);
+                    }
+
+                    $this->metadata_model->update_minmax($metadata_id, $value);
+                }
+
+                // Flush XML in memory to file every 1000 iterations
+                if ($i % 1000 == 0) {
+                    file_put_contents($dir.'/total.xml', $xmlWriter->flush(), FILE_APPEND);
+                }
+
+                ++$i;
+            } catch (Exception $e) {
+                $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Problem loading '.$file.' '.$e->getMessage());
+            }
         }
 
         $c = array(

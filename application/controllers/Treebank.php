@@ -79,7 +79,7 @@ class Treebank extends MY_Controller
         $importrun = $this->importrun_model->get_last_importrun_by_treebank($treebank_id);
 
         $data['page_title'] = sprintf(lang('treebank_log'), $treebank->title);
-        $data['importlogs'] = $this->importlog_model->get_importlogs_by_importrun($importrun->id);
+        $data['importlogs'] = !$importrun ? array() : $this->importlog_model->get_importlogs_by_importrun($importrun->id);
 
         $this->load->view('header', $data);
         $this->load->view('treebank_log', $data);
@@ -100,6 +100,32 @@ class Treebank extends MY_Controller
         $this->treebank_model->update_treebank($treebank_id, $t);
 
         $this->session->set_flashdata('message', lang('treebank_access_modified'));
+        redirect($this->agent->referrer(), 'refresh');
+    }
+
+    /**
+     * Resets a Treebank to allow for it to be reprocessed.
+     * Deletes it from both BaseX, but retains the uploaded file.
+     *
+     * @param int $treebank_id the ID of the Treebank
+     */
+    public function reset($treebank_id)
+    {
+        $treebank = $this->get_or_404($treebank_id);
+        $this->check_is_owner($treebank->user_id);
+
+        // Delete the treebank from BaseX
+        $components = $this->component_model->get_components_by_treebank($treebank_id);
+        foreach ($components as $component) {
+            $this->basex->delete($component->basex_db);
+        }
+        $this->basex->delete(strtoupper($treebank->title.'_ID'));
+
+        // Clears the processing run from the database
+        $this->importrun_model->clear_importrun($treebank_id);
+
+        // Return to the previous page
+        $this->session->set_flashdata('message', lang('treebank_reset'));
         redirect($this->agent->referrer(), 'refresh');
     }
 
