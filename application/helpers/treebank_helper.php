@@ -26,15 +26,15 @@ if (!function_exists('treebank_actions')) {
         $details = array('url' => 'treebank/show/'.$treebank->title, 'img' => 'details');
 
         if ($treebank->user_id == current_user_id()) {
-            $show_process_button = !$treebank->processed && !$treebank->processing && in_development();
+            $processable = !$treebank->processed && !$treebank->processing;
             $actions = array_filter(
                 [
-                    array_merge($details, array('include' => !$show_process_button)),
-                    array('url' => 'cron/process/by_id/'.$treebank->id, 'img' => 'process', 'include' => $show_process_button),
+                    array_merge($details, array('include' => !$processable)),
+                    array('url' => 'cron/process/by_id/'.$treebank->id, 'img' => 'process', 'include' => $processable && in_development()),
                     array('url' => 'treebank/log/'.$treebank->id, 'img' => 'view_log'),
                     array('url' => 'treebank/change_access/'.$treebank->id, 'img' => ($treebank->public ? 'make_private' : 'make_public')),
                     array('url' => 'api/treebank/download/'.$treebank->title, 'img' => 'drive_web'),
-                    array('url' => 'treebank/reset/'.$treebank->id, 'img' => 'reset', 'include' => !$show_process_button),
+                    array('url' => 'treebank/reset/'.$treebank->id, 'img' => 'reset', 'include' => !$processable),
                     array('url' => 'treebank/delete/'.$treebank->id, 'img' => 'delete'),
                 ],
                 function ($item) {
