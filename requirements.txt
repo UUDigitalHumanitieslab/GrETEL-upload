@@ -7,13 +7,13 @@
 argparse==1.4.0           # via corpus2alpino
 beautifulsoup4==4.9.1     # via tei-reader
 corpus2alpino==0.3.2
-cython==0.29.20           # via corpus2alpino, python-ucto
+Cython==0.27.3
 httplib2==0.18.1          # via pynlpl
 isodate==0.6.0            # via rdflib
 lxml==4.5.1               # via pynlpl, tei-reader
 pynlpl==1.2.9             # via corpus2alpino
 pyparsing==2.4.7          # via rdflib
-python-ucto==0.5.1        # via corpus2alpino
+python-ucto==0.4.7
 rdflib==5.0.0             # via pynlpl
 six==1.15.0               # via isodate, rdflib
 soupsieve==2.0.1          # via beautifulsoup4
