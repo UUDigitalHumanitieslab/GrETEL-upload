@@ -21,6 +21,14 @@ GrETEL-upload also requires the following external programs to be installed:
 * [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/). Download and then unpack (preferably) into `/opt/Alpino/` . You can change the installation directory in the `application/config/database_default.php` . It also need to be changed in `alpino.sh` .
 * [Corpus2alpino](https://github.com/UUDigitalHumanitieslab/corpus2alpino). This can be installed globally using `sudo -H pip3 install corpus2alpino` . This requires Python 3.6+.
 
+It is also possible to install using pip:
+
+```bash
+pip install -r requirements.txt
+```
+
+Make sure to modify [config/common.php] (see below) to point to the install location of corpus2alpino.
+
 ### Configuration
 
 You will have to provide configuration details in four files:
