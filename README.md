@@ -23,7 +23,7 @@ GrETEL-upload also requires the following external programs to be installed:
 
 It is also possible to install using pip:
 
-```bash
+``` bash
 pip install -r requirements.txt
 ```
 
@@ -36,9 +36,9 @@ You will have to provide configuration details in four files:
 * `application/config/common.php` : Paths and other common settings.
 * `application/config/config.php` : CodeIgniter settings.
 * `application/config/database.php` : Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex).
-* `application/config/ldap.php` : Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php`.
+* `application/config/ldap.php` : Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php` .
 
-An example configuration for each can be found in `application/config/{NAME}_default.php`.
+An example configuration for each can be found in `application/config/{NAME}_default.php` .
 
 Update the apache config, to allow read-write access to gretel-upload (and gretel).
 
@@ -60,6 +60,12 @@ Start both Alpino and BaseX as server instances by running the following two com
 	./alpino.sh
 
 Then, navigate to the installation directory in your web browser (e.g. `localhost/gretel-upload/` ) to start using GrETEL-upload.
+
+#### Production: Cron Task
+
+For production servers, a cron job is required for processing uploaded treebanks. Schedule the following e.g. every 5 minutes:
+
+	/usr/bin/php {root}/index.php cron process
 
 ## Uploading corpora
 
