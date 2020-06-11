@@ -225,12 +225,20 @@ class Process extends CI_Controller
      */
     private function corpus2alpino($dir, $file_path, $importrun_id)
     {
-        $file_out = substr($file_path, 0, -4).'-alpino.xml';
-        $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('corpus2alpino_path').' -t -s '.ALPINO_HOST.':'.ALPINO_PORT." {$file_path} -o {$file_out} 2>&1";
+        $this->importlog_model->add_log($importrun_id, LogLevel::Debug, 'Corpus2alpino on '.$file_path);
+        $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('corpus2alpino_path').' -t -s '.ALPINO_HOST.':'.ALPINO_PORT." {$file_path} -o {$dir}/__out__ 2>&1";
         $output = array();
-        exec($command, $output, $return_var);
-        foreach ($output as $line) {
-            $this->importlog_model->add_log($importrun_id, LogLevel::Debug, $line);
+
+        // also have a log which isn't truncated (for extensive debugging)
+        $log = fopen($file_path.'.log', 'w');
+        try {
+            exec($command, $output, $return_var);
+            foreach ($output as $line) {
+                fwrite($log, $line);
+                $this->importlog_model->add_log($importrun_id, LogLevel::Debug, $line);
+            }
+        } finally {
+            fclose($log);
         }
         if ($return_var != 0) {
             $this->importlog_model->add_log($importrun_id, LogLevel::Error, "Problem executing corpus2alpino. Is it installed? Check the Apache log or inspect {$file_path}.");
@@ -283,7 +291,9 @@ class Process extends CI_Controller
         $xmlWriter->startElement('treebank');
 
         $i = 0;
-        foreach (glob($dir.'/*.xml') as $file) {
+        // Corpus2alpino outputs to subdirectories in __out__
+        $files = glob($dir.'/{*.xml,__out__/*}', GLOB_BRACE);
+        while ($file = array_shift($files)) {
             try {
                 $file_content = file_get_contents($file);
                 $header_length = min(strlen($file_content), 100);
@@ -296,7 +306,15 @@ class Process extends CI_Controller
                 // CHAT time alignment character, replaced with middle dot because DOMDocument does not like this entity at all
                 $file_content = str_replace('', '&#183;', $file_content);
                 if (!$file_content) {
-                    $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Empty file '.$file);
+                    $sub_files = glob($file.'/*.xml');
+                    $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Looking for sub-files '.$file.'/*.xml');
+
+                    if ($sub_files) {
+                        $files += $sub_files;
+                    } else {
+                        $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Empty file '.$file);
+                    }
+
                     continue;
                 }
                 $file_xml = new DOMDocument();

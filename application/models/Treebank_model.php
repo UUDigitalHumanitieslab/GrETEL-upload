@@ -102,6 +102,7 @@ class Treebank_model extends CI_Model
      */
     public function delete_treebank($treebank_id)
     {
+        $this->component_model->delete_by_treebank($treebank_id);
         $this->db->delete('treebanks', array('id' => $treebank_id));
     }
 

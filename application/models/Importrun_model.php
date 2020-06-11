@@ -54,6 +54,7 @@ class Importrun_model extends CI_Model
         $this->db->where('treebank_id', $treebank_id);
         $importruns = $this->db->get('importruns')->result();
         $this->treebank_model->update_treebank($treebank_id, array('processing' => false, 'processed' => null));
+        $this->component_model->delete_by_treebank($treebank_id);
 
         foreach ($importruns as $importrun) {
             $this->importlog_model->delete_log($importrun->id);
