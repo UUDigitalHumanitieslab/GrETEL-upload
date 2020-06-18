@@ -307,7 +307,7 @@ class Process extends CI_Controller
                 $file_content = str_replace('', '&#183;', $file_content);
                 if (!$file_content) {
                     $sub_files = glob($file.'/*.xml');
-                    $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Looking for sub-files '.$file.'/*.xml');
+                    $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Looking for sub-files '.$file.'/*.xml');
 
                     if ($sub_files) {
                         $files += $sub_files;
