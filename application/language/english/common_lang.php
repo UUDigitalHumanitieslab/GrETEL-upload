@@ -21,6 +21,7 @@ $lang['uploaded_at'] = 'Uploaded at';
 $lang['processed_at'] = 'Processed at';
 $lang['upload_success'] = 'Successfully uploaded your treebank.<br><br>Your treebank will now be processed. You will receive a mail when the processing has finished. Processing can take up to a day, depending on the size of your corpus.';
 $lang['treebank_processed'] = 'Successfully processed your treebank';
+$lang['treebank_failure'] = ' Problem processing your treebank, consult the log';
 $lang['treebank_reset'] = 'Successfully reset your treebank';
 $lang['treebank_deleted'] = 'Successfully deleted your treebank';
 $lang['treebank_access_modified'] = 'Successfully changed access rights of your treebank';

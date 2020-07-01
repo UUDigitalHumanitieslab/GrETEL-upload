@@ -5,6 +5,11 @@
 		<?=$this->session->flashdata('message'); ?>
 	</div>
 <?php } ?>
+<?php if ($this->session->flashdata('error')) { ?>
+	<div class="error">
+		<?=$this->session->flashdata('error'); ?>
+	</div>
+<?php } ?>
 
 <?php if ($treebanks) { ?>
 <table class="pure-table">

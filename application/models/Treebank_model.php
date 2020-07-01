@@ -173,13 +173,13 @@ class Treebank_model extends CI_Model
         if ($dir == null) {
             $name = strtoupper(substr($title, 0, 252).'_ID');
         } else {
-            $slug = substr(str_replace(array('\\', '/'), '_', $dir), 0, 100);
+            $slug = substr(preg_replace('/[\\/ ]+/', '_', $dir), 0, 100);
             // make sure the database name does not exceed the filename limit of 255 characters
             $name = strtoupper(substr($title, 0, 251 - strlen($slug)).'_ID_'.$slug);
         }
 
         // only allow really boring ASCII characters
-        $name = strtoupper(preg_replace('/[^a-zA-Z0-9_]/', '_', $name));
+        $name = strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '_', $name));
 
         if ($existing_names === null) {
             return $name;
