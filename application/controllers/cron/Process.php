@@ -141,7 +141,7 @@ class Process extends CI_Controller
                         $this->paragraph_tokenize($dir);
                     }
                     if (!$treebank->is_word_tokenised) {
-                        $this->paragraph_tokenize($dir);
+                        $this->word_tokenize($dir);
                     }
 
                     // currently these text files are converted in-place to Lassy XML files
