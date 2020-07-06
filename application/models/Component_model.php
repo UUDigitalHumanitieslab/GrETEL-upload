@@ -116,4 +116,14 @@ class Component_model extends CI_Model
     {
         $this->db->delete('components', array('treebank_id' => $treebank_id));
     }
+
+    /**
+     * Deletes a Component.
+     *
+     * @param int $component_id the ID of the Component
+     */
+    public function delete_component($component_id)
+    {
+        $this->db->delete('components', array('id' => $component_id));
+    }
 }

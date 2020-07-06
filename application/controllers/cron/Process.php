@@ -52,10 +52,46 @@ class Process extends CI_Controller
         }
 
         $treebank = $this->treebank_model->get_treebank_by_id($treebank_id);
-        $this->process_treebank($treebank);
+        $success = $this->process_treebank($treebank);
 
-        $this->session->set_flashdata('message', lang('treebank_processed'));
+        if ($success) {
+            $this->session->set_flashdata('message', lang('treebank_processed'));
+        } else {
+            $this->session->set_flashdata('error', lang('treebank_failure'));
+        }
+
         redirect($this->agent->referrer(), 'refresh');
+    }
+
+    /**
+     * Wrapping the processing of the Treebank.
+     *
+     * @param Treebank $treebank
+     */
+    private function process_treebank($treebank)
+    {
+        $importrun_id = $this->importrun_model->start_importrun($treebank->id);
+        $success = true;
+
+        try {
+            // make sure errors are always caught and logged
+            // otherwise it will just abort for severe errors
+            set_error_handler(
+                function ($severity, $message, $file, $line) {
+                    throw new ErrorException($message, $severity, $severity, $file, $line);
+                }
+            );
+            $success = $this->process_treebank_run($importrun_id, $treebank);
+        } catch (Exception $e) {
+            $success = false;
+            $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Fatal error processing treebank '.$treebank->id.' '.$e->getMessage());
+        } finally {
+            restore_error_handler();
+            // Mark treebank as processed
+            $this->importrun_model->end_importrun($importrun_id, $treebank->id);
+        }
+
+        return $success;
     }
 
     /**
@@ -63,10 +99,8 @@ class Process extends CI_Controller
      *
      * @param Treebank $treebank
      */
-    private function process_treebank($treebank)
+    private function process_treebank_run($importrun_id, $treebank)
     {
-        $importrun_id = $this->importrun_model->start_importrun($treebank->id);
-
         $zip = new ZipArchive();
         $res = $zip->open(UPLOAD_DIR.$treebank->filename);
         if ($res === true) {
@@ -74,24 +108,25 @@ class Process extends CI_Controller
 
             // create a new random directory, to more easily rerun the task
             $root_dir = UPLOAD_DIR.pathinfo($treebank->filename)['filename'].'/'.uniqid();
-            $zip->extractTo($root_dir);
+            $zip->extractTo($root_dir.'/in');
             $zip->close();
 
             // Read the metadata
             $metadata = null;
-            if (file_exists($root_dir.'/metadata.json')) {
-                $metadata = json_decode(file_get_contents($root_dir.'/metadata.json'));
+            if (file_exists($root_dir.'/in/metadata.json')) {
+                $metadata = json_decode(file_get_contents($root_dir.'/in/metadata.json'));
             }
 
             // Create databases per component
-            $dirs = $this->retrieve_dirs($root_dir, $treebank->title);
-            $root_len = strlen($root_dir);
+            $dirs = $this->retrieve_dirs($root_dir.'/in', $treebank->title);
+            $root_len = strlen($root_dir.'/in');
             $basex_db_names = array();
             foreach ($dirs as $dir) {
                 // Create a Component for each directory in the .zip-file.
-                $basex_db = $this->treebank_model->get_db_name($treebank->title, substr($dir, $root_len + 1), $slug, $basex_db_names);
-                $basex_db = $basex_db;
-                $title = $metadata ? $metadata->$slug->description : $slug;
+                $relative_dir = substr($dir, $root_len + 1);
+
+                $basex_db = $this->treebank_model->get_db_name($treebank->title, $relative_dir, $slug, $basex_db_names);
+                $title = $metadata ? $metadata->$slug->description : $relative_dir;
 
                 $component = array(
                     'treebank_id' => $treebank->id,
@@ -109,30 +144,38 @@ class Process extends CI_Controller
                         $this->word_tokenize($dir);
                     }
 
+                    // currently these text files are converted in-place to Lassy XML files
                     $this->alpino_parse($importrun_id, $dir, $treebank->has_labels);
+
+                    foreach (glob($dir.'/*.txt') as $file) {
+                        // remove files to prevent them from being parsed again by corpus2alpino
+                        unlink($file);
+                    }
                 }
 
-                if (in_array($treebank->file_type, array(FileType::CHAT, FileType::FOLIA, FileType::TEI))) {
-                    $this->corpus_parse($importrun_id, $root_dir, $dir);
-                }
+                $this->corpus_parse($importrun_id, $root_dir, $relative_dir);
 
                 // Merge the (created) XML files, and upload them to BaseX
-                $this->merge_xml_files($dir, $importrun_id, $treebank->id, $component_id);
-                $this->basex->upload($importrun_id, $basex_db, $dir.'/total.xml');
+                $this->merge_xml_files($root_dir, $relative_dir, $importrun_id, $treebank->id, $component_id);
+                $merged_xml_path = $root_dir.'/out/'.$relative_dir.'/__total__.xml';
+                if (file_exists($merged_xml_path)) {
+                    $this->basex->upload($importrun_id, $basex_db, $merged_xml_path);
+                }
             }
 
             // Merge all the directories, and upload the merged file to BaseX
             $this->merge_dirs($root_dir, $dirs, $importrun_id);
             $basex_db = $this->treebank_model->get_db_name($treebank->title);
-            $this->basex->upload($importrun_id, $basex_db, $root_dir.'/total.xml');
+            $this->basex->upload($importrun_id, $basex_db, $root_dir.'/out/__total__.xml');
 
             $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Processing completed');
+
+            return true;
         } else {
             $this->importlog_model->add_log($importrun_id, LogLevel::Fatal, 'File not found: '.UPLOAD_DIR.$treebank->filename);
-        }
 
-        // Mark treebank as processed
-        $this->importrun_model->end_importrun($importrun_id, $treebank->id);
+            return false;
+        }
     }
 
     /**
@@ -200,13 +243,13 @@ class Process extends CI_Controller
      *
      * @param int    $importrun_id The ID of the current ImportRun
      * @param string $root_dir     The root directory
-     * @param string $dir          The directory which contains the FoLiA/TEI-files
+     * @param string $relative_dir The path of the directory which contains the files relative to the input folder
      */
-    private function corpus_parse($importrun_id, $root_dir, $dir)
+    private function corpus_parse($importrun_id, $root_dir, $relative_dir)
     {
         $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Started corpus2alpino preprocessing');
-        foreach (glob($dir.'/*.{xml,cha,txt}', GLOB_BRACE) as $file) {
-            if (!$this->corpus2alpino($dir, $file, $importrun_id)) {
+        foreach (glob($root_dir.'/in/'.$relative_dir.'/*.{xml,cha,txt}', GLOB_BRACE) as $file) {
+            if (!$this->corpus2alpino($root_dir, $relative_dir, $file, $importrun_id)) {
                 $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Aborted corpus2alpino preprocessing');
 
                 return;
@@ -219,14 +262,16 @@ class Process extends CI_Controller
     /**
      * Converts a FoLiA/TEI file to readable input.
      *
-     * @param string $dir          the current directory
+     * @param string $root_dir     the directory containing the input and output files
+     * @param string $relative_dir the path of the directory being parsed relative to the input folder
      * @param string $file_path    the full path of the FoLiA file to parse
      * @param int    $importrun_id The ID of the current ImportRun
      */
-    private function corpus2alpino($dir, $file_path, $importrun_id)
+    private function corpus2alpino($root_dir, $relative_dir, $file_path, $importrun_id)
     {
         $this->importlog_model->add_log($importrun_id, LogLevel::Debug, 'Corpus2alpino on '.$file_path);
-        $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('corpus2alpino_path').' -t -s '.ALPINO_HOST.':'.ALPINO_PORT." {$file_path} -o {$dir}/__out__ 2>&1";
+        $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('corpus2alpino_path').' -t -s '.ALPINO_HOST.':'.ALPINO_PORT.
+            ' '.escapeshellarg($file_path).' -o '.escapeshellarg("{$root_dir}/out/{$relative_dir}").' 2>&1';
         $output = array();
 
         // also have a log which isn't truncated (for extensive debugging)
@@ -270,17 +315,45 @@ class Process extends CI_Controller
         }
     }
 
+    private function sentence_id($root_dir, $file_path)
+    {
+        // strip the root directory (and output folder) from the file path
+        // this should give a unique path to the file
+        $relative_path = str_replace($root_dir.'/out/', '', $file_path);
+
+        // files containing multiple sentences are split into:
+        // filename/1...n.xml
+        // replace this with filename:1...n
+        $sentid = preg_replace('/(?<=\.(xml|cha|txt))[\/\\\\](\d+)\.xml$/i', ':$2', $relative_path);
+
+        // but now it isn't guaranteed unique! Ohnoes!
+        if (!isset($this->unique_sentid)) {
+            $this->unique_sentid = array($sentid);
+        } else {
+            $base_sentid = $sentid;
+            $i = 1;
+            while (in_array($sentid, $this->unique_sentid)) {
+                $sentid = $base_sentid.'-'.$i;
+                ++$i;
+            }
+            $this->unique_sentid[] = $sentid;
+        }
+
+        return $sentid;
+    }
+
     /**
      * Merges all Alpino-DS .xml-files in a directory to a single DomDocument and counts the number of words/sentences.
      *
-     * @param string $dir          The directory which contains the Alpino-DS .xml-files
+     * @param string $root_dir     The root directory
+     * @param string $relative_dir The path of the directory which contains the files relative to the input folder
      * @param int    $importrun_id The ID of the current ImportRun
      * @param int    $treebank_id  The ID of the current Treebank
      * @param int    $component_id The ID of the current Component
      */
-    private function merge_xml_files($dir, $importrun_id, $treebank_id, $component_id)
+    private function merge_xml_files($root_dir, $relative_dir, $importrun_id, $treebank_id, $component_id)
     {
-        $this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Starting merge of directory '.$dir);
+        $this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Starting merge of directory '.$relative_dir);
 
         $nr_sentences = 0;
         $nr_words = 0;
@@ -290,9 +363,10 @@ class Process extends CI_Controller
         $xmlWriter->startDocument('1.0', 'UTF-8');
         $xmlWriter->startElement('treebank');
 
-        $i = 0;
-        // Corpus2alpino outputs to subdirectories in __out__
-        $files = glob($dir.'/{*.xml,__out__/*}', GLOB_BRACE);
+        $file_index = 0;
+
+        $files = glob($root_dir.'/out/'.$relative_dir.'/*.{xml,cha,txt}', GLOB_BRACE);
+        natsort($files);
         while ($file = array_shift($files)) {
             try {
                 $file_content = file_get_contents($file);
@@ -300,6 +374,7 @@ class Process extends CI_Controller
                 if (substr_count($file_content, 'folia2html.xsl', 0, $header_length) > 0 ||
                     substr_count($file_content, '<TEI', 0, $header_length) > 0) {
                     // skip FoLiA and TEI files: these should already have been pre-processed
+                    $this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Skip FoLiA/TEI '.$file);
                     continue;
                 }
 
@@ -310,13 +385,24 @@ class Process extends CI_Controller
                     $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Looking for sub-files '.$file.'/*.xml');
 
                     if ($sub_files) {
-                        $files += $sub_files;
+                        natsort($sub_files);
+                        $files = array_merge($sub_files, $files);
                     } else {
                         $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Empty file '.$file);
                     }
 
                     continue;
                 }
+                $file_extension = pathinfo($file)['extension'];
+                switch (strtolower($file_extension)) {
+                    case 'xml':
+                        break;
+                    default:
+                        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Skipped '.$file.' without xml-extension');
+                        continue;
+                        break;
+                }
+
                 $file_xml = new DOMDocument();
                 $file_xml->loadXML($file_content);
                 if (!$file_xml) {
@@ -324,8 +410,10 @@ class Process extends CI_Controller
                     continue;
                 }
 
-                // Set the id attribute as the filename in the root element
-                $file_xml->documentElement->setAttribute('id', basename($dir).'-'.basename($file));
+                // Set the id attribute as the relative path and filename in the root element
+                // this way each sentence id should be unique
+                $sentence_id = $this->sentence_id($root_dir, $file);
+                $file_xml->documentElement->setAttribute('id', $sentence_id);
 
                 $xp = new DOMXPath($file_xml);
                 ++$nr_sentences;
@@ -363,27 +451,33 @@ class Process extends CI_Controller
                     $this->metadata_model->update_minmax($metadata_id, $value);
                 }
 
-                // Flush XML in memory to file every 1000 iterations
-                if ($i % 1000 == 0) {
-                    file_put_contents($dir.'/total.xml', $xmlWriter->flush(), FILE_APPEND);
+                // Flush XML in memory to file every 1000 sentences
+                if ($nr_sentences % 1000 == 0) {
+                    file_put_contents($root_dir.'/out/'.$relative_dir.'/__total__.xml', $xmlWriter->flush(), FILE_APPEND);
                 }
-
-                ++$i;
             } catch (Exception $e) {
                 $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Problem loading '.$file.' '.$e->getMessage());
             }
         }
 
-        $c = array(
-            'nr_sentences' => $nr_sentences,
-            'nr_words' => $nr_words, );
-        $this->component_model->update_component($component_id, $c);
-
         $xmlWriter->endElement();
         $xmlWriter->endDocument();
-        file_put_contents($dir.'/total.xml', $xmlWriter->flush(), FILE_APPEND);
 
-        $this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished merge of directory '.$dir);
+        if ($nr_sentences) {
+            // don't write a file if there was no output
+            $c = array(
+                'nr_sentences' => $nr_sentences,
+                'nr_words' => $nr_words, );
+            $this->component_model->update_component($component_id, $c);
+
+            file_put_contents($root_dir.'/out/'.$relative_dir.'/__total__.xml', $xmlWriter->flush(), FILE_APPEND);
+        } else {
+            // Skip empty components
+            $this->component_model->delete_component($component_id);
+            $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Deleted component '.$relative_dir.' because it was empty ');
+        }
+
+        $this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished merge of directory '.$relative_dir);
     }
 
     /**
@@ -403,9 +497,14 @@ class Process extends CI_Controller
         $xmlWriter->startElement('treebank');
 
         $i = 0;
-        foreach ($dirs as $dir) {
+        foreach ($dirs as $in_dir) {
+            $out_dir = str_replace($root_dir.'/in', $root_dir.'/out', $in_dir);
+            $total_path = $out_dir.'/__total__.xml';
+            if (!file_exists($total_path)) {
+                continue;
+            }
             $xmlReader = new XMLReader();
-            $xmlReader->open($dir.'/total.xml');
+            $xmlReader->open($total_path);
 
             // Select all alpino_ds elements, write to the total file
             while ($xmlReader->read() && $xmlReader->name !== 'alpino_ds');
@@ -418,7 +517,7 @@ class Process extends CI_Controller
 
             // Flush XML in memory to file every 1000 iterations
             if ($i % 1000 == 0) {
-                file_put_contents($root_dir.'/total.xml', $xmlWriter->flush(true), FILE_APPEND);
+                file_put_contents($root_dir.'/out/__total__.xml', $xmlWriter->flush(true), FILE_APPEND);
             }
 
             ++$i;
@@ -426,7 +525,7 @@ class Process extends CI_Controller
 
         $xmlWriter->endElement();
         $xmlWriter->endDocument();
-        file_put_contents($root_dir.'/total.xml', $xmlWriter->flush(true), FILE_APPEND);
+        file_put_contents($root_dir.'/out/__total__.xml', $xmlWriter->flush(true), FILE_APPEND);
 
         $this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished total merge');
     }
