@@ -2,6 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
 
 require APPPATH.'/libraries/REST_Controller.php';
 
