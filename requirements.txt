@@ -11,7 +11,7 @@ corpus2alpino==0.3.4      # via -r requirements.in
 cython==0.27.3            # via corpus2alpino, python-ucto
 httplib2==0.18.1          # via pynlpl
 isodate==0.6.0            # via rdflib
-lxml==4.5.1               # via pynlpl, tei-reader
+lxml==4.6.2               # via pynlpl, tei-reader
 pynlpl==1.2.9             # via corpus2alpino
 pyparsing==2.4.7          # via rdflib
 python-ucto==0.4.7        # via corpus2alpino
