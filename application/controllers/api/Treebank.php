@@ -1,8 +1,8 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-header('Access-Control-Allow-Origin: *');
 
+require APPPATH.'/libraries/CORS_header.php';
 require APPPATH.'/libraries/REST_Controller.php';
 
 class Treebank extends REST_Controller
