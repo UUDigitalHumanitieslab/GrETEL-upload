@@ -40,7 +40,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |  $autoload['packages'] = array(APPPATH.'third_party', '/usr/local/shared');
 |
 */
-$autoload['packages'] = array();
+$autoload['packages'] = [];
 
 /*
 | -------------------------------------------------------------------
@@ -59,7 +59,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('database', 'form_validation', 'session', 'user_agent', 'BaseX', 'ldap', 'alpino', 'email');
+$autoload['libraries'] = ['database', 'form_validation', 'session', 'user_agent', 'BaseX', 'ldap', 'user_status', 'alpino', 'email'];
 
 /*
 | -------------------------------------------------------------------
@@ -74,7 +74,7 @@ $autoload['libraries'] = array('database', 'form_validation', 'session', 'user_a
 |
 |	$autoload['drivers'] = array('cache');
 */
-$autoload['drivers'] = array();
+$autoload['drivers'] = [];
 
 /*
 | -------------------------------------------------------------------
@@ -84,8 +84,8 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('date', 'form', 'html', 'language', 'url',
-    'common', 'log', 'metadata', 'treebank', );
+$autoload['helper'] = ['date', 'form', 'html', 'language', 'url',
+    'common', 'log', 'metadata', 'treebank', ];
 
 /*
 | -------------------------------------------------------------------
@@ -99,7 +99,7 @@ $autoload['helper'] = array('date', 'form', 'html', 'language', 'url',
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('common');
+$autoload['config'] = ['common'];
 
 /*
 | -------------------------------------------------------------------
@@ -113,7 +113,7 @@ $autoload['config'] = array('common');
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
 |
 */
-$autoload['language'] = array('common', 'form', 'help', 'rest_controller');
+$autoload['language'] = ['common', 'form', 'help', 'rest_controller'];
 
 /*
 | -------------------------------------------------------------------
@@ -128,5 +128,5 @@ $autoload['language'] = array('common', 'form', 'help', 'rest_controller');
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('user_model', 'treebank_model', 'component_model',
-    'metadata_model', 'importrun_model', 'importlog_model', );
+$autoload['model'] = ['user_model', 'treebank_model', 'component_model',
+    'metadata_model', 'importrun_model', 'importlog_model', ];
