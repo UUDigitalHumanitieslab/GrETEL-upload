@@ -16,7 +16,7 @@ cython==0.27.3
     # via
     #   corpus2alpino
     #   python-ucto
-httplib2==0.18.1
+httplib2==0.19.0
     # via pynlpl
 isodate==0.6.0
     # via rdflib
@@ -27,7 +27,9 @@ lxml==4.6.3
 pynlpl==1.2.9
     # via corpus2alpino
 pyparsing==2.4.7
-    # via rdflib
+    # via
+    #   httplib2
+    #   rdflib
 python-ucto==0.4.7
     # via corpus2alpino
 rdflib==5.0.0
