@@ -28,13 +28,15 @@ class Process extends CI_Controller
                 // Send e-mail to User when Treebank is processed
                 $user = $this->user_model->get_user_by_id($treebank->user_id);
 
-                $this->email->clear();
+                if ($user->email != GUEST_EMAIL) {
+                    $this->email->clear();
 
-                $this->email->from(ADMIN_EMAIL, lang('site_title'));
-                $this->email->to(in_development() ? ADMIN_EMAIL : $user->email);
-                $this->email->subject(lang('mail_processed_title'));
-                $this->email->message(sprintf(lang('mail_processed_body'), $treebank->title, GRETEL_URL));
-                $this->email->send();
+                    $this->email->from(ADMIN_EMAIL, lang('site_title'));
+                    $this->email->to(in_development() ? ADMIN_EMAIL : $user->email);
+                    $this->email->subject(lang('mail_processed_title'));
+                    $this->email->message(sprintf(lang('mail_processed_body'), $treebank->title, GRETEL_URL));
+                    $this->email->send();
+                }
             }
         }
     }
