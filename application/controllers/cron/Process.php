@@ -479,7 +479,7 @@ class Process extends CI_Controller
             $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Deleted component '.$relative_dir.' because it was empty ');
         }
 
-        $this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished merge of directory '.$relative_dir);
+        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Finished merge of directory '.$relative_dir.' #sentences='.$nr_sentences);
     }
 
     /**
@@ -529,6 +529,6 @@ class Process extends CI_Controller
         $xmlWriter->endDocument();
         file_put_contents($root_dir.'/out/__total__.xml', $xmlWriter->flush(true), FILE_APPEND);
 
-        $this->importlog_model->add_log($importrun_id, LogLevel::Trace, 'Finished total merge');
+        $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Finished total merge');
     }
 }

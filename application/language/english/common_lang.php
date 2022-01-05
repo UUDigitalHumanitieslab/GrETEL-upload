@@ -19,6 +19,7 @@ $lang['nr_words'] = '# words';
 $lang['uploaded_by'] = 'Uploaded by';
 $lang['uploaded_at'] = 'Uploaded at';
 $lang['processed_at'] = 'Processed at';
+$lang['processing'] = 'Processing...';
 $lang['upload_success'] = 'Successfully uploaded your treebank.<br><br>Your treebank will now be processed. You will receive a mail when the processing has finished. Processing can take up to a day, depending on the size of your corpus.';
 $lang['treebank_processed'] = 'Successfully processed your treebank';
 $lang['treebank_failure'] = ' Problem processing your treebank, consult the log';

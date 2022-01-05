@@ -30,7 +30,13 @@
 			<td><?=anchor('treebank/show/' . $treebank->title, $treebank->title); ?></td>
 			<td><?=$treebank->email; ?></td>
 			<td><?=$treebank->uploaded; ?></td>
-			<td><?=$treebank->processed; ?></td>
+			<td>
+				<?php if ($treebank->processing) { ?>
+					<?=lang('processing'); ?>
+				<?php } else { ?>
+					<?=$treebank->processed; ?>
+				<?php } ?>
+			</td>
 			<?php if ($this->session->userdata('logged_in')) { ?>
 				<td class="actions">
 				<?=treebank_actions($treebank->id); ?>
