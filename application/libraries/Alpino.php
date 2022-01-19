@@ -254,7 +254,8 @@ class Alpino
                 $process = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
 
                 if (is_resource($process)) {
-                    file_put_contents($out, stream_get_contents($pipes[1]), FILE_APPEND);
+                    $tokenized = stream_get_contents($pipes[1]);
+                    file_put_contents($out, trim($tokenized) . "\n", FILE_APPEND);
                     fclose($pipes[1]);
 
                     proc_close($process);
