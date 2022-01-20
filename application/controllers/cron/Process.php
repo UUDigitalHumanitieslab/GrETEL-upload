@@ -122,7 +122,7 @@ class Process extends CI_Controller
             // Create databases per component
             $dirs = $this->retrieve_dirs($root_dir.'/in', $treebank->title);
             $root_len = strlen($root_dir.'/in');
-            $basex_db_names = array();
+            $basex_db_names = [];
             foreach ($dirs as $dir) {
                 // Create a Component for each directory in the .zip-file.
                 $relative_dir = substr($dir, $root_len + 1);
@@ -130,15 +130,15 @@ class Process extends CI_Controller
                 $basex_db = $this->treebank_model->get_db_name($treebank->title, $relative_dir, $slug, $basex_db_names);
                 $title = $metadata ? $metadata->$slug->description : $relative_dir;
 
-                $component = array(
+                $component = [
                     'treebank_id' => $treebank->id,
                     'title' => $title,
                     'slug' => $slug,
-                    'basex_db' => $basex_db, );
+                    'basex_db' => $basex_db, ];
                 $component_id = $this->component_model->add_component($component);
 
                 // If the Treebank consists of plain text items, tokenize and parse it.
-                if (in_array($treebank->file_type, array(FileType::TXT))) {
+                if (in_array($treebank->file_type, [FileType::TXT])) {
                     if (!$treebank->is_sent_tokenised) {
                         $this->paragraph_tokenize($dir);
                     }
@@ -210,7 +210,7 @@ class Process extends CI_Controller
                     rename($root_dir.'/'.$filename, $new_dir.'/'.$filename);
                 }
             }
-            $dirs = array($new_dir);
+            $dirs = [$new_dir];
         }
 
         return $dirs;
@@ -274,7 +274,7 @@ class Process extends CI_Controller
         $this->importlog_model->add_log($importrun_id, LogLevel::Debug, 'Corpus2alpino on '.$file_path);
         $command = 'export LANG=nl_NL.UTF8 && '.$this->config->item('corpus2alpino_path').' -t -s '.ALPINO_HOST.':'.ALPINO_PORT.
             ' '.escapeshellarg($file_path).' -o '.escapeshellarg("{$root_dir}/out/{$relative_dir}").' 2>&1';
-        $output = array();
+        $output = [];
 
         // also have a log which isn't truncated (for extensive debugging)
         $log = fopen($file_path.'.log', 'w');
@@ -330,7 +330,7 @@ class Process extends CI_Controller
 
         // but now it isn't guaranteed unique! Ohnoes!
         if (!isset($this->unique_sentid)) {
-            $this->unique_sentid = array($sentid);
+            $this->unique_sentid = [$sentid];
         } else {
             $base_sentid = $sentid;
             $i = 1;
@@ -441,12 +441,12 @@ class Process extends CI_Controller
                     if ($metadata) {
                         $metadata_id = $metadata->id;
                     } else {
-                        $metadata = array(
+                        $metadata = [
                             'treebank_id' => $treebank_id,
                             'field' => $field,
                             'type' => $type,
                             'facet' => default_facet($type),
-                        );
+                        ];
                         $metadata_id = $this->metadata_model->add_metadata($metadata);
                     }
 
@@ -467,9 +467,9 @@ class Process extends CI_Controller
 
         if ($nr_sentences) {
             // don't write a file if there was no output
-            $c = array(
+            $c = [
                 'nr_sentences' => $nr_sentences,
-                'nr_words' => $nr_words, );
+                'nr_words' => $nr_words, ];
             $this->component_model->update_component($component_id, $c);
 
             file_put_contents($root_dir.'/out/'.$relative_dir.'/__total__.xml', $xmlWriter->flush(), FILE_APPEND);
@@ -505,21 +505,25 @@ class Process extends CI_Controller
             if (!file_exists($total_path)) {
                 continue;
             }
-            $xmlReader = new XMLReader();
-            $xmlReader->open($total_path);
+            try {
+                $xmlReader = new XMLReader();
+                $xmlReader->open($total_path);
 
-            // Select all alpino_ds elements, write to the total file
-            while ($xmlReader->read() && $xmlReader->name !== 'alpino_ds');
-            while ($xmlReader->name === 'alpino_ds') {
-                $xmlWriter->writeRaw($xmlReader->readOuterXML());
-                $xmlReader->next('alpino_ds');
-            }
+                // Select all alpino_ds elements, write to the total file
+                while ($xmlReader->read() && $xmlReader->name !== 'alpino_ds');
+                while ($xmlReader->name === 'alpino_ds') {
+                    $xmlWriter->writeRaw($xmlReader->readOuterXML());
+                    $xmlReader->next('alpino_ds');
+                }
 
-            $xmlReader->close();
+                $xmlReader->close();
 
-            // Flush XML in memory to file every 1000 iterations
-            if ($i % 1000 == 0) {
-                file_put_contents($root_dir.'/out/__total__.xml', $xmlWriter->flush(true), FILE_APPEND);
+                // Flush XML in memory to file every 1000 iterations
+                if ($i % 1000 == 0) {
+                    file_put_contents($root_dir.'/out/__total__.xml', $xmlWriter->flush(true), FILE_APPEND);
+                }
+            } catch (Exception $e) {
+                $this->importlog_model->add_log($importrun_id, LogLevel::Error, 'Problem merging '.$total_path.' '.$e->getMessage());
             }
 
             ++$i;
