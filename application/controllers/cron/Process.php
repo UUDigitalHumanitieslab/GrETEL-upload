@@ -20,6 +20,8 @@ class Process extends CI_Controller
             return;
         }
 
+        ini_set('memory_limit', '2048M');
+
         $treebanks = $this->treebank_model->get_to_be_processed_treebanks();
         foreach ($treebanks as $treebank) {
             if (!$treebank->processing) {
@@ -404,7 +406,7 @@ class Process extends CI_Controller
                         break;
                     default:
                         $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Skipped ' . $file . ' without xml-extension');
-                        continue;
+                        continue 2;
                         break;
                 }
 
