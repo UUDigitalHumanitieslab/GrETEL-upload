@@ -8,7 +8,7 @@ After processing, the treebanks are searchable in GrETEL, and if you supply meta
 
 ### Requirements
 
-On top of a default LAMP installation, the following packages are required:
+On top of a default LAMP installation (with PHP 7.\*; PHP 8 is currently not working), the following packages are required:
 
 * [basex](https://packages.debian.org/stretch/basex): Storing processed treebanks into a XML-database.
 * [php-zip](https://packages.debian.org/stretch/php-zip): Required to process .zip-files.
@@ -36,7 +36,7 @@ You will have to provide configuration details in four files:
 * `application/config/common.php` : Paths and other common settings.
 * `application/config/config.php` : CodeIgniter settings.
 * `application/config/database.php` : Settings for your database connection to both the relational database (e.g. MySQL) and the XML-database (basex).
-* `application/config/ldap.php` : Settings for LDAP authentication. An example configuration can be found in `application/config/ldap_default.php` .
+* `application/config/ldap.php` : Settings for LDAP authentication.
 
 An example configuration for each can be found in `application/config/{NAME}_default.php` .
 
@@ -50,7 +50,7 @@ See `docs/schema.png` for the current database schema (exported from [phpMyAdmin
 
 ### Permissions
 
-Make sure the `uploads` directory is writable for the user running the Apache daemon (usually `www-data` ).
+Make sure the `uploads` directory is writable for the user running the Apache daemon (usually `www-data` ). Also create a writable `sessions` directory and refer to its absolute path in `application/config/config.php` if using the default `files` session driver.
 
 ### Start-up
 
