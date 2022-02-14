@@ -374,6 +374,20 @@ class Process extends CI_Controller
         natsort($files);
         while ($file = array_shift($files)) {
             try {
+                if (is_dir($file)) {
+                    // In case we are dealing with a subdirectory, add all sub files to $files and move forward
+                    $sub_files = glob($file . '/*.xml');
+                    $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Looking for sub-files ' . $file . '/*.xml');
+
+                    if ($sub_files) {
+                        natsort($sub_files);
+                        $files = array_merge($sub_files, $files);
+                    } else {
+                        $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Empty file ' . $file);
+                    }
+
+                    continue;
+                }
                 $file_content = file_get_contents($file);
                 $header_length = min(strlen($file_content), 100);
                 if (
@@ -387,19 +401,6 @@ class Process extends CI_Controller
 
                 // CHAT time alignment character, replaced with middle dot because DOMDocument does not like this entity at all
                 $file_content = str_replace('', '&#183;', $file_content);
-                if (!$file_content) {
-                    $sub_files = glob($file . '/*.xml');
-                    $this->importlog_model->add_log($importrun_id, LogLevel::Info, 'Looking for sub-files ' . $file . '/*.xml');
-
-                    if ($sub_files) {
-                        natsort($sub_files);
-                        $files = array_merge($sub_files, $files);
-                    } else {
-                        $this->importlog_model->add_log($importrun_id, LogLevel::Warn, 'Empty file ' . $file);
-                    }
-
-                    continue;
-                }
                 $file_extension = pathinfo($file)['extension'];
                 switch (strtolower($file_extension)) {
                     case 'xml':
