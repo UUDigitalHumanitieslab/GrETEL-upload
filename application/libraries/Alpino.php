@@ -244,7 +244,9 @@ class Alpino
                     continue;
                 }
 
-                $cmd = 'echo "'.$line.'" | sh '.ALPINO_HOME.'/Tokenization/tokenize.sh';
+                // prevent shell command injection
+                $escaped = escapeshellarg($line);
+                $cmd = "echo $escaped | sh ".ALPINO_HOME.'/Tokenization/tokenize.sh';
                 $descriptorspec = array(
                     0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
                     1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
@@ -275,7 +277,9 @@ class Alpino
      */
     public function paragraph_per_line($file)
     {
-        $cmd = '/usr/bin/perl -w '.ALPINO_HOME.'/Tokenization/paragraph_per_line "'.$file.'"';
+        // prevent shell command injection
+        $escaped = escapeshellarg($file);
+        $cmd = '/usr/bin/perl -w '.ALPINO_HOME.'/Tokenization/paragraph_per_line '.$escaped;
         $descriptorspec = array(
             0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
             1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
