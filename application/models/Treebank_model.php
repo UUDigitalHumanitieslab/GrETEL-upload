@@ -119,7 +119,8 @@ class Treebank_model extends CI_Model
     {
         $this->db->select(array('treebanks.id', 'treebanks.title',
             'users.id AS user_id', 'users.email',
-            'treebanks.uploaded', 'treebanks.processed', 'treebanks.public', ));
+            'treebanks.uploaded', 'treebanks.processing',
+            'treebanks.processed', 'treebanks.public', ));
         $this->db->from('treebanks');
         $this->db->join('users', 'users.id = treebanks.user_id');
 
