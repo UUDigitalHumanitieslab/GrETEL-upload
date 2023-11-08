@@ -29,7 +29,7 @@
 <?=form_help('help_title'); ?>
 <div class="pure-control-group">
 <?=form_label(lang('file'), 'treebank'); ?>
-<input type="file" name="treebank" size="20" class="pure-input-rounded" />
+<input type="file" id="treebank" name="treebank" size="20" class="pure-input-rounded" />
 <?=form_error('treebank'); ?>
 </div>
 <?=form_single_checkbox_and_label('public', '1', '1'); ?>
@@ -38,8 +38,8 @@
 
 <?=form_fieldset(lang('parse_flags')); ?>
 
-<div class="pure-control-group">
-<?=form_label(lang('file_type'), 'file_type'); ?>
+<fieldset class="pure-control-group">
+<legend><?=lang('file_type') ?></legend>
 <div class="pure-form-group-box">
 <?=form_radio_and_label('file_type', FileType::TXT, FileType::TXT, 'Plain text'); ?><?=form_help('help_ft_txt'); ?><br />
 <?=form_radio_and_label('file_type', FileType::FOLIA, '', 'FoLiA-XML'); ?><?=form_help('help_ft_folia'); ?><br />
@@ -47,7 +47,7 @@
 <?=form_radio_and_label('file_type', FileType::CHAT, '', 'CHAT files'); ?><?=form_help('help_ft_chat'); ?><br />
 <?=form_radio_and_label('file_type', FileType::LASSY, '', 'LASSY-XML'); ?><?=form_help('help_ft_lassy'); ?>
 </div>
-</div>
+</fieldset>
 
 <div class="parse_flags_txt">
 <?=form_single_checkbox_and_label('is_sent_tokenised', '1'); ?>
@@ -92,9 +92,9 @@ $(document).ready(function() {
     $('.tooltiptext').hide();
 	
 	// If txt is selected, show additional parse flags
-	$('input[name="file_type"]').change(function() {
+	$('input[name="file_type"]').on('change', function() {
 		$('.parse_flags_txt').toggle($(this).val() === 'txt');
 	});
-	$('input[name="file_type_txt').change();
+	$('input[name="file_type_txt').trigger('change');
 });
 </script>

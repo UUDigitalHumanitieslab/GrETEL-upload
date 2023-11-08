@@ -95,9 +95,22 @@ td.actions a {
 }
 
 /* Larger pure-control-group */
-.pure-form-aligned .pure-control-group label {
-	width: 25em; 
+.pure-form-aligned .pure-control-group label,
+.pure-form-aligned .pure-control-group legend {
+	width: 25em;
 }
+
+/* make them look like a label */
+.pure-form-aligned .pure-control-group legend {
+	border: none;
+	color: #505050;
+	font-size: 1em;
+	text-align: right;
+    float: left;
+    vertical-align: middle;
+    margin: 0 1em 0 0;
+}
+
 
 .pure-form-aligned .pure-control-group .pure-radio {
 	text-align: left;
