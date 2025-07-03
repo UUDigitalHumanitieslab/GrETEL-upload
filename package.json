@@ -4,7 +4,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/UUDigitalHumanitieslab/GrETEL-upload.git"
+        "url": "git+https://github.com/CentreForDigitalHumanities/GrETEL-upload.git"
     },
     "scripts": {
         "version": "node version.js"
